@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       // initialRoute: '/homePage',
       // home: DetailProjectPage(),
       // darkTheme: AppThemes.darkTheme,
+      
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }
