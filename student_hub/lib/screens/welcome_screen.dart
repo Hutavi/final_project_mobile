@@ -102,7 +102,9 @@ class _Content extends StatelessWidget {
               MaterialPageRoute(builder: (context) => Dashboard()),
             );
           },
-          child: Text('Get Started'),
+          child: Text('Get Started',
+              style: TextStyle(color: Colors.black),
+          ),  
         ),
         ]);
   }
