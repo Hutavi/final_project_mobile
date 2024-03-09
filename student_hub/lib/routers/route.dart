@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/student_profile_s1/student_profile_s1.dart';
+import 'package:student_hub/screens/student_profile_s2/student_profile_s2.dart';
+import 'package:student_hub/screens/student_profile_s3/student_profile_s3.dart';
 // import 'package:todolist_app/main.dart';
 
 class AppRoute {
@@ -11,6 +14,17 @@ class AppRoute {
       case AppRouterName.homePage:
         return MaterialPageRoute(builder: (_) => const HomePage());
 
+      case AppRouterName.profileS1:
+        return MaterialPageRoute(
+            builder: (_) => const StundentProfileS1(
+                  selectedValue: 'Fullstack Engineer',
+                ));
+
+      case AppRouterName.profileS2:
+        return MaterialPageRoute(builder: (_) => const StundentProfileS2());
+
+      case AppRouterName.profileS3:
+        return MaterialPageRoute(builder: (_) => const StundentProfileS3());
       //Mẫu hiệu ứng chuyển trang
       // case AppRouterName.AddPersonalTaskPage:
       //   return PageRouteBuilder(
