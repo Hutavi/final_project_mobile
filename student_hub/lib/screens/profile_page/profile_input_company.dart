@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
+import 'package:student_hub/screens/welcome_screen.dart';
 class ProfileInput extends StatefulWidget {
   const ProfileInput({super.key});
 
@@ -36,8 +36,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class _NewLoginPageState extends State<ProfileInput>
-    with SingleTickerProviderStateMixin {
+class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderStateMixin {
   int activeIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -379,7 +378,9 @@ class _NewLoginPageState extends State<ProfileInput>
                       child: FadeTransition(
                         opacity: _fadeAnimation,
                         child: MaterialButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> WelcomeScreen()));
+                          },
                           height: 45,
                           color: Colors.black,
                           padding: const EdgeInsets.symmetric(

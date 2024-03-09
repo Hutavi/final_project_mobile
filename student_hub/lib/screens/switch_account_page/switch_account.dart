@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
-import 'package:student_hub/screens/switch_account_page/show_account.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 
 class SwitchAccount extends StatefulWidget {
