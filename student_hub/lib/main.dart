@@ -1,284 +1,125 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:dotted_border/dotted_border.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final String? selectedValue = 'Fullstack Engineer';
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'StudentHub',
-      home: MyHomePage(selectedValue: selectedValue),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.selectedValue});
+  const MyHomePage({super.key, required this.title});
 
-  final String? selectedValue;
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  File? _imageFile;
-  File? _imageFile1;
+  int _counter = 0;
 
-  Widget _buildDropZone() {
-    return const Center(
-      child: Column(
-        children: [
-          Icon(
-            Icons.cloud_upload,
-            size: 40,
-          ),
-          Text(
-            'Drop and Drag Image Here',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _pickImage() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  void _pickImage1() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile1 = File(pickedFile.path);
-      });
-    }
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(color: Colors.white), // Chỉnh màu chữ thành trắng
-        ),
-        backgroundColor: Colors.blue,
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.people,
-              color: Colors.white, // Chỉnh màu icon thành trắng
-              size: 30, // Kích thước của icon
-            ),
-          ),
-        ],
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Welcome message
-            const Padding(
-              padding: EdgeInsets.only(top: 30.0, bottom: 12.0),
-              child: Text(
-                'CV & Transcript',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
+            const Text(
+              'You have pushed the button this many times:',
             ),
-
-            const Padding(
-              padding: EdgeInsets.only(
-                  top: 10.0, bottom: 16.0, left: 16.0, right: 16.0),
-              child: Text(
-                'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-            ),
-
-            // Skillset
-            const Row(
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ),
-                  child: Text(
-                    'Resume/CV (*)',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                )),
-              ],
-            ),
-
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _imageFile == null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: DottedBorder(
-                            color: Colors.black,
-                            dashPattern: const [8, 4],
-                            strokeWidth: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12)),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 30.0),
-                              child: DragTarget(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return _buildDropZone();
-                                },
-                                onAccept: (File imageFile) {
-                                  setState(() {
-                                    _imageFile = imageFile;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      : Image.file(_imageFile!),
-                  const SizedBox(height: 10),
-                  Container(
-                    // Đặt padding cho Container để căn chỉnh nút
-                    alignment: Alignment
-                        .bottomRight, // Căn chỉnh nút ở dưới cùng bên phải
-                    child: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: ElevatedButton(
-                        onPressed: _pickImage,
-                        child: const Text('Choose Image'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Row(
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ),
-                  child: Text(
-                    'Transcript (*)',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                )),
-              ],
-            ),
-
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _imageFile1 == null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: DottedBorder(
-                            color: Colors.black,
-                            dashPattern: const [8, 4],
-                            strokeWidth: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12)),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 30.0),
-                              child: DragTarget(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return _buildDropZone();
-                                },
-                                onAccept: (File imageFile) {
-                                  setState(() {
-                                    _imageFile1 = imageFile;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      : Image.file(_imageFile1!),
-                  const SizedBox(height: 10),
-                  Container(
-                    // Đặt padding cho Container để căn chỉnh nút
-                    alignment: Alignment
-                        .bottomRight, // Căn chỉnh nút ở dưới cùng bên phải
-                    child: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: ElevatedButton(
-                        onPressed: _pickImage1,
-                        child: const Text('Choose Image'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Next button
-            Container(
-              padding: const EdgeInsets.only(
-                  top: 16.0,
-                  right: 16.0), // Đặt padding cho Container để căn chỉnh nút
-              alignment:
-                  Alignment.bottomRight, // Căn chỉnh nút ở dưới cùng bên phải
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: ElevatedButton(
-                  onPressed: _pickImage,
-                  child: const Text('Continue'),
-                ),
-              ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
