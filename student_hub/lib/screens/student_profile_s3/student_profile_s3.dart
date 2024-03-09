@@ -11,7 +11,6 @@ class StundentProfileS3 extends StatefulWidget {
 }
 
 class _StundentProfileS3State extends State<StundentProfileS3> {
-  @override
   File? _imageFile;
   File? _imageFile1;
 
@@ -253,7 +252,33 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ElevatedButton(
-                  onPressed: _pickImage,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        // Trả về một Dialog
+                        return AlertDialog(
+                          title: const Text(
+                            'Welcome',
+                            textAlign: TextAlign.center,
+                          ),
+                          content: const Text(
+                            'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects Next',
+                            textAlign: TextAlign.center,
+                          ),
+                          actions: [
+                            // Nút "Next"
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Next'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   child: const Text('Continue'),
                 ),
               ),

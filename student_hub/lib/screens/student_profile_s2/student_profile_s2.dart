@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class StundentProfileS2 extends StatefulWidget {
   const StundentProfileS2({super.key});
@@ -139,7 +140,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                       ),
                       const SizedBox(
                           height:
-                              8.0), // Thêm một khoảng cách giữa hàng và văn bản
+                              2.0), // Thêm một khoảng cách giữa hàng và văn bản
                       const Text(
                         '9/2020 - 12/2020, 4 months',
                         style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -193,8 +194,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Reactjs'),
-                              const SizedBox(width: 8.0),
+                              const Text('Reactjs',
+                                  style: TextStyle(fontSize: 13)),
+                              const SizedBox(width: 20.0),
                               GestureDetector(
                                 onTap: () {
                                   // Xử lý sự kiện khi icon close được bấm
@@ -219,8 +221,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Nodejs'),
-                              const SizedBox(width: 8.0),
+                              const Text('Nodejs',
+                                  style: TextStyle(fontSize: 13)),
+                              const SizedBox(width: 20.0),
                               GestureDetector(
                                 onTap: () {
                                   // Xử lý sự kiện khi icon close được bấm
@@ -247,16 +250,22 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
               ),
             ),
 
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+              child: Divider(
+                color: Colors.black, // Màu sắc của đường kẻ
+                thickness: 1, // Độ dày của đường kẻ
+              ),
+            ),
+
             // Languages
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Căn văn bản sang trái
                     children: [
                       const Text(
                         'Intelligent Taxi Dispatching system',
@@ -293,7 +302,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     ],
                   ),
                   const SizedBox(
-                      height: 8.0), // Thêm một khoảng cách giữa hàng và văn bản
+                      height: 2.0), // Thêm một khoảng cách giữa hàng và văn bản
                   const Text(
                     '9/2020 - 12/2020, 4 months',
                     style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -303,7 +312,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
             ),
 
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.only(right: 16.0, left: 16.0, top: 16.0),
               child: Text(
                 'It is the developer of a super-app for ride-hailing, food delivery, and digital payments services on mobile devices that operates in Singapore, Malaysia, ..',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
@@ -320,7 +329,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.profileS3);
+                  },
                   child: const Text('Next'),
                 ),
               ),

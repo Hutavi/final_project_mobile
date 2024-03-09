@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -90,10 +91,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top:
-                                    16.0), // Padding trên cho button 2 (16.0 là ví dụ, bạn có thể thay đổi giá trị này)
+                              top: 16.0,
+                            ), // Padding trên cho button 2 (16.0 là ví dụ, bạn có thể thay đổi giá trị này)
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, AppRouterName.profileS1);
+                              },
                               child: const Text('Student'),
                             ),
                           ),

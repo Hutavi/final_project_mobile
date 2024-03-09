@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class StundentProfileS1 extends StatefulWidget {
   const StundentProfileS1({super.key, required this.selectedValue});
@@ -154,8 +155,11 @@ class _StundentProfileS1State extends State<StundentProfileS1> {
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Reactjs'),
-                              const SizedBox(width: 8.0),
+                              const Text(
+                                'Reactjs',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              const SizedBox(width: 20.0),
                               GestureDetector(
                                 onTap: () {
                                   // Xử lý sự kiện khi icon close được bấm
@@ -180,8 +184,9 @@ class _StundentProfileS1State extends State<StundentProfileS1> {
                           label: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Nodejs'),
-                              const SizedBox(width: 8.0),
+                              const Text('Nodejs',
+                                  style: TextStyle(fontSize: 13)),
+                              const SizedBox(width: 20.0),
                               GestureDetector(
                                 onTap: () {
                                   // Xử lý sự kiện khi icon close được bấm
@@ -254,7 +259,7 @@ class _StundentProfileS1State extends State<StundentProfileS1> {
                     ],
                   ),
                   const SizedBox(
-                      height: 8.0), // Thêm một khoảng cách giữa hàng và văn bản
+                      height: 2.0), // Thêm một khoảng cách giữa hàng và văn bản
                   const Text(
                     'English: Native or Bilingual',
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
@@ -349,7 +354,7 @@ class _StundentProfileS1State extends State<StundentProfileS1> {
                       ),
                       const SizedBox(
                           height:
-                              8.0), // Thêm một khoảng cách giữa hàng và văn bản
+                              2.0), // Thêm một khoảng cách giữa hàng và văn bản
                       const Text(
                         '2008-2010',
                         style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -370,7 +375,9 @@ class _StundentProfileS1State extends State<StundentProfileS1> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.profileS2);
+                  },
                   child: const Text('Next'),
                 ),
               ),
