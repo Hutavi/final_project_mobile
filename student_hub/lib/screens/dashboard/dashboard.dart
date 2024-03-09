@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/screens/dashboard/bottomNavigationBar.dart';
+import 'package:student_hub/widgets/bottomNavigationBar.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
