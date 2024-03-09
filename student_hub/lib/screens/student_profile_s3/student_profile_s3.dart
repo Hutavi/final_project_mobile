@@ -3,33 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  final String? selectedValue = 'Fullstack Engineer';
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'StudentHub',
-      home: MyHomePage(selectedValue: selectedValue),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.selectedValue});
-
-  final String? selectedValue;
+class StundentProfileS3 extends StatefulWidget {
+  const StundentProfileS3({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StundentProfileS3> createState() => _StundentProfileS3State();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _StundentProfileS3State extends State<StundentProfileS3> {
+  @override
   File? _imageFile;
   File? _imageFile1;
 
