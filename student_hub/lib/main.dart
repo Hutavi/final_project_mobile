@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: SwitchAccount(),
+      home: SwitchAccount(),
       // home: ProfileInput(), 
-      home: Dashboard(),
+      // home: Dashboard(),
     );
   }
 }

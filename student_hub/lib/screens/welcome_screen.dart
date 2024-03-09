@@ -45,7 +45,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({Key? key}) : super(key: key);
+  const _Body({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +62,14 @@ class _Body extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  const _Content({Key? key}) : super(key: key);
+  const _Content({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Align(
+          const Align(
             alignment: Alignment.topCenter,
             child: Text(
               "Welcome to Student Hub!",
@@ -80,8 +80,8 @@ class _Content extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
-          Align(
+          const SizedBox(height: 10),
+          const Align(
             alignment: Alignment.topCenter,
             child: Text(
               "Let's start with your first project post!",
@@ -93,18 +93,17 @@ class _Content extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          // button get started
-
+          // button get started 
           
-        //   ElevatedButton(
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => DashboardScreen()),
-        //     );
-        //   },
-        //   child: Text('Get Started'),
-        // ),
+          ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard()),
+            );
+          },
+          child: Text('Get Started'),
+        ),
         ]);
   }
 }
