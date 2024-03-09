@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
       // home: CalendarPage(),
       // home: DetailProjectPage(),
       // home: CreateReportPage(),
-      home: HomePage(),
+      home: SwitchAccount(),
       // initialRoute: '/homePage',
       // home: DetailProjectPage(),
       // darkTheme: AppThemes.darkTheme,

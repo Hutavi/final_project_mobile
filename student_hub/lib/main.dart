@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:student_hub/screens/switch_account_page/switch_account.dart';
+import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: SwitchAccount(),
+      home: ProfileInput(),
     );
   }
 }
