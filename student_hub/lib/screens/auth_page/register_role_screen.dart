@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/screens/auth_page/register_by_screen.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class RegisterChoiceRoleScreen extends StatefulWidget {
   const RegisterChoiceRoleScreen({Key? key}) : super(key: key);
@@ -154,13 +154,8 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          RegisterByScreen(radioValue: radioValue),
-                    ),
-                  );
+                  Navigator.pushNamed(context, AppRouterName.registerBy,
+                      arguments: radioValue);
                 },
                 style: OutlinedButton.styleFrom(
                   shape: const RoundedRectangleBorder(

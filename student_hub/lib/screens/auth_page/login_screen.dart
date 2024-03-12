@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/screens/auth_page/register_role_screen.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -149,12 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         OutlinedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RegisterChoiceRoleScreen()),
-                            );
+                            Navigator.pushNamed(
+                                context, AppRouterName.register);
                           },
                           style: OutlinedButton.styleFrom(
                             shape: const RoundedRectangleBorder(

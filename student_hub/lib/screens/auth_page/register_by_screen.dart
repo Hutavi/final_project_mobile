@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/screens/switch_account_page/switch_account.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class RegisterByScreen extends StatefulWidget {
@@ -21,6 +21,10 @@ class _LoginByScreenState extends State<RegisterByScreen> {
   bool isAllFieldsValid = false;
   bool? radioValue;
   bool isChecked = false;
+
+  bool isFullNameValid = false;
+  bool isMailForWorkValid = false;
+  bool isPasswordValid = false;
 
   void validateFields() {
     setState(() {
@@ -52,10 +56,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SwitchAccount()),
-              );
+              Navigator.pushNamed(context, AppRouterName.switchAccount);
             },
           ),
         ],
@@ -90,7 +91,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   inputType: TextInputType.text,
                   fillColor: kWhiteColor,
                   onChange: (value) {
-                    validateFields();
+                    // validateFields();
                   },
                   labelText: 'Full name',
                   validator: (value) {
@@ -108,7 +109,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   inputType: TextInputType.text,
                   fillColor: kWhiteColor,
                   onChange: (value) {
-                    validateFields();
+                    // validateFields();
                   },
                   labelText: 'Work email address',
                   validator: (value) {
@@ -126,7 +127,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   inputType: TextInputType.text,
                   fillColor: kWhiteColor,
                   onChange: (value) {
-                    validateFields();
+                    // validateFields();
                   },
                   labelText: 'Password (8 or more characters)',
                   validator: (value) {

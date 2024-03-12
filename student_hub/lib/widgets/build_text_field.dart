@@ -48,6 +48,7 @@ class BuildTextField extends StatelessWidget {
       maxLength: maxLength,
       maxLines: inputType == TextInputType.multiline ? 3 : 1,
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       // enabled: enabled,
       decoration: InputDecoration(
         labelText: labelText,
