@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/profile_page/edit_profile.dart';
+import 'package:student_hub/screens/student_profile_s1/student_profile_s1.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -37,7 +39,8 @@ class MyApp extends StatelessWidget {
       // home: SwitchAccount(),
       // home: ProfileInput(), 
       // home: Dashboard(),
-      home: EditProfile(),  
+      // home: EditProfile(),  
+      home: HomePage(),
     );
   }
 }

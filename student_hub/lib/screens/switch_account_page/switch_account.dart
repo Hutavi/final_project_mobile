@@ -1,8 +1,12 @@
 import "package:flutter/material.dart";
+import 'package:flutter/widgets.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
+import 'package:student_hub/routers/route.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -62,7 +66,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
             ? const AddAccount()
             : TextButton(
                 onPressed: () {
-                  showAccountList(accountList, context);
+                  // Navigator.pushNamed(context, AppRouterName.profile);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -92,12 +96,17 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Transform.rotate(
-                            angle: -90 * 3.141592653589793 / 180,
-                            child: const Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.black,
-                              size: 20,
+                          TextButton(
+                            onPressed: () {
+                              showAccountList(accountList, context);
+                            },
+                            child: Transform.rotate(
+                              angle: -90 * 3.141592653589793 / 180,
+                              child: const Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.black,
+                                size: 20,
+                              ),
                             ),
                           )
                         ],
@@ -118,10 +127,9 @@ class _SwitchAccountState extends State<SwitchAccount> {
             child: TextButton.icon(
               onPressed: () {
                 // Profiles button pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileInput())
-                );
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => ProfileInput()));
+                Navigator.pushNamed(context, AppRouterName.profileInput);
               },
               icon: const Icon(Icons.person, color: Colors.black, size: 28.0),
               label: const Text('Profiles',
