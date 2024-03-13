@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
-import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/auth_page/login_screen.dart';
+// import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 
 class MyApp extends StatefulWidget {
@@ -18,16 +19,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
-      // home: ProjectListPage(),
-      // home: CreateProjectTask(),
-      // home: CalendarPage(),
-      // home: DetailProjectPage(),
-      // home: CreateReportPage(),
-      home: SwitchAccount(),
+      // home: SwitchAccount(),
+      home: LoginScreen(),
       // initialRoute: '/homePage',
-      // home: DetailProjectPage(),
       // darkTheme: AppThemes.darkTheme,
-      
+
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }
