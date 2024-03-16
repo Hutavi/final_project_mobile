@@ -1,12 +1,9 @@
 import "package:flutter/material.dart";
-import 'package:flutter/widgets.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
-import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/routers/route.dart';
-import 'package:student_hub/routers/route_name.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -30,10 +27,26 @@ class _SwitchAccountState extends State<SwitchAccount> {
       currentAccount = name;
     });
   }
+  // void showAccountList(BuildContext context) {
+  //   List<CompanyUser> loggedInAccounts = accountList.where((account) => account.isLogin).toList();
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (_) {
+  //       return ListView.builder(
+  //         itemCount: loggedInAccounts.length,
+  //         itemBuilder: (context, index) {
+  //           final account = loggedInAccounts[index];
+  //           // final isOdd = index.isOdd;
+  //           return AccountTile(account: account, accountManager: accountManager);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   void showAccountList(List<CompanyUser> accounts, BuildContext contextVar) {
     //show account list
-    print('Account List');
+
     showModalBottomSheet(
         context: contextVar,
         builder: (_) {
@@ -57,157 +70,191 @@ class _SwitchAccountState extends State<SwitchAccount> {
         });
   }
 
+  // bool isExpended = false;
+  AccountManager accountManager = AccountManager();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const _AppBar(),
-      body: Column(children: <Widget>[
-        accountList.isEmpty
-            ? const AddAccount()
-            : TextButton(
-                onPressed: () {
-                  // Navigator.pushNamed(context, AppRouterName.profile);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
+      body: Column(
+        children: <Widget>[
+          accountList.isEmpty
+              ? const AddAccount()
+              : ExpansionTile(
+                  title: Row(
+                    children: <Widget>[
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(
                             width: 50,
                             height: 50,
                             child: Image.asset('lib/assets/images/avatar.png'),
-                          )
-                        ]),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(4, 4, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            accountList
-                                .where((element) => element.isLogin == true)
-                                .first
-                                .getFullName(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              showAccountList(accountList, context);
-                            },
-                            child: Transform.rotate(
-                              angle: -90 * 3.141592653589793 / 180,
-                              child: const Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                            ),
-                          )
                         ],
                       ),
-                    )
-                  ],
-                )),
-        const Padding(
+                      const SizedBox(
+                        //khoảng cách giữa ảnh và tên
+                        width: 10,
+                      ),
+                      Text(
+                        accountList
+                            .where((element) => element.isLogin == true)
+                            .first
+                            .getFullName(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // children: accountList
+                  //     .where((account) => account.isLogin)
+                  //     .map((account) => ListTile(
+                  //           leading: CircleAvatar(
+                  //             backgroundImage:
+                  //                 AssetImage('lib/assets/images/avatar.png'),
+                  //           ),
+                  //           title: Text(account.getFullName()),
+                  //           onTap: () {
+                  //             for (var i = 0; i < accountList.length; i++) {
+                  //               accountList[i].isLogin = false;
+                  //             }
+                  //             account.isLogin = true;
+                  //             updateAccountName(account.getFullName());
+                  //             reloadScreen();
+                  //           },
+                  //         ))
+                  //     .toList(),
+
+                  //khi mở rộng
+                  onExpansionChanged: (bool expanded) {
+                    if (expanded) {
+                      // showAccountList(context);
+                    }
+                  },
+
+                  children: accountList
+                      .where((account) => account.signedIn && !account.isLogin)
+                      .map((account) {
+                    return GestureDetector(
+                      onTap: () {
+                        for (var i = 0; i < accountList.length; i++) {
+                          accountList[i].isLogin = false;
+                          if (accountList[i].userId == account.userId) {
+                            accountList[i].isLogin = true;
+                          }
+                        }
+                        updateAccountName(account.getFullName());
+                        reloadScreen();
+                      },
+                      child: AccountTile(
+                        account: account,
+                        accountManager: accountManager,
+                      ),
+                    );
+                  }).toList(),
+                ),
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Divider(
               color: Colors.black,
               thickness: 0.34,
-            )),
-        Container(
-            child: Column(children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () {
-                // Profiles button pressed
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => ProfileInput()));
-                Navigator.pushNamed(context, AppRouterName.profileInput);
-              },
-              icon: const Icon(Icons.person, color: Colors.black, size: 28.0),
-              label: const Text('Profiles',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.normal)),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width *
-                    0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                child: const Divider(
-                  color: Colors.black,
-                  thickness: 0.34,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.profileInput);
+                  },
+                  icon:
+                      const Icon(Icons.person, color: Colors.black, size: 28.0),
+                  label: const Text('Profiles',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.normal)),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
+                    child: const Divider(
+                      color: Colors.black,
+                      thickness: 0.34,
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    // Settings button pressed
+                  },
+                  icon: const Icon(Icons.settings,
+                      color: Colors.black, size: 28.0),
+                  label: const Text('Settings',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.normal)),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
+                    child: const Divider(
+                      color: Colors.black,
+                      thickness: 0.34,
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    // Log out button pressed
+                  },
+                  icon:
+                      const Icon(Icons.logout, color: Colors.black, size: 28.0),
+                  label: const Text('Log out',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.normal)),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
+                    child: const Divider(
+                      color: Colors.black,
+                      thickness: 0.34,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () {
-                // Settings button pressed
-              },
-              icon: const Icon(Icons.settings, color: Colors.black, size: 28.0),
-              label: const Text('Settings',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.normal)),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width *
-                    0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                child: const Divider(
-                  color: Colors.black,
-                  thickness: 0.34,
-                ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () {
-                // Log out button pressed
-              },
-              icon: const Icon(Icons.logout, color: Colors.black, size: 28.0),
-              label: const Text('Log out',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.normal)),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width *
-                    0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                child: const Divider(
-                  color: Colors.black,
-                  thickness: 0.34,
-                ),
-              ),
-            ],
-          ),
-        ]))
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -243,4 +290,49 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class AccountManager {
+  String currentAccountName = '';
+
+  void updateAccountName(String name) {
+    currentAccountName = name;
+  }
+
+  void reloadScreen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SwitchAccount()),
+    );
+  }
+}
+
+class AccountTile extends StatelessWidget {
+  final CompanyUser account;
+  final AccountManager accountManager;
+
+  const AccountTile({
+    Key? key,
+    required this.account,
+    required this.accountManager,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: const CircleAvatar(
+        // backgroundImage: AssetImage('lib/assets/images/avatar_${account.userId}.png'),
+        backgroundImage: const AssetImage('lib/assets/images/avatar.png'),
+      ),
+      title: Text(account.getFullName()),
+      onTap: () {
+        for (var i = 0; i < accountList.length; i++) {
+          accountList[i].isLogin = false;
+        }
+        account.isLogin = true;
+        accountManager.updateAccountName(account.getFullName());
+        accountManager.reloadScreen(context);
+      },
+    );
+  }
 }

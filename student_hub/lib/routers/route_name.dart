@@ -6,4 +6,10 @@ class AppRouterName {
   static const register = '/register';
   static const registerBy = '/register-by';
   static const switchAccount = '/switch-acc';
+  static const profileInput = '/profile-input';
+  //post a project flow
+  static const postScreen1 = '/post-step-1';
+  static const postScreen2 = '/post-step-2';
+  static const postScreen3 = '/post-step-3';
+  static const postScreen4 = '/post-step-4'; 
 }
