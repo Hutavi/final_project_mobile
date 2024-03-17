@@ -6,4 +6,8 @@ class AppRouterName {
   static const register = '/register';
   static const registerBy = '/register-by';
   static const switchAccount = '/switch-acc';
+  static const projectList = '/project-list';
+  static const projectDetail = '/project-detail';
+  static const projectSaved = '/project-saved';
+  static const projectSearch = '/project-search';
 }

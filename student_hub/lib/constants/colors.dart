@@ -2,34 +2,46 @@
 
 import 'package:flutter/material.dart';
 
-const Color COLOR_DONE = Color.fromARGB(255, 36, 186, 150);
-const Color COLOR_GREEN = Color.fromARGB(255, 29, 160, 129);
-const Color COLOR_GREEN_SHADOW = Color.fromARGB(55, 56, 255, 76);
-const Color COLOR_BLACK = Colors.black;
-const Color COLOR_GRAY_TITLE = Color.fromARGB(255, 35, 35, 35);
-const Color COLOR_PLACE_HOLDER_BORDER = Color.fromARGB(255, 244, 244, 244);
-const Color COLOR_WHITE = Colors.white;
-const Color COLOR_CARD_BACKGROUND = Color.fromARGB(255, 239, 239, 239);
-const Color COLOR_INPROGRESS = Color.fromARGB(255, 252, 196, 25);
-const Color COLOR_PLAN = Color.fromARGB(255, 132, 94, 247);
-const Color COLOR_LATE = Color.fromARGB(255, 250, 82, 82);
-const Color COLOR_GRAY_SEARCH = Color.fromARGB(218, 248, 248, 248);
-const Color COLOR_TEST = Color.fromARGB(255, 56, 93, 248);
-const Color COLOR_DELAY = Color.fromARGB(255, 166, 117, 144);
-
-const Color COLOR_BG_BOTTOM_NAV_BAR = Color.fromARGB(230, 252, 245, 245);
-const Color COLOR_BG_ITEM_TASK = Color.fromARGB(172, 247, 253, 255);
-const Color COLOR_BG_ITEM_TASK2 = Color.fromARGB(255, 0, 116, 158);
-const Color COLOR_PLACE_HOLDER = Color.fromARGB(255, 110, 110, 110);
-const Color COLOR_GRAY = Color.fromARGB(255, 187, 187, 187);
-const Color COLOR_TEXT_MAIN = Color.fromARGB(255, 50, 50, 50);
-const Color kPrimaryColor = Color(0xFF3F37C9);
 const Color kWhiteColor = Color(0xffffffff);
 const Color kBlackColor = Color(0xff000000);
+const Color kRed = Color.fromARGB(255, 211, 0, 0);
+const Color kGreyColorText = Color(0xff45474B);
+
 const Color kGrey0 = Color(0xff555555);
 const Color kGrey1 = Color(0xff8D9091);
 const Color kGrey2 = Color(0xffCCCCCC);
 const Color kGrey3 = Color(0xffEFEFEF);
 
-const Color kRed = Color(0xffC5292A);
-const Color kOrange = Color.fromARGB(255, 250, 125, 0);
+//https://colorhunt.co/palette/008dda41c9e2ace2e1f7eedd
+
+const Color kBlue50 = Color(0xFFE3F2FD);
+const Color kBlue100 = Color(0xFFBBDEFB);
+const Color kBlue200 = Color(0xFF90CAF9);
+const Color kBlue300 = Color(0xFF64B5F6);
+const Color kBlue400 = Color(0xFF42A5F5);
+const Color kBlue600 = Color(0xFF1E88E5);
+const Color kBlue700 = Color(0xFF1976D2);
+const Color kBlue800 = Color(0xFF1565C0);
+const Color kBlue900 = Color(0xFF0D47A1);
+
+//Main color for app
+const Color kGreyMain = Color(0xFFB5C0D0);
+const Color kSage = Color(0xFFCCD3CA);
+const Color kBaige = Color(0xFFF5E8DD);
+const Color kPeach = Color(0xFFEED3D9);
+
+const Color kBlueGray50 = Color(0xFFECEFF1);
+const Color kBlueGray100 = Color(0xFFCFD8DC);
+const Color kBlueGray200 = Color(0xFFB0BEC5);
+const Color kBlueGray300 = Color(0xFF90A4AE);
+const Color kBlueGray400 = Color(0xFF78909C);
+const Color kBlueGray500 = Color(0xFF607D8B);
+
+//Text color should be white for items from color table 600
+const Color kBlueGray600 = Color(0xFF546E7A);
+const Color kBlueGray700 = Color(0xFF455A64);
+const Color kBlueGray800 = Color(0xFF37474F);
+const Color kBlueGray900 = Color(0xFF263238);
+
+//https://colorhunt.co/palette/b5c0d0ccd3caf5e8ddeed3d9
+//https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors

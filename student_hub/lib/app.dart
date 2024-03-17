@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
+import 'package:student_hub/screens/browser_page/project_list.dart';
 // import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 
@@ -20,7 +21,8 @@ class _MyAppState extends State<MyApp> {
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
       // home: SwitchAccount(),
-      home: LoginScreen(),
+      // home: LoginScreen(),
+      home: ProjectListScreen(),
       // initialRoute: '/homePage',
       // darkTheme: AppThemes.darkTheme,
 
