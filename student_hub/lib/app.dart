@@ -4,6 +4,7 @@ import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 // import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
+import 'package:student_hub/screens/post/post_screen_1.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       home: ProjectListScreen(),
       // initialRoute: '/homePage',
       // darkTheme: AppThemes.darkTheme,
+      // home: PostScreen1(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );

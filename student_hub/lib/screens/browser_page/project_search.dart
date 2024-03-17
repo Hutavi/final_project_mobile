@@ -5,7 +5,6 @@ import 'package:student_hub/models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_filter.dart';
-import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectSearch extends StatefulWidget {

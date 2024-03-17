@@ -25,7 +25,8 @@ class _ShowAccountState extends State<ShowAccount> {
       itemBuilder: (ctx, index) {
         if (index == widget._accountList.length) {
           return const AddAccount();
-        } else {
+        } 
+        else {
           return InkWell(
             onTap: () {
               primaryFocus?.unfocus();

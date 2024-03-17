@@ -1,5 +1,5 @@
 class CompanyUser {
-  final String userId;//id của người dùng trong hệ thống
+  final String userId; //id của người dùng trong hệ thống
   final String fullName;
   final String email;
   final String password;
@@ -8,8 +8,9 @@ class CompanyUser {
   final String companyName;
   final String companyWebsite;
   final String companyDescription;
-  final String employeesID;//id của người dùng trong công ty
+  final String employeesID; //id của người dùng trong công ty
   bool isLogin = false;
+  bool signedIn = false; // Thêm trường signedIn
 
   CompanyUser({
     required this.userId,
@@ -22,6 +23,7 @@ class CompanyUser {
     required this.companyDescription,
     required this.employeesID,
     required this.isLogin,
+    required this.signedIn,
   });
 
   void login() {
@@ -55,7 +57,7 @@ class CompanyUser {
   String getTypeUser() {
     return typeUser;
   }
-  
+
   String getCompanyId() {
     return companyId;
   }
@@ -91,7 +93,7 @@ class CompanyUser {
   void setPassword(String password) {
     password = password;
   }
-  
+
   void setCompanyId(String companyId) {
     companyId = companyId;
   }
@@ -119,12 +121,13 @@ class CompanyUser {
       'email': email,
       'password': password,
       'typeUser': typeUser,
-      'companyId': companyId,//id của công ty trong hệ thống
+      'companyId': companyId, //id của công ty trong hệ thống
       'companyName': companyName,
       'companyWebsite': companyWebsite,
       'companyDescription': companyDescription,
       'employeesID': employeesID,
       'isLogin': isLogin,
+      'signedIn': signedIn, // Thêm signedIn vào đây
     };
   }
 
@@ -140,13 +143,12 @@ class CompanyUser {
       companyDescription: map['companyDescription'],
       employeesID: map['employeesID'],
       isLogin: map['isLogin'],
+      signedIn: map['signedIn'], // Thêm signedIn vào đây
     );
   }
-
-  
-  
 }
 //user mẫu
+
 List<CompanyUser> accountList = [
   CompanyUser(
     userId: '1',
@@ -158,7 +160,8 @@ List<CompanyUser> accountList = [
     companyWebsite: 'www.companyA.com',
     companyDescription: 'Công ty A',
     employeesID: '1',
-    isLogin: false
+    isLogin: false,
+    signedIn: true, // Thêm signedIn vào đây
   ),
   CompanyUser(
     userId: '2',
@@ -170,7 +173,8 @@ List<CompanyUser> accountList = [
     companyWebsite: 'www.companyB.com',
     companyDescription: 'Công ty B',
     employeesID: '2',
-    isLogin: true
+    isLogin: true,
+    signedIn: true, // Thêm signedIn vào đây
   ),
   CompanyUser(
     userId: '3',
@@ -182,6 +186,7 @@ List<CompanyUser> accountList = [
     companyWebsite: 'www.companyC.com',
     companyDescription: 'Công ty C',
     employeesID: '3',
-    isLogin: false
+    isLogin: false,
+    signedIn: true, // Thêm signedIn vào đây
   ),
 ];
