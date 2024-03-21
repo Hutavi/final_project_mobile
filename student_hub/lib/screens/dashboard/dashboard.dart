@@ -1,125 +1,280 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/widgets/bottomNavigationBar.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/dashboard/send_hired.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  DashboardState createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
-  int _currentIndex = 0;
+class DashboardState extends State<Dashboard>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(
-                    20, 10, 0, 10), // Đặt lề cho Container
-                child: const Text(
-                  "Your jobs",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              ButtonBar(
-                children: <Widget>[
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRouterName.postScreen1);
-                      },
-                      style: ButtonStyle(
-                        shadowColor: MaterialStateProperty.all<Color>(
-                            Colors.grey), // Màu đổ bóng
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        15.0))), // Bo tròn góc
-                        side: MaterialStateProperty.all<BorderSide>(
-                          const BorderSide(
-                            color:
-                                Color.fromARGB(255, 8, 11, 1), // Màu đường viền
-                            width: 1.2, // Độ dày của đường viền
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Post a job',
-                        style: TextStyle(color: Colors.black),
-                      )),
-                ],
-              ),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Đặt alignment theo chiều ngang
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Đặt alignment theo chiều dọc
-            children: <Widget>[
-              Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Đặt alignment theo chiều dọc
-                children: <Widget>[
-                  Text(
-                    "Welcome,",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "You have no jobs",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ],
+      appBar: AppBar(
+        title: const Text(
+          'StudentHub',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.blue,
+        actions: const [
+          IconButton(
+            onPressed: null,
+            icon: Icon(
+              Icons.people,
+              color: Colors.white,
+              size: 30,
+            ),
           ),
         ],
       ),
-      bottomNavigationBar: const bottomNavigationBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 16.0, bottom: 0, left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Your Project',
+                  style: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Post a projects',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildTabBar(),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildProjectList(),
+                        // Center(child: _buildProjectList),
+                        const Center(child: Text('Working')),
+                        const Center(child: Text('Archieved')),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {},
-        ),
+  Widget _buildTabBar() {
+    return TabBar(
+      controller: _tabController,
+      tabs: const [
+        Tab(text: 'All projects'),
+        Tab(text: 'Working'),
+        Tab(text: 'Archieved'),
       ],
     );
   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Widget _buildProjectList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: 4,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return _buildProjectItem(index);
+        },
+      ),
+    );
+  }
+
+  void _showPopupMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ListTile(
+                // leading: const Icon(Icons.pending_outlined),
+                title: const Text('View proposals'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('View messages'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('View hired'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('View job posting'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Edit posting'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Remove posting'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Start working this project'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _tabController.animateTo(1);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProjectItem(int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, AppRouterName.SendHired);
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Senior frontend developer (Fintech)',
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        '3 days ago',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _showPopupMenu(context);
+                    },
+                    icon: const Icon(Icons.pending_outlined,
+                        size: 25, color: Colors.black),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Students are looking for',
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      '•',
+                      style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        'Clear expectations about the project or deliverables',
+                        style: TextStyle(fontSize: 13.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('2'),
+                  Text('8'),
+                  Text('2'),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Proposals'),
+                  Text('Message'),
+                  Text('Hired'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(const MaterialApp(
+    home: Dashboard(),
+  ));
 }

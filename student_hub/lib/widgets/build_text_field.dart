@@ -73,7 +73,7 @@ class BuildTextField extends StatelessWidget {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(width: 1, color: kOrange),
+          borderSide: BorderSide(width: 1, color: kBlue800),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -95,7 +95,7 @@ class BuildTextField extends StatelessWidget {
         focusColor: kWhiteColor,
         hoverColor: kWhiteColor,
       ),
-      cursorColor: kPrimaryColor,
+      cursorColor: kBlackColor,
       style: const TextStyle(
         fontSize: textMedium,
         fontWeight: FontWeight.w500,
