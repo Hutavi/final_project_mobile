@@ -16,4 +16,6 @@ class AppRouterName {
   static const postScreen2 = '/post-step-2';
   static const postScreen3 = '/post-step-3';
   static const postScreen4 = '/post-step-4';
+
+  static const SendHired = '/send=hired';
 }

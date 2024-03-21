@@ -10,11 +10,12 @@ import 'package:student_hub/screens/browser_page/project_detail.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
+import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
-import 'package:student_hub/screens/student_profile_s1/student_profile_s1.dart';
-import 'package:student_hub/screens/student_profile_s2/student_profile_s2.dart';
-import 'package:student_hub/screens/student_profile_s3/student_profile_s3.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s2.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s3.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
@@ -33,16 +34,82 @@ class AppRoute {
         return MaterialPageRoute(builder: (_) => const HomePage());
 
       case AppRouterName.profileS1:
-        return MaterialPageRoute(
-            builder: (_) => const StundentProfileS1(
-                  selectedValue: 'Fullstack Engineer',
-                ));
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const StundentProfileS1(
+            selectedValue: 'Fullstack Engineer',
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
 
       case AppRouterName.profileS2:
-        return MaterialPageRoute(builder: (_) => const StundentProfileS2());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const StundentProfileS2(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
 
       case AppRouterName.profileS3:
-        return MaterialPageRoute(builder: (_) => const StundentProfileS3());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const StundentProfileS3(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+
+      case AppRouterName.SendHired:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const SendHired(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
 
       case AppRouterName.register:
         return PageRouteBuilder(
