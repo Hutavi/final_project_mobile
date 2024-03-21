@@ -20,11 +20,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
-      // home: SwitchAccount(),
+      home: SwitchAccount(),
       // home: LoginScreen(),
       // initialRoute: '/homePage',
       // darkTheme: AppThemes.darkTheme,
-      home: PostScreen1(),
+      // home: PostScreen1(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );

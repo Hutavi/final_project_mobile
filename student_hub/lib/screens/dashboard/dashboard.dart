@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/widgets/bottomNavigationBar.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -31,7 +32,9 @@ class _DashboardState extends State<Dashboard> {
               ButtonBar(
                 children: <Widget>[
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRouterName.postScreen1);
+                      },
                       style: ButtonStyle(
                         shadowColor: MaterialStateProperty.all<Color>(
                             Colors.grey), // Màu đổ bóng
