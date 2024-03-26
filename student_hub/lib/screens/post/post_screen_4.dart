@@ -113,104 +113,59 @@ class _PostScreen4State extends State<PostScreen4> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              Row(
+              const Row(
                 children: [
-                  const Icon(
-                    Icons.alarm,
-                    size: 35,
-                  ),
-                  const SizedBox(
+                  Icon(Icons.alarm),
+                  SizedBox(
                     width: 15,
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Text('Project scope',
-                            style: TextStyle(
-                              fontSize: 14,
-                            )),
-                        ListTile(
-                          title: Row(
-                            children: [
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.02),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: Icon(Icons.circle, size: 5),
-                              ),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.02),
-                              const Expanded(
-                                child: Text(
-                                  '3 to 6 months',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                      fontSize: 14), // Đặt kích thước chữ là 14
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Project scope',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14),
+                        overflow: TextOverflow.clip,
+                      ),
+                      Text(
+                        '• ' '3 to 6 month',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
+                        overflow: TextOverflow.clip,
+                      )
+                    ],
+                  )
+                ],  
               ),
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height < 600
-              //       ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
-              //       : 16,
-              // ),
-              Row(
+              SizedBox(
+                height: MediaQuery.of(context).size.height < 600
+                    ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
+                    : 16,
+              ),
+              const Row(
                 children: [
-                  const Icon(
-                    Icons.people_outline,
-                    size: 35,
-                  ),
-                  const SizedBox(
+                  Icon(Icons.people),
+                  SizedBox(
                     width: 15,
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Text('Required students',
-                            style: TextStyle(
-                              fontSize: 14,
-                            )),
-                        ListTile(
-                          // contentPadding: EdgeInsets.all(0),
-                          title: Row(
-                            children: [
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.02),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: Icon(Icons.circle, size: 5),
-                              ),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.02),
-                              const Expanded(
-                                child: Text(
-                                  '6 students',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                      fontSize: 14), // Đặt kích thước chữ là 14
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Project scope',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14),
+                        overflow: TextOverflow.clip,
+                      ),
+                      Text(
+                        '• ' '6 students',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
+                        overflow: TextOverflow.clip,
+                      )
+                    ],
+                  )
                 ],
               ),
             ],

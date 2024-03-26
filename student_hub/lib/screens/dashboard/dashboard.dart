@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
+import 'package:student_hub/widgets/bottomNavigationBar.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -62,7 +63,9 @@ class DashboardState extends State<Dashboard>
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.postScreen1);
+                  },
                   child: const Text(
                     'Post a projects',
                     textAlign: TextAlign.center,
@@ -95,6 +98,7 @@ class DashboardState extends State<Dashboard>
           ),
         ],
       ),
+      bottomNavigationBar: const bottomNavigationBar(),
     );
   }
 
