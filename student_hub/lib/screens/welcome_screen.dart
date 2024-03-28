@@ -99,7 +99,7 @@ class _Content extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Dashboard()),
+              MaterialPageRoute(builder: (context) => Dashboard(userRole: UserRole.studentUser,)),
             );
           },
           child: Text('Get Started',
