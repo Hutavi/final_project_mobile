@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:student_hub/routers/route_name.dart';
 
 class studentAllProject extends StatefulWidget {
   const studentAllProject({super.key});

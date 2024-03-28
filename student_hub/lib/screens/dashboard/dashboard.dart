@@ -99,10 +99,10 @@ class DashboardState extends State<Dashboard> with SingleTickerProviderStateMixi
               ),
             ),
             //nội dung của student dashboard
-            studentAllProject(),
+            const studentAllProject(),
           ],
         ),
-        bottomNavigationBar: studentBottomNavigationBar(),
+        bottomNavigationBar: const studentBottomNavigationBar(),
       );
     }
     return Scaffold(
