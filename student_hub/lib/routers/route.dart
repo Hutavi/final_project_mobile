@@ -22,6 +22,7 @@ import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
 import 'package:student_hub/screens/post/post_screen_3.dart';
 import 'package:student_hub/screens/post/post_screen_4.dart';
+import 'package:student_hub/widgets/schedule_message.dart';
 
 // import 'package:todolist_app/main.dart';
 
@@ -33,6 +34,9 @@ class AppRoute {
     switch (settings.name) {
       case AppRouterName.homePage:
         return MaterialPageRoute(builder: (_) => const HomePage());
+
+      // case AppRouterName.schedule:
+      //   return MaterialPageRoute(builder: (_) => const ScheduleMessageItem());
 
       case AppRouterName.profileS1:
         return PageRouteBuilder(

@@ -18,6 +18,9 @@ class AppRouterName {
   static const postScreen4 = '/post-step-4';
 
   static const SendHired = '/send=hired';
+
+  //Schedule
+  static const schedule = '/schedule';
   //submit proposal from project detail
   static const submitProposal = '/submit-proposal';
 }

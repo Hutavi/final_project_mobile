@@ -18,16 +18,6 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
   List<ProjectModel> projectLists = allProject;
   String? _selectedLength;
 
-  void searchProject(String query) {
-    final suggestions = allProject.where((project) {
-      final projectTitle = project.title!.toLowerCase();
-      final input = query.toLowerCase();
-
-      return projectTitle.contains(input);
-    }).toList();
-    setState(() => projectLists = suggestions);
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
