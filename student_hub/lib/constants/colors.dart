@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 const Color kWhiteColor = Color(0xffffffff);
 const Color kBlackColor = Color(0xff000000);
-const Color kRed = Color.fromARGB(255, 211, 0, 0);
+const Color kRed = Color.fromARGB(255, 211, 0, 0); //cancel btn
 const Color kGreyColorText = Color(0xff45474B);
 
 const Color kGrey0 = Color(0xff555555);

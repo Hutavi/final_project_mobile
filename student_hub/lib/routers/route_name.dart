@@ -22,4 +22,9 @@ class AppRouterName {
   static const videoCall = '/video-call';
   static const messageList = '/message-list';
   static const notification = '/notification';
+
+  //Schedule
+  static const schedule = '/schedule';
+  //submit proposal from project detail
+  static const submitProposal = '/submit-proposal';
 }

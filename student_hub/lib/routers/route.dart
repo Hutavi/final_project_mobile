@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -11,7 +8,6 @@ import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
 import 'package:student_hub/screens/chat/chat.dart';
-import 'package:student_hub/screens/chat/chat_room_screen.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/notification/notification.dart';
@@ -35,6 +31,9 @@ class AppRoute {
     switch (settings.name) {
       case AppRouterName.homePage:
         return MaterialPageRoute(builder: (_) => const HomePage());
+
+      // case AppRouterName.schedule:
+      //   return MaterialPageRoute(builder: (_) => const ScheduleMessageItem());
 
       case AppRouterName.profileS1:
         return PageRouteBuilder(
@@ -317,7 +316,6 @@ class AppRoute {
             );
           },
         );
-
       case AppRouterName.messageList:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>

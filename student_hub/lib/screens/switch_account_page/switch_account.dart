@@ -3,7 +3,6 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
-import 'package:student_hub/routers/route.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -110,25 +109,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       ),
                     ],
                   ),
-
-                  // children: accountList
-                  //     .where((account) => account.isLogin)
-                  //     .map((account) => ListTile(
-                  //           leading: CircleAvatar(
-                  //             backgroundImage:
-                  //                 AssetImage('lib/assets/images/avatar.png'),
-                  //           ),
-                  //           title: Text(account.getFullName()),
-                  //           onTap: () {
-                  //             for (var i = 0; i < accountList.length; i++) {
-                  //               accountList[i].isLogin = false;
-                  //             }
-                  //             account.isLogin = true;
-                  //             updateAccountName(account.getFullName());
-                  //             reloadScreen();
-                  //           },
-                  //         ))
-                  //     .toList(),
 
                   //khi mở rộng
                   onExpansionChanged: (bool expanded) {
