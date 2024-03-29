@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
       // darkTheme: AppThemes.darkTheme,
       // home: PostScreen1(),
       home: ScheduleInviteTicket(),
+      // home: ProjectListScreen(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );

@@ -21,4 +21,5 @@ class AppRouterName {
 
   //Schedule
   static const schedule = '/schedule';
+  static const meetingRoom = '/meeting-room';
 }

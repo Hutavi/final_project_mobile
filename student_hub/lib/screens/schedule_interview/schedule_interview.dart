@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
@@ -66,7 +65,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        height: MediaQuery.of(context).size.height * 0.7,
+        height: MediaQuery.of(context).size.height * 0.8,
         width: double.infinity,
         decoration: const BoxDecoration(
           color: kWhiteColor,

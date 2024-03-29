@@ -13,6 +13,7 @@ import 'package:student_hub/screens/browser_page/project_search.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
+import 'package:student_hub/screens/schedule_interview/video_conference_screen.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s2.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s3.dart';
@@ -33,9 +34,6 @@ class AppRoute {
     switch (settings.name) {
       case AppRouterName.homePage:
         return MaterialPageRoute(builder: (_) => const HomePage());
-
-      // case AppRouterName.schedule:
-      //   return MaterialPageRoute(builder: (_) => const ScheduleMessageItem());
 
       case AppRouterName.profileS1:
         return PageRouteBuilder(
@@ -298,6 +296,14 @@ class AppRoute {
               child: child,
             );
           },
+        );
+
+      case AppRouterName.meetingRoom:
+        final args = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (context) => VideoConferencePage(
+            conferenceID: args,
+          ),
         );
     }
     return _errPage();

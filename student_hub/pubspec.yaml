@@ -41,6 +41,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   omni_datetime_picker: ^1.0.9
   intl: ^0.19.0
+  zego_uikit_prebuilt_video_conference: ^2.7.1
 
 dev_dependencies:
   flutter_test:
