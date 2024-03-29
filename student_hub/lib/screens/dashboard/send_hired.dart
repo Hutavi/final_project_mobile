@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/describe_item.dart';
 
 class SendHired extends StatefulWidget {
   const SendHired({Key? key}) : super(key: key);
@@ -29,23 +31,7 @@ class SendHiredState extends State<SendHired>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue,
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.people,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-        ],
-      ),
+      appBar: const AppBarCustom(title: "Student Hub"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -88,6 +74,7 @@ class SendHiredState extends State<SendHired>
 
   Widget _buildTabBar() {
     return TabBar(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
       tabs: const [
         Tab(text: 'Proposals'),
@@ -183,36 +170,30 @@ class SendHiredState extends State<SendHired>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Students are looking for',
-          style: TextStyle(
-            fontSize: 13,
-          ),
-        ),
-        _buildListText('Clear expectations about the project or deliverables'),
-        _buildListText('Ability to work in a team environment'),
-        _buildListText('Excellent communication skills'),
-        const SizedBox(height: 8),
-        SizedBox(
-            height: 1,
-            width: double.infinity,
-            child: Container(color: Colors.black)),
-        const SizedBox(height: 10),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.access_alarm, size: 40),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Project scope',
-                  style: TextStyle(fontSize: 13),
+            const Text(
+              'Students are looking for',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: kBlackColor,
+              ),
+            ),
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [
+                DescribeItem(
+                  itemDescribe:
+                      'Clear expectation about your project or deliverables',
                 ),
-                Text(
-                  '3 to 6 month',
-                  style: TextStyle(fontSize: 13),
+                DescribeItem(
+                  itemDescribe: 'The skills required for your project',
+                ),
+                DescribeItem(
+                  itemDescribe: 'Detail about your project',
                 ),
               ],
             ),
@@ -220,23 +201,46 @@ class SendHiredState extends State<SendHired>
         ),
         const SizedBox(height: 10),
         const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(Icons.people_alt_rounded, size: 40),
-            SizedBox(width: 10),
+            Icon(Icons.alarm),
+            SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Student required:',
-                  style: TextStyle(fontSize: 13),
+                  'Project scope',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  overflow: TextOverflow.clip,
                 ),
                 Text(
-                  '6 students',
-                  style: TextStyle(fontSize: 13),
-                ),
+                  '• 3 to 6 months',
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                  overflow: TextOverflow.clip,
+                )
               ],
-            ),
+            )
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Row(
+          children: [
+            Icon(Icons.people),
+            SizedBox(width: 15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Team size',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  overflow: TextOverflow.clip,
+                ),
+                Text(
+                  '• 6 students',
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                  overflow: TextOverflow.clip,
+                )
+              ],
+            )
           ],
         ),
       ],

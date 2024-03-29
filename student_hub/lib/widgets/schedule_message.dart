@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class ScheduleMessageItem extends StatefulWidget {
@@ -105,7 +106,10 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.meetingRoom,
+                        arguments: conferencesID);
+                  },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

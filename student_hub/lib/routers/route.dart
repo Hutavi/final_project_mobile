@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -10,8 +7,10 @@ import 'package:student_hub/screens/browser_page/project_detail.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
+import 'package:student_hub/screens/chat/chat.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/screens/schedule_interview/video_conference_screen.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
@@ -22,7 +21,6 @@ import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
 import 'package:student_hub/screens/post/post_screen_3.dart';
 import 'package:student_hub/screens/post/post_screen_4.dart';
-import 'package:student_hub/widgets/schedule_message.dart';
 
 // import 'package:todolist_app/main.dart';
 
@@ -94,7 +92,7 @@ class AppRoute {
           },
         );
 
-      case AppRouterName.SendHired:
+      case AppRouterName.sendHired:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const SendHired(),
@@ -304,6 +302,61 @@ class AppRoute {
           builder: (context) => VideoConferencePage(
             conferenceID: args,
           ),
+        );
+
+      case AppRouterName.chatScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const ChatRoomScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+      case AppRouterName.messageList:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const MessageListScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+      case AppRouterName.notification:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const NotificationPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
         );
     }
     return _errPage();

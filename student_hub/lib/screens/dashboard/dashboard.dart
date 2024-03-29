@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/dashboard/send_hired.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/bottomNavigationBar.dart';
+import 'package:student_hub/widgets/studentBottomNavigationBar.dart';
+import 'package:student_hub/screens/dashboard/studentAllProject.dart';
+
+enum UserRole {
+  companyUser,
+  studentUser,
+}
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  final UserRole userRole;
+  const Dashboard({Key? key, required this.userRole}) : super(key: key);
 
   @override
   DashboardState createState() => DashboardState();
@@ -27,24 +36,75 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(color: Colors.white),
+    if (widget.userRole != UserRole.companyUser &&
+        widget.userRole != UserRole.studentUser) {
+      // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Error'),
         ),
-        backgroundColor: Colors.blue,
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.people,
-              color: Colors.white,
-              size: 30,
-            ),
+        body: const Center(
+          child: Text('You are not authorized to access this screen.'),
+        ),
+      );
+    }
+    if (widget.userRole == UserRole.studentUser) {
+      //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'StudentHub',
+            style: TextStyle(color: Colors.white),
           ),
-        ],
-      ),
+          backgroundColor: Colors.blue,
+          actions: const [
+            IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.people,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 16.0, bottom: 0, left: 16, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Your Project',
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRouterName.postScreen1);
+                    },
+                    child: const Text(
+                      'Post a projects',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //nội dung của student dashboard
+            const studentAllProject(),
+          ],
+        ),
+        bottomNavigationBar: const studentBottomNavigationBar(),
+      );
+    }
+    return Scaffold(
+      appBar: const AppBarCustom(title: "Student Hub"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -62,7 +122,9 @@ class DashboardState extends State<Dashboard>
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRouterName.postScreen1);
+                  },
                   child: const Text(
                     'Post a projects',
                     textAlign: TextAlign.center,
@@ -95,11 +157,13 @@ class DashboardState extends State<Dashboard>
           ),
         ],
       ),
+      bottomNavigationBar: const bottomNavigationBar(),
     );
   }
 
   Widget _buildTabBar() {
     return TabBar(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
       tabs: const [
         Tab(text: 'All projects'),
@@ -183,7 +247,7 @@ class DashboardState extends State<Dashboard>
   Widget _buildProjectItem(int index) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRouterName.SendHired);
+        Navigator.pushNamed(context, AppRouterName.sendHired);
       },
       child: Card(
         child: Padding(
@@ -275,6 +339,9 @@ class DashboardState extends State<Dashboard>
 
 void main() {
   runApp(const MaterialApp(
-    home: Dashboard(),
+    home: Dashboard(
+      userRole: UserRole.studentUser,
+      // userRole: UserRole.companyUser,
+    ),
   ));
 }

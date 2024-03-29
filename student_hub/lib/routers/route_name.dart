@@ -17,9 +17,15 @@ class AppRouterName {
   static const postScreen3 = '/post-step-3';
   static const postScreen4 = '/post-step-4';
 
-  static const SendHired = '/send=hired';
+  static const sendHired = '/send-hired';
+  static const chatScreen = '/chat-screen';
+  static const videoCall = '/video-call';
+  static const messageList = '/message-list';
+  static const notification = '/notification';
 
   //Schedule
   static const schedule = '/schedule';
   static const meetingRoom = '/meeting-room';
+  //submit proposal from project detail
+  static const submitProposal = '/submit-proposal';
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
+import 'package:student_hub/screens/chat/chat.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/widgets/schedule_invite.dart';
@@ -27,12 +29,14 @@ class _MyAppState extends State<MyApp> {
       // home: SwitchAccount(),
       // home: LoginScreen(),
       // home: ProjectListScreen(),
+      // home: NotificationPage(),
       // home: Dashboard(),
       // initialRoute: '/homePage',
       // darkTheme: AppThemes.darkTheme,
       // home: PostScreen1(),
       home: ScheduleInviteTicket(),
       // home: ProjectListScreen(),
+      // home: ChatRoomScreen(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
