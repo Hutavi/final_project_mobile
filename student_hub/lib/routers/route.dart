@@ -10,8 +10,11 @@ import 'package:student_hub/screens/browser_page/project_detail.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
+import 'package:student_hub/screens/chat/chat.dart';
+import 'package:student_hub/screens/chat/chat_room_screen.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s2.dart';
@@ -92,7 +95,7 @@ class AppRoute {
           },
         );
 
-      case AppRouterName.SendHired:
+      case AppRouterName.sendHired:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const SendHired(),
@@ -281,6 +284,62 @@ class AppRoute {
               ProjectDetail(
             projectItem: args,
           ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+
+      case AppRouterName.chatScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const ChatRoomScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+
+      case AppRouterName.messageList:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const MessageListScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+      case AppRouterName.notification:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const NotificationPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;

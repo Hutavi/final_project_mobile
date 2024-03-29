@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/dashboard/send_hired.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -28,23 +28,7 @@ class DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue,
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.people,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-        ],
-      ),
+      appBar: const AppBarCustom(title: "Student Hub"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -100,6 +84,7 @@ class DashboardState extends State<Dashboard>
 
   Widget _buildTabBar() {
     return TabBar(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
       tabs: const [
         Tab(text: 'All projects'),
@@ -183,7 +168,7 @@ class DashboardState extends State<Dashboard>
   Widget _buildProjectItem(int index) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRouterName.SendHired);
+        Navigator.pushNamed(context, AppRouterName.sendHired);
       },
       child: Card(
         child: Padding(

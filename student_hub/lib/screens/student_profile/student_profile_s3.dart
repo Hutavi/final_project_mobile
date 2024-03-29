@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class StundentProfileS3 extends StatefulWidget {
   const StundentProfileS3({super.key});
@@ -57,23 +58,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(color: Colors.white), // Chỉnh màu chữ thành trắng
-        ),
-        backgroundColor: Colors.blue,
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.people,
-              color: Colors.white, // Chỉnh màu icon thành trắng
-              size: 30, // Kích thước của icon
-            ),
-          ),
-        ],
-      ),
+      appBar: const AppBarCustom(title: "Student Hub"),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
