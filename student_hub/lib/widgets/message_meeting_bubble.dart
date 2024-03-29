@@ -141,7 +141,7 @@ class MessageMeetingBubble extends StatelessWidget {
                       Icons.pending_outlined,
                     ),
                     iconSize: 26,
-                    offset: const Offset(-36, -120),
+                    offset: const Offset(0, -140),
                     color: Theme.of(context).colorScheme.secondaryContainer,
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuEntry<String>>[

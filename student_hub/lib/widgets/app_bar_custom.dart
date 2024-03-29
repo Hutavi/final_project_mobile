@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/schedule_interview/schedule_interview.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
