@@ -36,14 +36,12 @@ class _MyAppState extends State<MyApp> {
       // initialRoute: '/homePage',
       // darkTheme: AppThemes.darkTheme,
       // home: PostScreen1(),
-      home: ScheduleInviteTicket(),
+      // home: ScheduleInviteTicket(),
       // home: ProjectListScreen(),
       // home: ChatRoomScreen(),
       // home: HomePage(),
-      // home: MainPage(
-      //   index: 0,
-      // ),
-      // home: WelcomeScreen(),
+      // home: MainPage(),
+      home: WelcomeScreen(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );

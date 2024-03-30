@@ -102,11 +102,9 @@ class _Content extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                // MaterialPageRoute(builder: (context) => Dashboard(null, accountList[0])),
                 MaterialPageRoute(
                     builder: (context) => MainPage(
                           companyUser: accountList[0],
-                          index: 0,
                         )),
               );
             },
