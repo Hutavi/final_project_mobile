@@ -45,6 +45,11 @@ dependencies:
   omni_datetime_picker: ^1.0.9
   intl: ^0.19.0
   zego_uikit_prebuilt_video_conference: ^2.7.1
+  
+  quickalert: ^1.0.2
+  #add for navigation bar
+  #reference: https://pub.dev/packages/google_nav_bar
+  google_nav_bar: ^5.0.0 
 
 dev_dependencies:
   flutter_test:

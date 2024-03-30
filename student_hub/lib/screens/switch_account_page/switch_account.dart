@@ -26,22 +26,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
       currentAccount = name;
     });
   }
-  // void showAccountList(BuildContext context) {
-  //   List<CompanyUser> loggedInAccounts = accountList.where((account) => account.isLogin).toList();
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (_) {
-  //       return ListView.builder(
-  //         itemCount: loggedInAccounts.length,
-  //         itemBuilder: (context, index) {
-  //           final account = loggedInAccounts[index];
-  //           // final isOdd = index.isOdd;
-  //           return AccountTile(account: account, accountManager: accountManager);
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
 
   void showAccountList(List<CompanyUser> accounts, BuildContext contextVar) {
     //show account list

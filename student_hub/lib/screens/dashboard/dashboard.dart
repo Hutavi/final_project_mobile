@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottomNavigationBar.dart';
-import 'package:student_hub/widgets/studentBottomNavigationBar.dart';
+import 'package:student_hub/screens/home_page/main_page.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
-
-enum UserRole {
-  companyUser,
-  studentUser,
-}
+import 'package:student_hub/data/company_user.dart';
+import 'package:student_hub/data/student_user.dart';
 
 class Dashboard extends StatefulWidget {
-  final UserRole userRole;
-  const Dashboard({Key? key, required this.userRole}) : super(key: key);
+  final StudentUser? studentUser;
+  final CompanyUser? companyUser;
+  const Dashboard(this.studentUser, this.companyUser, {super.key});
 
   @override
   DashboardState createState() => DashboardState();
@@ -36,38 +34,23 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.userRole != UserRole.companyUser &&
-        widget.userRole != UserRole.studentUser) {
-      // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Error'),
-        ),
-        body: const Center(
-          child: Text('You are not authorized to access this screen.'),
-        ),
-      );
-    }
-    if (widget.userRole == UserRole.studentUser) {
+    // if (widget.companyUser == null &&
+    //     widget.studentUser == null) {
+    //   // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
+    //   return Scaffold(
+    //     appBar: AppBar(
+    //       title: const Text('Error'),
+    //     ),
+    //     body: const Center(
+    //       child: Text('You are not authorized to access this screen.'),
+    //     ),
+    //   );
+    // }
+    if (widget.studentUser != null) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'StudentHub',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.blue,
-          actions: const [
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.people,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-          ],
-        ),
+        // appBar:
+        appBar: const AppBarCustom(title: "Student Hub"),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -100,7 +83,7 @@ class DashboardState extends State<Dashboard>
             const studentAllProject(),
           ],
         ),
-        bottomNavigationBar: const studentBottomNavigationBar(),
+        // bottomNavigationBar: const studentBottomNavigationBar(),
       );
     }
     return Scaffold(
@@ -157,7 +140,7 @@ class DashboardState extends State<Dashboard>
           ),
         ],
       ),
-      bottomNavigationBar: const bottomNavigationBar(),
+      // bottomNavigationBar: const bottomNavigationBar(),
     );
   }
 
@@ -335,13 +318,4 @@ class DashboardState extends State<Dashboard>
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: Dashboard(
-      userRole: UserRole.studentUser,
-      // userRole: UserRole.companyUser,
-    ),
-  ));
 }

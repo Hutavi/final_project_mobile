@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
+import 'package:student_hub/data/company_user.dart';
+import 'package:student_hub/screens/home_page/main_page.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -12,11 +14,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar:  _AppBar(),
+      appBar: _AppBar(),
       body: _Body(),
     );
   }
-} 
+}
+
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   const _AppBar({super.key});
 
@@ -93,19 +96,31 @@ class _Content extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          // button get started 
-          
+          // button get started
+
           ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Dashboard(userRole: UserRole.studentUser,)),
-            );
-          },
-          child: Text('Get Started',
+            onPressed: () {
+              Navigator.push(
+                context,
+                // MaterialPageRoute(builder: (context) => Dashboard(null, accountList[0])),
+                MaterialPageRoute(
+                    builder: (context) => MainPage(
+                          companyUser: accountList[0],
+                          index: 0,
+                        )),
+              );
+            },
+            child: const Text(
+              'Get Started',
               style: TextStyle(color: Colors.black),
-          ),  
-        ),
+            ),
+          ),
         ]);
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: WelcomeScreen(),
+  ));
 }
