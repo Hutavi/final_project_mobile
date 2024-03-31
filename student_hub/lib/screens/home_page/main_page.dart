@@ -64,20 +64,11 @@ class _BuildMainPage extends State<MainPage> {
           backgroundColor: kWhiteColor,
           color: Colors.black.withOpacity(0.7),
           activeColor: kWhiteColor,
-          // tabBackgroundGradient: LinearGradient(
-          //             begin: Alignment.,
-          //             end: Alignment.,
-          //             colors: [Colors.lightBlue[100]!, Colors.cyan],
-          //           ),
-          tabBackgroundGradient: const LinearGradient(
-            begin: Alignment.bottomLeft, // Equivalent to 90 degrees
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFF020024), // rgba(2, 0, 36, 1)
-              Color(0xFF090979), // rgba(9, 9, 121, 1)
-              Color(0xFF00D4FF), // rgba(0, 212, 255, 1)
-            ],
-            stops: [0.0, 0.35, 1.0], // Color stops at 0%, 35%, and 100%
+          tabBackgroundGradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Colors.lightBlue[100]!, kBlue700],
+            stops: const [0.0, 1.0],
           ),
           gap: 5,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
