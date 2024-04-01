@@ -5,7 +5,7 @@ import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/chat/chat.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
-import 'package:student_hub/screens/home_page/main_page.dart';
+import 'package:student_hub/widgets/navigation_menu.dart';
 import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 import 'package:student_hub/screens/post/post_screen_1.dart';
@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
       // home: WelcomeScreen(),
       home: LoginScreen(),
 
+      // home: NavigationMenu(),
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }
