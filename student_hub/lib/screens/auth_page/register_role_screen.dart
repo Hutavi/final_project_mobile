@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class RegisterChoiceRoleScreen extends StatefulWidget {
   const RegisterChoiceRoleScreen({Key? key}) : super(key: key);
@@ -46,27 +47,8 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Student Hub',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.grey[200],
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const AddAccount()),
-              // );
-            },
-          ),
-        ],
+      appBar: const AppBarCustom(
+        title: 'Student Hub',
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,

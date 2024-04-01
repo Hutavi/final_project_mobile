@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_public.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,39 +20,64 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isAllFieldsValid = false;
+  bool userNotFound = false;
+  bool passwordWrong = false;
 
-  void validateFields() {
-    setState(() {
-      isAllFieldsValid = _formKey.currentState!.validate();
-    });
+  void sendRequestLogin() async {
+    if (_formKey.currentState!.validate()) {
+      var data = json.encode({
+        "email": userNameController.text,
+        "password": passwordController.text
+      });
+      print(data);
+      try {
+        final dio = DioClientWithoutToken();
+        final response = await dio.request(
+          '/auth/sign-in',
+          data: data,
+          options: Options(
+            method: 'POST',
+          ),
+        );
+        print("abc: ${response.statusCode}");
+
+        if (response.statusCode == 201) {
+          final token = response.data['accessToken'];
+          await saveTokenToLocal(token);
+          print("Login ok");
+        } else {
+          print("Login failed: ${response.data}");
+        }
+      } catch (e) {
+        if (e is DioException && e.response != null) {
+          if (e.response!.data['errorDetails'] == 'Not found user') {
+            setState(() {
+              userNotFound = true;
+            });
+          } else if (e.response!.data['errorDetails'] == 'Incorrect password') {
+            setState(() {
+              passwordWrong = true;
+            });
+          }
+          // Xử lý thông tin lỗi từ e.response!.data ở đây
+        } else {
+          print('Have Error: $e');
+        }
+      }
+    }
+  }
+
+  Future<void> saveTokenToLocal(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Student Hub',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.grey[200],
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const AddAccount()),
-              // );
-            },
-          ),
-        ],
+      appBar: const AppBarCustom(
+        title: 'Student Hub',
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -80,12 +111,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       inputType: TextInputType.text,
                       fillColor: kWhiteColor,
                       onChange: (value) {
-                        validateFields();
+                        userNotFound = false;
+                        // validateFields();
                       },
                       labelText: 'Username or email',
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Username or email is required';
+                        } else if (userNotFound) {
+                          return 'User not found';
                         }
                         return null;
                       },
@@ -96,14 +130,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     BuildTextField(
                       controller: passwordController,
                       inputType: TextInputType.text,
+                      obscureText: true,
                       fillColor: kWhiteColor,
                       onChange: (value) {
-                        validateFields();
+                        // validateFields();
+                        passwordWrong = false;
                       },
                       labelText: 'Password',
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Password is required';
+                        } else if (passwordWrong) {
+                          return 'Password is wrong';
                         }
                         return null;
                       },
@@ -114,11 +152,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     Column(
                       children: [
                         OutlinedButton(
-                          onPressed: isAllFieldsValid
-                              ? () {
-                                  print("Login");
-                                }
-                              : null,
+                          onPressed: () {
+                            sendRequestLogin();
+                          },
                           style: OutlinedButton.styleFrom(
                             shape: const RoundedRectangleBorder(
                               borderRadius:

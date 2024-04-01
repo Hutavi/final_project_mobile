@@ -3,14 +3,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {
   final Dio _api;
-  String baseURL = dotenv.env['http://34.16.137.128/api']!;
-  String accessToken = dotenv.env['ACCESS_TOKEN']!;
+  String baseURL = 'http://34.16.137.128/api';
+  String accessToken = '';
 
   DioClient() : _api = Dio() {
     _configureInterceptors();
+    _loadToken();
   }
 
   void _configureInterceptors() {
@@ -32,6 +34,11 @@ class DioClient {
         return handler.next(error);
       },
     ));
+  }
+
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken') ?? '';
   }
 
   Future<Response<T>> request<T>(

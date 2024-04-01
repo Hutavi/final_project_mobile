@@ -49,6 +49,7 @@ dependencies:
   #add for navigation bar
   #reference: https://pub.dev/packages/google_nav_bar
   google_nav_bar: ^5.0.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
