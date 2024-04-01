@@ -41,7 +41,8 @@ class _MyAppState extends State<MyApp> {
       // home: ChatRoomScreen(),
       // home: HomePage(),
       // home: MainPage(),
-      home: WelcomeScreen(),
+      // home: WelcomeScreen(),
+      home: LoginScreen(),
 
       onGenerateRoute: AppRoute.onGenerateRoute,
     );

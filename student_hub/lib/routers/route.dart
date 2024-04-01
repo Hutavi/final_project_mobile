@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
 import 'package:student_hub/screens/auth_page/register_role_screen.dart';
 import 'package:student_hub/screens/browser_page/project_detail.dart';
@@ -97,6 +98,25 @@ class AppRoute {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const SendHired(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+
+      case AppRouterName.login:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const LoginScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -359,7 +379,7 @@ class AppRoute {
             );
           },
         );
-      
+
       case AppRouterName.submitProposal:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>

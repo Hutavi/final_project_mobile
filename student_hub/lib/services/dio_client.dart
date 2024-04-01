@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DioClient {
   final Dio _api;
-  String baseURL = dotenv.env['API_BASE_URL']!;
+  String baseURL = dotenv.env['http://34.16.137.128/api']!;
   String accessToken = dotenv.env['ACCESS_TOKEN']!;
 
   DioClient() : _api = Dio() {

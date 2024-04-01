@@ -4,6 +4,7 @@ class AppRouterName {
   static const profileS2 = '/profile_S2';
   static const profileS3 = '/profile_S3';
   static const register = '/register';
+  static const login = '/login';
   static const registerBy = '/register-by';
   static const switchAccount = '/switch-acc';
   static const projectList = '/project-list';
