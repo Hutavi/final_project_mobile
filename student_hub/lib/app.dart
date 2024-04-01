@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
+import 'package:student_hub/screens/auth_page/login_screen.dart';
+import 'package:student_hub/screens/browser_page/project_list.dart';
+import 'package:student_hub/screens/chat/chat.dart';
+import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
+import 'package:student_hub/screens/home_page/main_page.dart';
+import 'package:student_hub/screens/notification/notification.dart';
+import 'package:student_hub/screens/switch_account_page/switch_account.dart';
+import 'package:student_hub/screens/post/post_screen_1.dart';
+import 'package:student_hub/screens/welcome_screen.dart';
+import 'package:student_hub/widgets/schedule_invite.dart';
+import 'package:student_hub/widgets/schedule_message.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -17,15 +28,21 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
-      // home: ProjectListPage(),
-      // home: CreateProjectTask(),
-      // home: CalendarPage(),
-      // home: DetailProjectPage(),
-      // home: CreateReportPage(),
-      home: HomePage(),
+      // home: SwitchAccount(),
+      // home: LoginScreen(),
+      // home: ProjectListScreen(),
+      // home: NotificationPage(),
+      // home: Dashboard(),
       // initialRoute: '/homePage',
-      // home: DetailProjectPage(),
       // darkTheme: AppThemes.darkTheme,
+      // home: PostScreen1(),
+      // home: ScheduleInviteTicket(),
+      // home: ProjectListScreen(),
+      // home: ChatRoomScreen(),
+      // home: HomePage(),
+      // home: MainPage(),
+      home: WelcomeScreen(),
+
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }

@@ -13,8 +13,6 @@ class DioClient {
     _configureInterceptors();
   }
 
-
-
   void _configureInterceptors() {
     _api.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
@@ -23,7 +21,6 @@ class DioClient {
         options.headers = {
           'Access-Token': accessToken,
           'Content-Type': 'application/json; charset=UTF-8',
-          'Client': "Mobile"
         };
 
         return handler.next(options);
