@@ -25,7 +25,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           onSelected: (value) {
             if (value == 'scheduleInterview') {
               // Hiển thị bottom sheet khi chọn "Schedule an interview"
-              _showSearchBottomSheet(context);
+              // _showSearchBottomSheet(context);
             } else if (value == 'cancel') {
               // Không làm gì khi chọn "Cancel"
             }
@@ -56,16 +56,16 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  void _showSearchBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext context) {
-        return const ScheduleInterview();
-      },
-    );
-  }
+  // void _showSearchBottomSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (BuildContext context) {
+  //       return const ScheduleInterview();
+  //     },
+  //   );
+  // }
 }

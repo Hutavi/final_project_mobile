@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/models/chat/message.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
+import 'package:uuid/uuid.dart';
 
 class ScheduleInterview extends StatefulWidget {
-  const ScheduleInterview({super.key});
+  final Function(Message) onSendMessage;
+
+  const ScheduleInterview({super.key, required this.onSendMessage});
 
   @override
   State<ScheduleInterview> createState() => _ScheduleInterviewState();
@@ -253,7 +257,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
             ),
             Text(
               'Duration: ${calculateDurationInMinutes()} minutes',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             Expanded(
               child: Column(
@@ -279,7 +283,25 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                       ),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Message newMessage = Message(
+                              id: const Uuid().v4(),
+                              chatRoomId: 'chatRoomId1',
+                              senderUserId: 'userId2',
+                              receiverUserId: 'userId1',
+                              title: 'Catch up meeting',
+                              createdAt: DateTime.now()
+                                  .add(const Duration(minutes: 60)),
+                              startTime: DateTime.now(),
+                              endTime: DateTime.now()
+                                  .add(const Duration(minutes: 15)),
+                              meeting: true,
+                            );
+                            // Gọi hàm callback để gửi tin nhắn mới
+                            widget.onSendMessage(newMessage);
+                            // Đóng modal
+                            Navigator.pop(context);
+                          },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),

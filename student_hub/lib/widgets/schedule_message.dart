@@ -3,11 +3,25 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/models/chat/message.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class ScheduleMessageItem extends StatefulWidget {
-  const ScheduleMessageItem({super.key});
+  const ScheduleMessageItem({
+    super.key,
+    // required this.message,
+    // required this.userId1,
+    // required this.userId2,
+    // this.onCancelMeeting,
+  });
+
+  // final String userId1;
+  // final String userId2;
+
+  // final Message message;
+
+  // final VoidCallback? onCancelMeeting;
 
   @override
   State<ScheduleMessageItem> createState() => _ScheduleMessageItemState();
@@ -138,15 +152,28 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Catch up meeting"),
-            Text("60 minutes"),
+            Text(
+              "Catch up meeting",
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              "60 minutes",
+              style: TextStyle(color: Colors.white),
+            ),
           ],
         ),
-        const Text("Start time: Thursday 13/3/2024 15:00"),
-        const Text("Start time: Thursday 13/3/2024 16:00"),
+        const Text(
+          "Start time: Thursday 13/3/2024 15:00",
+          style: TextStyle(color: Colors.white),
+        ),
+        const Text(
+          "Start time: Thursday 13/3/2024 16:00",
+          style: TextStyle(color: Colors.white),
+        ),
         Text(
           "Code room: $conferencesID",
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style:
+              const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
         ),
         const SizedBox(
           height: 10,
@@ -184,7 +211,10 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                     onTap: () {
                       _showOptionsModal(context);
                     },
-                    child: const Icon(FontAwesomeIcons.circleInfo),
+                    child: const Icon(
+                      Icons.pending_outlined,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               )

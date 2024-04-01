@@ -3,8 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/models/chat/chat_room.dart';
 import 'package:student_hub/models/chat/message.dart';
+import 'package:student_hub/screens/schedule_interview/schedule_interview.dart';
 import 'package:student_hub/widgets/message_chat_bubble.dart';
-import 'package:student_hub/widgets/message_meeting_bubble.dart';
+import 'package:student_hub/widgets/schedule_invite.dart';
 import 'package:student_hub/widgets/avatar.dart';
 import 'package:student_hub/widgets/create_meeting.dart';
 import 'package:uuid/uuid.dart';
@@ -91,30 +92,19 @@ List<Message> sampleMessages = [
     content: 'Sure, I will. Thanks again!',
     createdAt: DateTime.now().add(const Duration(minutes: 45)),
   ),
-  Message(
-    id: const Uuid().v4(),
-    chatRoomId: 'chatRoomId1',
-    senderUserId: 'userId2',
-    receiverUserId: 'userId1',
-    title: 'Catch up meeting',
-    createdAt: DateTime.now().add(const Duration(minutes: 60)),
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(minutes: 15)),
-    meeting: true,
-  ),
-  Message(
-    id: const Uuid().v4(),
-    chatRoomId: 'chatRoomId1',
-    senderUserId: 'userId1',
-    receiverUserId: 'userId2',
-    title: 'Catch up meeting',
-    createdAt: DateTime.now().add(const Duration(minutes: 70)),
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(minutes: 15)),
-    meeting: true,
-    canceled: true,
-  ),
 ];
+// Message(
+//   id: const Uuid().v4(),
+//   chatRoomId: 'chatRoomId1',
+//   senderUserId: 'userId1',
+//   receiverUserId: 'userId2',
+//   title: 'Catch up meeting',
+//   createdAt: DateTime.now().add(const Duration(minutes: 70)),
+//   startTime: DateTime.now(),
+//   endTime: DateTime.now().add(const Duration(minutes: 15)),
+//   meeting: true,
+//   canceled: true,
+// ),
 
 class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({super.key, this.chatRoom});
@@ -129,11 +119,12 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final messageController = TextEditingController();
   final List<Message> messages =
       sampleMessages.isNotEmpty ? sampleMessages : [];
+  final ScrollController _scrollController = ScrollController();
+  bool isUserScrollingDown = false;
 
   @override
   void initState() {
     _loadMessages();
-
     // messageRepository.subscribeToMessageUpdates((messageData) {
     //   final message = Message.fromJson(messageData);
     //   if (message.chatRoomId == widget.chatRoom.id) {
@@ -151,8 +142,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     super.dispose();
   }
 
-  void _sendMessage() async {
-    final message = Message(
+  void _sendMessage() {
+    final newMessage = Message(
+      id: const Uuid().v4(),
       chatRoomId: 'chatRoomId1',
       senderUserId: 'userId1',
       receiverUserId: 'userId2',
@@ -160,8 +152,21 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       createdAt: DateTime.now(),
     );
 
-    // await messageRepository.createMessage(message);
+    setState(() {
+      messages.add(newMessage);
+    });
+
     messageController.clear();
+
+    _scrollToBottom();
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   _loadMessages() async {
@@ -177,13 +182,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   Widget build(BuildContext context) {
     final viewInsets = MediaQuery.viewInsetsOf(context);
-    final currentParticipant = widget.chatRoom?.participants.firstWhere(
-      (user) => user.id == 'userId1',
-    );
+    // final currentParticipant = widget.chatRoom?.participants.firstWhere(
+    //   (user) => user.id == 'userId1',
+    // );
 
-    final otherParticipant = widget.chatRoom?.participants.firstWhere(
-      (user) => user.id != currentParticipant?.id,
-    );
+    // final otherParticipant = widget.chatRoom?.participants.firstWhere(
+    //   (user) => user.id != currentParticipant?.id,
+    // );
 
     return Scaffold(
       appBar: AppBar(
@@ -218,17 +223,23 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               PopupMenuItem<String>(
                 value: 'Schedule an interview',
                 height: 60,
-                onTap: () async {
-                  await showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.white,
-                      isScrollControlled: true,
-                      builder: (ctx) {
-                        return SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.7,
-                          child: const CreateMeeting(),
-                        );
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    builder: (BuildContext context) {
+                      return ScheduleInterview(onSendMessage: (newMessage) {
+                        // Thêm tin nhắn mới vào List<Message> tại đây
+                        setState(() {
+                          sampleMessages.add(newMessage);
+                        });
                       });
+                    },
+                  );
                 },
                 child: Row(
                   children: [
@@ -292,6 +303,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
@@ -319,7 +332,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                 ],
                               ),
                             if (message.meeting)
-                              MessageMeetingBubble(
+                              ScheduleInviteTicket(
                                 userId1: 'userId1',
                                 userId2: 'userId2',
                                 message: message,
@@ -369,18 +382,24 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () async {
-                        await showModalBottomSheet(
-                            context: context,
-                            backgroundColor: Colors.white,
-                            isScrollControlled: true,
-                            builder: (ctx) {
-                              return SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.7,
-                                child: const CreateMeeting(),
-                              );
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (BuildContext context) {
+                            return ScheduleInterview(
+                                onSendMessage: (newMessage) {
+                              // Thêm tin nhắn mới vào List<Message> tại đây
+                              setState(() {
+                                sampleMessages.add(newMessage);
+                              });
                             });
+                          },
+                        );
                       },
                       icon: const Icon(Icons.calendar_month),
                     ),
