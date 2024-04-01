@@ -1,25 +1,21 @@
-// ignore_for_file: deprecated_member_use
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class DioClient {
+class DioClientWithoutToken {
   final Dio _api;
   String baseURL = dotenv.env['API_BASE_URL']!;
-  String accessToken = dotenv.env['ACCESS_TOKEN']!;
 
-  DioClient() : _api = Dio() {
+  DioClientWithoutToken() : _api = Dio() {
     _configureInterceptors();
   }
 
   void _configureInterceptors() {
     _api.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // print(accessToken);
         options.baseUrl = baseURL;
         options.headers = {
-          'Access-Token': accessToken,
           'Content-Type': 'application/json; charset=UTF-8',
         };
 
