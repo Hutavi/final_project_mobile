@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/screens/home_page/main_page.dart';
+import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -103,7 +102,7 @@ class _Content extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MainPage(
+                    builder: (context) => NavigationMenu(
                           companyUser: accountList[0],
                         )),
               );

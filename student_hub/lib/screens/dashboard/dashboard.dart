@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
-import 'package:student_hub/widgets/bottomNavigationBar.dart';
-import 'package:student_hub/screens/home_page/main_page.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/data/student_user.dart';
@@ -10,7 +8,7 @@ import 'package:student_hub/data/student_user.dart';
 class Dashboard extends StatefulWidget {
   final StudentUser? studentUser;
   final CompanyUser? companyUser;
-  const Dashboard(this.studentUser, this.companyUser, {super.key});
+  const Dashboard({super.key, this.companyUser, this.studentUser});
 
   @override
   DashboardState createState() => DashboardState();
@@ -34,18 +32,18 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.companyUser == null &&
-    //     widget.studentUser == null) {
-    //   // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
-    //   return Scaffold(
-    //     appBar: AppBar(
-    //       title: const Text('Error'),
-    //     ),
-    //     body: const Center(
-    //       child: Text('You are not authorized to access this screen.'),
-    //     ),
-    //   );
-    // }
+    if (widget.companyUser == null &&
+        widget.studentUser == null) {
+      // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Error'),
+        ),
+        body: const Center(
+          child: Text('You are not authorized to access this screen.'),
+        ),
+      );
+    }
     if (widget.studentUser != null) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return Scaffold(
