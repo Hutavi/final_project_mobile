@@ -23,6 +23,7 @@ import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
 import 'package:student_hub/screens/post/post_screen_3.dart';
 import 'package:student_hub/screens/post/post_screen_4.dart';
+import 'package:student_hub/widgets/navigation_menu.dart';
 
 // import 'package:todolist_app/main.dart';
 
@@ -156,7 +157,7 @@ class AppRoute {
         final args = settings.arguments as bool;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              RegisterByScreen(radioValue: args),
+              RegisterByScreen(isStudent: args),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -285,6 +286,8 @@ class AppRoute {
 
       case AppRouterName.projectSaved:
         return MaterialPageRoute(builder: (_) => const SavedProject());
+      case AppRouterName.navigation:
+        return MaterialPageRoute(builder: (_) => const NavigationMenu());
 
       case AppRouterName.projectSearch:
         final args = settings.arguments as String;

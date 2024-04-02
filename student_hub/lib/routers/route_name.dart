@@ -29,4 +29,6 @@ class AppRouterName {
   static const meetingRoom = '/meeting-room';
   //submit proposal from project detail
   static const submitProposal = '/submit-proposal';
+  //Navigator Menu
+  static const navigation = '/navigation';
 }

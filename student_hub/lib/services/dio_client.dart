@@ -1,8 +1,6 @@
-// ignore_for_file: deprecated_member_use
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {

@@ -39,12 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
             method: 'POST',
           ),
         );
-        print("abc: ${response.statusCode}");
 
         if (response.statusCode == 201) {
-          final token = response.data['accessToken'];
+          final token = response.data['result']['token'];
           await saveTokenToLocal(token);
-          print("Login ok");
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(context, AppRouterName.navigation);
+          print(token);
         } else {
           print("Login failed: ${response.data}");
         }
@@ -59,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
               passwordWrong = true;
             });
           }
-          // Xử lý thông tin lỗi từ e.response!.data ở đây
         } else {
           print('Have Error: $e');
         }
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> saveTokenToLocal(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
+    await prefs.setString('accessToken', token);
   }
 
   @override

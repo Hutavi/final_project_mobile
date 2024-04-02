@@ -1,12 +1,15 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class RegisterByScreen extends StatefulWidget {
-  final bool? radioValue;
-  const RegisterByScreen({Key? key, required this.radioValue})
-      : super(key: key);
+  final bool? isStudent;
+  const RegisterByScreen({Key? key, required this.isStudent}) : super(key: key);
 
   @override
   State<RegisterByScreen> createState() => _LoginByScreenState();
@@ -16,15 +19,16 @@ class _LoginByScreenState extends State<RegisterByScreen> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController mailForWorkController = TextEditingController();
   TextEditingController passworkController = TextEditingController();
+  bool passworkWeak = false;
+  bool passwordShort = false;
+  bool isEmail = false;
+  bool emailExist = false;
 
   final _formKey = GlobalKey<FormState>();
   bool isAllFieldsValid = false;
   bool? radioValue;
   bool isChecked = false;
-
   bool isFullNameValid = false;
-  bool isMailForWorkValid = false;
-  bool isPasswordValid = false;
 
   void validateFields() {
     setState(() {
@@ -36,6 +40,73 @@ class _LoginByScreenState extends State<RegisterByScreen> {
   void initState() {
     super.initState();
     radioValue = false; // Đặt giá trị mặc định cho Radio
+  }
+
+  void sendRequestRegister() async {
+    passworkWeak = false;
+    passwordShort = false;
+    isEmail = false;
+    emailExist = false;
+
+    if (_formKey.currentState!.validate()) {
+      var data = json.encode({
+        "email": mailForWorkController.text,
+        "password": passworkController.text,
+        "fullname": fullNameController.text,
+        "role": widget.isStudent == false ? 1 : 0,
+      });
+
+      try {
+        final dio = DioClientWithoutToken();
+        final response = await dio.request(
+          '/auth/sign-up',
+          data: data,
+          options: Options(
+            method: 'POST',
+          ),
+        );
+
+        if (response.statusCode == 201) {
+          // ignore: use_build_context_synchronously
+          // Navigator.pushNamed(context, AppRouterName.navigation);
+          print("Ok");
+        } else {
+          print("Sign failed: ${response.data}");
+        }
+      } catch (e) {
+        // print(e);
+        if (e is DioException && e.response != null) {
+          final errorDetails = e.response!.data['errorDetails'];
+          if (errorDetails != null && errorDetails is List) {
+            if (errorDetails.contains('email must be an email')) {
+              setState(() {
+                isEmail = true;
+              });
+              print("Email invalid");
+            } else if (errorDetails.contains(
+                'password is too weak, password must be longer than or equal to 8 characters')) {
+              setState(() {
+                passworkWeak = true;
+              });
+              print("Weak");
+            } else if (errorDetails.contains(
+                'password must be longer than or equal to 8 characters')) {
+              setState(() {
+                passwordShort = true;
+              });
+              print("Short");
+            } else if (errorDetails.contains('Email already exists')) {
+              setState(() {
+                emailExist = true;
+              });
+              print("Email exist");
+            }
+          }
+        } else {
+          print('Have Error: $e');
+        }
+      }
+    }
   }
 
   @override
@@ -76,7 +147,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                 ),
                 Center(
                   child: Text(
-                    widget.radioValue == false
+                    widget.isStudent == false
                         ? 'Sign up as Company'
                         : 'Sign up as Student',
                     style: const TextStyle(
@@ -110,11 +181,17 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   fillColor: kWhiteColor,
                   onChange: (value) {
                     // validateFields();
+                    isEmail = false;
+                    emailExist = false;
                   },
                   labelText: 'Work email address',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Work email address is required';
+                    } else if (isEmail) {
+                      return 'Email is invalid';
+                    } else if (emailExist) {
+                      return 'Email already exists';
                     }
                     return null;
                   },
@@ -128,11 +205,17 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   fillColor: kWhiteColor,
                   onChange: (value) {
                     // validateFields();
+                    passworkWeak = false;
+                    passwordShort = false;
                   },
                   labelText: 'Password (8 or more characters)',
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Password is required';
+                    } else if (passworkWeak) {
+                      return 'Password is too weak';
+                    } else if (passwordShort) {
+                      return 'Password is too short';
                     }
                     return null;
                   },
@@ -181,9 +264,9 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   height: 30,
                 ),
                 OutlinedButton(
-                  onPressed: isAllFieldsValid && isChecked == true
+                  onPressed: isChecked
                       ? () {
-                          print("Create account");
+                          sendRequestRegister();
                         }
                       : null,
                   style: OutlinedButton.styleFrom(

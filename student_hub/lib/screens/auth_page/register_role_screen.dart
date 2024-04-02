@@ -16,7 +16,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isAllFieldsValid = false;
-  bool? radioValue;
+  bool? isStudent;
 
   void validateFields() {
     setState(() {
@@ -27,12 +27,12 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   // Hàm callback để xử lý khi Radio được chọn
   void handleRadioValueChanged(bool? value) {
     setState(() {
-      radioValue = value;
+      isStudent = value;
     });
     // Hiển thị thông báo hoặc thực hiện các hành động tương ứng với giá trị được chọn
-    if (radioValue == true) {
+    if (isStudent == true) {
       print('Option 1 is selected');
-    } else if (radioValue == false) {
+    } else if (isStudent == false) {
       print('Option 2 is selected');
     }
   }
@@ -40,7 +40,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   @override
   void initState() {
     super.initState();
-    radioValue = false; // Đặt giá trị mặc định cho Radio
+    isStudent = true; // Đặt giá trị mặc định cho Radio
   }
 
   @override
@@ -92,7 +92,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                       children: [
                         Radio(
                           value: true,
-                          groupValue: radioValue,
+                          groupValue: isStudent,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -123,7 +123,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                       children: [
                         Radio(
                           value: false,
-                          groupValue: radioValue,
+                          groupValue: isStudent,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -137,7 +137,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               OutlinedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, AppRouterName.registerBy,
-                      arguments: radioValue);
+                      arguments: isStudent);
                 },
                 style: OutlinedButton.styleFrom(
                   shape: const RoundedRectangleBorder(
