@@ -68,7 +68,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
 
         if (response.statusCode == 201) {
           // ignore: use_build_context_synchronously
-          // Navigator.pushNamed(context, AppRouterName.navigation);
+          Navigator.pushNamed(context, AppRouterName.navigation);
           print("Ok");
         } else {
           print("Sign failed: ${response.data}");

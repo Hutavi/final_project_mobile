@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_filter.dart';
-import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectSearch extends StatefulWidget {
   final String query;
@@ -110,12 +109,12 @@ class _ProjectSearchState extends State<ProjectSearch> {
                       Navigator.pushNamed(context, AppRouterName.projectDetail,
                           arguments: project);
                     },
-                    child: ProjectItem(
-                      title: project.title!,
-                      describe: project.describe,
-                      proposals: project.proposals,
-                      isFavorite: project.favorite,
-                    ),
+                    // child: ProjectItem(
+                    //   title: project.title!,
+                    //   describe: project.describe,
+                    //   proposals: project.proposals,
+                    //   isFavorite: project.favorite,
+                    // ),
                   );
                 },
               ),

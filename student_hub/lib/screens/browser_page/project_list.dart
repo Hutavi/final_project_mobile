@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/project_item.dart';
@@ -17,6 +20,41 @@ class ProjectListScreen extends StatefulWidget {
 class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
   List<ProjectModel> projectLists = allProject;
+  List<ProjectForListModel> listProject = [];
+
+  @override
+  void initState() {
+    fecthData();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void fecthData() async {
+    // Call API to get data
+    try {
+      final dioPulic = DioClientWithoutToken();
+
+      final response =
+          await dioPulic.request('/project', options: Options(method: 'GET'));
+      if (response.statusCode == 200) {
+        final List<dynamic> parsed = response.data!['result'];
+        List<ProjectForListModel> projects =
+            parsed.map<ProjectForListModel>((item) {
+          return ProjectForListModel.fromJson(item);
+        }).toList();
+
+        setState(() {
+          listProject = projects;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +62,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
+        showBackButton: false,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -81,7 +120,14 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, AppRouterName.projectSaved);
+                      Navigator.pushNamed(context, AppRouterName.projectSaved)
+                          .then((_) => {
+                                setState(() {
+                                  fecthData();
+                                })
+                              });
+                      // Navigator.pushNamed(context, AppRouterName.projectSaved)
+                      //     .then((val) => {_getRequests()});
                     },
                     child: const Icon(
                       Icons.favorite,
@@ -92,9 +138,9 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: projectLists.length,
+                  itemCount: listProject.length,
                   itemBuilder: (context, index) {
-                    final project = projectLists[index];
+                    final project = listProject[index];
                     return GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -102,10 +148,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             arguments: project);
                       },
                       child: ProjectItem(
+                        id: project.id!,
                         title: project.title!,
-                        describe: project.describe,
-                        proposals: project.proposals,
-                        isFavorite: project.favorite,
+                        describe: project.description,
+                        projectScopeFlag: project.projectScopeFlag,
+                        typeFlag: project.typeFlag,
+                        numberOfStudents: project.numberOfStudents,
+                        createdAt: project.createdAt,
                       ),
                     );
                   },

@@ -5,6 +5,7 @@ class ProjectModel {
   String? describe;
   String? proposals;
   bool favorite;
+  
   ProjectModel({
     this.title,
     this.describe,

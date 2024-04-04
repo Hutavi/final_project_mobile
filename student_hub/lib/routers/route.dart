@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
@@ -298,7 +299,7 @@ class AppRoute {
         );
 
       case AppRouterName.projectDetail:
-        final args = settings.arguments as ProjectModel;
+        final args = settings.arguments as ProjectForListModel;
 
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>

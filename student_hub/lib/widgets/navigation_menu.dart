@@ -79,23 +79,23 @@ class _NavigationMenuState extends State<NavigationMenu> {
                 ),
               ),
               NavigationDestination(
-                  icon: Icon(
-                    Iconsax.message,
-                  ),
-                  label: 'Message',
-                  selectedIcon: Icon(
-                    Iconsax.message,
-                    color: kBlue700,
+                icon: Icon(
+                  Iconsax.message,
+                ),
+                label: 'Message',
+                selectedIcon: Icon(
+                  Iconsax.message,
+                  color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                  icon: Icon(Iconsax.notification), 
-                  label: 'Alerts',
-                  selectedIcon: Icon(
-                    Iconsax.notification,
-                    color: kBlue700,
-              ),
-            )
+                icon: Icon(Iconsax.notification),
+                label: 'Alerts',
+                selectedIcon: Icon(
+                  Iconsax.notification,
+                  color: kBlue700,
+                ),
+              )
             ],
           ),
         ),

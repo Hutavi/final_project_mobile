@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 
 class ProjectDetail extends StatefulWidget {
-  final ProjectModel projectItem;
+  final ProjectForListModel projectItem;
   const ProjectDetail({super.key, required this.projectItem});
 
   @override
@@ -42,13 +42,6 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 5,
               ),
-              // const Text(
-              //   'Title of the job',
-              //   style: TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w500,
-              //       color: kBlueGray800),
-              // ),
               Text(
                 widget.projectItem.title as String,
                 style: const TextStyle(
@@ -81,17 +74,16 @@ class _ProjectDetailState extends State<ProjectDetail> {
                     ListView(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      children: const [
+                      children: [
                         DescribeItem(
-                          itemDescribe:
-                              'Clear expectation about your project or deliverables',
+                          itemDescribe: widget.projectItem.description,
                         ),
-                        DescribeItem(
-                          itemDescribe: 'The skills required for your project',
-                        ),
-                        DescribeItem(
-                          itemDescribe: 'Detail about your project',
-                        ),
+                        // DescribeItem(
+                        //   itemDescribe: 'The skills required for your project',
+                        // ),
+                        // DescribeItem(
+                        //   itemDescribe: 'Detail about your project',
+                        // ),
                       ],
                     ),
                   ],
@@ -100,24 +92,24 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.alarm),
-                  SizedBox(
+                  const Icon(Icons.alarm),
+                  const SizedBox(
                     width: 15,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Project scope',
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '3 to 6 month',
-                        style: TextStyle(
+                        '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
                       )
@@ -128,24 +120,24 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.people),
-                  SizedBox(
+                  const Icon(Icons.people),
+                  const SizedBox(
                     width: 15,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Project scope',
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '6 students',
-                        style: TextStyle(
+                        '• ' '${widget.projectItem.numberOfStudents} students',
+                        style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
                       )

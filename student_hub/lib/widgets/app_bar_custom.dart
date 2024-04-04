@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/schedule_interview/schedule_interview.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const AppBarCustom({Key? key, required this.title}) : super(key: key);
+  final bool showBackButton;
+  const AppBarCustom(
+      {Key? key, required this.title, this.showBackButton = true})
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -21,30 +23,14 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       backgroundColor: Colors.grey[200],
-      // actions: <Widget>[
-      //   PopupMenuButton<String>(
-      //     onSelected: (value) {
-      //       if (value == 'scheduleInterview') {
-      //         // Hiển thị bottom sheet khi chọn "Schedule an interview"
-      //         // _showSearchBottomSheet(context);
-      //       } else if (value == 'cancel') {
-      //         // Không làm gì khi chọn "Cancel"
-      //       }
-      //     },
-      //     itemBuilder: (BuildContext context) {
-      //       return [
-      //         const PopupMenuItem(
-      //           value: 'scheduleInterview',
-      //           child: Text('Schedule an interview'),
-      //         ),
-      //         const PopupMenuItem(
-      //           value: 'cancel',
-      //           child: Text('Cancel'),
-      //         ),
-      //       ];
-      //     },
-      //   ),
-      // ],
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          : null,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.person),
@@ -55,17 +41,4 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
       ],
     );
   }
-
-  // void _showSearchBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (BuildContext context) {
-  //       return const ScheduleInterview();
-  //     },
-  //   );
-  // }
 }

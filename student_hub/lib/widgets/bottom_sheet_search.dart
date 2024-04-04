@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/item_search.dart';
 

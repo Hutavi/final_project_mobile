@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
@@ -29,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
         "email": userNameController.text,
         "password": passwordController.text
       });
-      print(data);
       try {
         final dio = DioClientWithoutToken();
         final response = await dio.request(
@@ -44,8 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
           final token = response.data['result']['token'];
           await saveTokenToLocal(token);
           // ignore: use_build_context_synchronously
-          Navigator.pushNamed(context, AppRouterName.navigation);
-          print(token);
+          Navigator.pushReplacementNamed(context, AppRouterName.navigation);
         } else {
           print("Login failed: ${response.data}");
         }
@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
+        showBackButton: false,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
