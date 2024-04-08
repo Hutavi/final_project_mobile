@@ -102,6 +102,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
           for (var item in languages) {
             listLanguage.add({
+              'id': item['id'],
               'languageName': item['languageName'].toString(),
               'level': item['level'].toString()
             });
@@ -353,11 +354,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   void _handleAcceptUpdateLanguage(
       String languageName, String languageLevel, int index) async {
     List<Map<String, dynamic>> dataPost = [];
-
-    dataPost.add({
-      'languageName': languageName,
-      'level': languageLevel,
-    });
 
     for (var item in listLanguage) {
       dataPost.add(item);

@@ -230,38 +230,35 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                   padding: const EdgeInsets.all(0.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (BuildContext context) {
-                      //     // Trả về một Dialog
-                      //     return AlertDialog(
-                      //       title: const Text(
-                      //         'Welcome',
-                      //         textAlign: TextAlign.center,
-                      //       ),
-                      //       content: const Text(
-                      //         'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects Next',
-                      //         textAlign: TextAlign.center,
-                      //       ),
-                      //       actions: [
-                      //         // Nút "Next"
-                      //         TextButton(
-                      //           onPressed: () {
-                      //             Navigator.of(context).pop();
-                      //           },
-                      //           child: const Text('Next'),
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      // );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                      if (_imageFile == null || _imageFile1 == null) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Lỗi'),
+                              content: const Text('Hãy chọn đủ ảnh.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        // Nếu cả hai hình ảnh đều đã được chọn, chuyển đến màn hình tiếp theo
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                             builder: (context) => NavigationMenu(
-                                  companyUser: accountList[0],
-                                )),
-                      );
+                              companyUser: accountList[0],
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: const Text('Continue'),
                   ),
