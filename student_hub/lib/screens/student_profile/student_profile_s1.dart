@@ -991,14 +991,14 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                 padding: const EdgeInsets.all(0.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    !created
+                    created
                         ? Navigator.pushNamed(context, AppRouterName.profileS2)
-                        : Navigator.pushNamed(context, AppRouterName.profileS2);
+                        : null;
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(created
                         ? Colors.blue
-                        : Colors.blue), // Thiết lập màu nền là màu xanh dương
+                        : Colors.grey), // Thiết lập màu nền là màu xanh dương
                   ),
                   child: const Text(
                     'Next',
