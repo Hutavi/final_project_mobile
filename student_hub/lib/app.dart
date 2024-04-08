@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       // home: HomePage(),
       // home: MainPage(),
       // home: WelcomeScreen(),
-      home: LoginScreen(),
+      home: HomePage(),
 
       // home: NavigationMenu(),
       onGenerateRoute: AppRoute.onGenerateRoute,

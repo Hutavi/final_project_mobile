@@ -39,9 +39,7 @@ class AppRoute {
       case AppRouterName.profileS1:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const StundentProfileS1(
-            selectedValue: 'Fullstack Engineer',
-          ),
+              const StudentProfileS1(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;

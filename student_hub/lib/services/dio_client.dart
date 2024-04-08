@@ -14,12 +14,15 @@ class DioClient {
   }
 
   void _configureInterceptors() {
+    const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImZ1bGxuYW1lIjoic3RyaW5nIiwiZW1haWwiOiJ0cmFuaHV1Y2hpbmg1MDBAZ21haWwuY29tIiwicm9sZXMiOlswXSwiaWF0IjoxNzEyNTQ5MDQ0LCJleHAiOjE3MTM3NTg2NDR9.a4HXBpcx15Lub3um4RaB2xHZk1shdCDB4OZqtEDDBnU';
+
     _api.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         // print(accessToken);
         options.baseUrl = baseURL;
         options.headers = {
-          'Access-Token': accessToken,
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json; charset=UTF-8',
         };
 
