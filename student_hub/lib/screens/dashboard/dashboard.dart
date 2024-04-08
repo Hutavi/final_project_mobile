@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
@@ -11,6 +13,7 @@ class Dashboard extends StatefulWidget {
   final StudentUser? studentUser;
   final CompanyUser? companyUser;
   const Dashboard({super.key, this.companyUser, this.studentUser});
+  // const Dashboard({Key? key}) : super(key: key);
 
   @override
   DashboardState createState() => DashboardState();
@@ -21,12 +24,33 @@ class DashboardState extends State<Dashboard>
   late TabController _tabController;
   var created = false;
   var idCompany = -1;
-
+  
+  User? user = User();
+  Future<void> getUserInfoFromToken() async {
+    // Lấy token từ local storage
+    String? token = await TokenManager.getTokenFromLocal();
+    // print(token);
+    if (token != null) {
+      // Gọi API để lấy thông tin user
+      User? userInfo = await ApiManager.getUserInfo(token);
+      setState(() {
+        print(userInfo);
+        // Cập nhật userCurr với thông tin user được trả về từ API
+        user = userInfo;
+        print('User:');
+        print(user);
+      });
+    }
+    else{
+      print('Token is null');
+    }
+  }
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     getDataDefault();
+    getUserInfoFromToken();
   }
 
   @override
@@ -89,18 +113,18 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.companyUser != null && widget.studentUser != null) {
+    if (user?.role == null) {
       // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Error'),
+          title: const Text('You have not profile yet'),
         ),
         body: const Center(
           child: Text('You are not authorized to access this screen.'),
         ),
       );
     }
-    if (widget.studentUser != null) {
+    if (user?.studentUser != null) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return Scaffold(
         // appBar:
@@ -182,7 +206,6 @@ class DashboardState extends State<Dashboard>
                       controller: _tabController,
                       children: [
                         _buildProjectList(),
-                        // Center(child: _buildProjectList),
                         const Center(child: Text('Working')),
                         const Center(child: Text('Archieved')),
                       ],
@@ -194,7 +217,6 @@ class DashboardState extends State<Dashboard>
           ),
         ],
       ),
-      // bottomNavigationBar: const bottomNavigationBar(),
     );
   }
 

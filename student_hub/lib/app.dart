@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
       // home: SwitchAccount(),
-      // home: LoginScreen(),
+      home: LoginScreen(),
       // home: ProjectListScreen(),
       // home: NotificationPage(),
       // home: Dashboard(),
@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
       // home: HomePage(),
       // home: MainPage(),
       // home: WelcomeScreen(),
-      home: HomePage(),
+      // home: HomePage(),
 
       // home: NavigationMenu(),
       onGenerateRoute: AppRoute.onGenerateRoute,

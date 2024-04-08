@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
@@ -103,21 +104,18 @@ class _Content extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => NavigationMenu(
-                          companyUser: accountList[0],
                         )),
               );
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: kBlue400, // Đặt màu nền của nút thành màu xanh
+            ),
             child: const Text(
               'Get Started',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: kWhiteColor),
+              
             ),
           ),
         ]);
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: WelcomeScreen(),
-  ));
 }

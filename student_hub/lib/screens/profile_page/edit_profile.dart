@@ -19,46 +19,83 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   int activeIndex = 0;
   // String getCompanyData = '';//lưu trữ dữ liệu lấy từ API
   String postCompanyData = '';//lưu trữ dữ liệu post lên API
-
+  
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   Timer? _timer;
 
   int? _selectedValue; // Giá trị được chọn trong RadioListTile
+  User? userCurr;
 
   // TextEditingController để điều khiển nội dung của TextField
   final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  Future<void> getUserInfoFromToken() async {
+    // Lấy token từ local storage
+    String? token = await TokenManager.getTokenFromLocal();
+    print(token);
+    if (token != null) {
+      // Gọi API để lấy thông tin user
+      User? userInfo = await ApiManager.getUserInfo(token);
+      setState(() {
+        print(userInfo);
+        // Cập nhật userCurr với thông tin user được trả về từ API
+        userCurr = userInfo;
+        _companyNameController.text = userCurr?.companyUser?.companyName ?? '';
+        _websiteController.text = userCurr?.companyUser?.website ?? '';
+        _descriptionController.text = userCurr?.companyUser?.description ?? '';
+        switch (userCurr?.companyUser?.size) {
+          case 0:
+            _selectedValue = 0;
+            break;
+          case 1:
+            _selectedValue = 1;
+            break;
+          case 2:
+            _selectedValue = 2;
+            break;
+          case 3:
+            _selectedValue = 3;
+            break;
+          case 4:
+            _selectedValue = 4;
+            break;
+          default:
+            _selectedValue = null;
+        }
+      });
+    }
+  }
   
   @override
   void initState() {
     super.initState();
-    
+    getUserInfoFromToken();
     // Gán giá trị của companyName cho TextEditingController
-    _companyNameController.text = widget.companyInfo.companyName ?? '';
-    _websiteController.text = widget.companyInfo.website ?? '';
-    _descriptionController.text = widget.companyInfo.description ?? '';
-
-    switch (widget.companyInfo.size) {
-      case 0:
-        _selectedValue = 0;
-        break;
-      case 1:
-        _selectedValue = 1;
-        break;
-      case 2:
-        _selectedValue = 2;
-        break;
-      case 3:
-        _selectedValue = 3;
-        break;
-      case 4:
-        _selectedValue = 4;
-        break;
-      default:
-        _selectedValue = null;
-    }
+    // _companyNameController.text = widget.companyInfo.companyName ?? '';
+    // _websiteController.text = widget.companyInfo.website ?? '';
+    // _descriptionController.text = widget.companyInfo.description ?? '';
+    
+    // switch (userCurr?.companyUser?.size) {
+    //   case 0:
+    //     _selectedValue = 0;
+    //     break;
+    //   case 1:
+    //     _selectedValue = 1;
+    //     break;
+    //   case 2:
+    //     _selectedValue = 2;
+    //     break;
+    //   case 3:
+    //     _selectedValue = 3;
+    //     break;
+    //   case 4:
+    //     _selectedValue = 4;
+    //     break;
+    //   default:
+    //     _selectedValue = null;
+    // }
     
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
