@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
 import 'package:student_hub/data/company_user.dart';
@@ -17,11 +19,14 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  var created = false;
+  var idCompany = -1;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    getDataDefault();
   }
 
   @override
@@ -30,10 +35,61 @@ class DashboardState extends State<Dashboard>
     super.dispose();
   }
 
+  void getDataIdStudent() async {
+    final dioPrivate = DioClient();
+    // print(idCompany);
+    print('hihi');
+
+    final responseProfile = await dioPrivate.request(
+      '/profile/company/$idCompany',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final profile = responseProfile.data['result'];
+
+    print(profile);
+
+    setState(() {});
+  }
+
+  void getDataDefault() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+      print(user);
+
+      setState(() {
+        if (user['student'] == null) {
+          created = false;
+        } else {
+          created = true;
+          final company = user['company'];
+          idCompany = company['id'];
+          getDataIdStudent();
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (widget.companyUser == null &&
-        widget.studentUser == null) {
+    if (widget.companyUser != null && widget.studentUser != null) {
       // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
       return Scaffold(
         appBar: AppBar(
@@ -240,28 +296,31 @@ class DashboardState extends State<Dashboard>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Senior frontend developer (Fintech)',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Senior frontend developer (Fintech)',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.04,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '3 days ago',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
+                        const Text(
+                          '3 days ago',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
                   IconButton(
                     onPressed: () {
                       _showPopupMenu(context);
                     },
-                    icon: const Icon(Icons.pending_outlined,
-                        size: 25, color: Colors.black),
+                    icon: Icon(Icons.pending_outlined,
+                        size: MediaQuery.of(context).size.width * 0.06,
+                        color: Colors.black),
                   ),
                 ],
               ),
