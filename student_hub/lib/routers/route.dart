@@ -98,25 +98,6 @@ class AppRoute {
           },
         );
 
-      case AppRouterName.sendHired:
-        return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const SendHired(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.ease;
-
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
-
       case AppRouterName.login:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
@@ -405,12 +386,11 @@ class AppRoute {
           },
         );
       case AppRouterName.editProfileCompany:
-      final args = settings.arguments as CompanyUser;
+        final args = settings.arguments as CompanyUser;
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              EditProfile(
-                companyInfo: args,
-                ),
+          pageBuilder: (context, animation, secondaryAnimation) => EditProfile(
+            companyInfo: args,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -426,12 +406,12 @@ class AppRoute {
           },
         );
       case AppRouterName.welcomeScreen:
-      // final args = settings.arguments as CompanyUser;
+        // final args = settings.arguments as CompanyUser;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               WelcomeScreen(
-                // companyInfo: args,
-                ),
+                  // companyInfo: args,
+                  ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;

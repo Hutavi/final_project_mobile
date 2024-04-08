@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -24,7 +25,8 @@ class DashboardState extends State<Dashboard>
   late TabController _tabController;
   var created = false;
   var idCompany = -1;
-  
+  List<dynamic> projects = [];
+
   User? user = User();
   Future<void> getUserInfoFromToken() async {
     // Lấy token từ local storage
@@ -40,11 +42,11 @@ class DashboardState extends State<Dashboard>
         print('User:');
         print(user);
       });
-    }
-    else{
+    } else {
       print('Token is null');
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -59,23 +61,23 @@ class DashboardState extends State<Dashboard>
     super.dispose();
   }
 
-  void getDataIdStudent() async {
+  void getDataIdCompany() async {
     final dioPrivate = DioClient();
-    // print(idCompany);
-    print('hihi');
 
-    final responseProfile = await dioPrivate.request(
-      '/profile/company/$idCompany',
+    final responseProject = await dioPrivate.request(
+      '/project/company/$idCompany',
       options: Options(
         method: 'GET',
       ),
     );
 
-    final profile = responseProfile.data['result'];
+    final project = responseProject.data['result'];
 
-    print(profile);
+    print(project);
 
-    setState(() {});
+    setState(() {
+      projects = project;
+    });
   }
 
   void getDataDefault() async {
@@ -93,13 +95,13 @@ class DashboardState extends State<Dashboard>
       print(user);
 
       setState(() {
-        if (user['student'] == null) {
+        if (user['company'] == null) {
           created = false;
         } else {
           created = true;
           final company = user['company'];
           idCompany = company['id'];
-          getDataIdStudent();
+          getDataIdCompany();
         }
       });
     } catch (e) {
@@ -107,6 +109,24 @@ class DashboardState extends State<Dashboard>
         print(e);
       } else {
         print('Have Error: $e');
+      }
+    }
+  }
+
+  String formatTimeAgo(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else {
+      if (difference.inHours < 1) {
+        int minutesDifference = difference.inMinutes;
+        return '$minutesDifference minutes ago';
+      } else {
+        int hoursDifference = difference.inHours;
+        return '$hoursDifference hours ago';
       }
     }
   }
@@ -146,12 +166,17 @@ class DashboardState extends State<Dashboard>
                     ),
                   ),
                   ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
                     onPressed: () {
                       Navigator.pushNamed(context, AppRouterName.postScreen1);
                     },
                     child: const Text(
                       'Post a projects',
                       textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -183,12 +208,17 @@ class DashboardState extends State<Dashboard>
                   ),
                 ),
                 ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                  ),
                   onPressed: () {
                     Navigator.pushNamed(context, AppRouterName.postScreen1);
                   },
                   child: const Text(
                     'Post a projects',
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -229,18 +259,24 @@ class DashboardState extends State<Dashboard>
         Tab(text: 'Working'),
         Tab(text: 'Archieved'),
       ],
+      indicatorColor: Colors.blue,
+      labelColor: Colors.blue,
     );
   }
 
   Widget _buildProjectList() {
     return Expanded(
-      child: ListView.builder(
-        itemCount: 4,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return _buildProjectItem(index);
-        },
-      ),
+      child: projects.isNotEmpty
+          ? ListView.builder(
+              itemCount: projects.length,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _buildProjectItem(index);
+              },
+            )
+          : const Center(
+              child: Text('Chưa có project'),
+            ),
     );
   }
 
@@ -304,9 +340,15 @@ class DashboardState extends State<Dashboard>
   }
 
   Widget _buildProjectItem(int index) {
+    print(projects[index]['id']);
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRouterName.sendHired);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SendHired(idProject: projects[index]['id']),
+          ),
+        );
       },
       child: Card(
         child: Padding(
@@ -323,15 +365,15 @@ class DashboardState extends State<Dashboard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Senior frontend developer (Fintech)',
+                          projects[index]['title'],
                           style: TextStyle(
                             fontSize: MediaQuery.of(context).size.width * 0.04,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const Text(
-                          '3 days ago',
-                          style: TextStyle(color: Colors.grey),
+                        Text(
+                          formatTimeAgo(projects[index]['createdAt']),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
@@ -354,9 +396,9 @@ class DashboardState extends State<Dashboard>
                 ),
               ),
               const SizedBox(height: 8.0),
-              const Row(
+              Row(
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 10.0),
                     child: Text(
                       '•',
@@ -365,22 +407,22 @@ class DashboardState extends State<Dashboard>
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        'Clear expectations about the project or deliverables',
-                        style: TextStyle(fontSize: 13.0),
+                        projects[index]['description'],
+                        style: const TextStyle(fontSize: 13.0),
                       ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16.0),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('2'),
-                  Text('8'),
-                  Text('2'),
+                  Text(projects[index]['countProposals'].toString()),
+                  Text(projects[index]['countMessages'].toString()),
+                  Text(projects[index]['countHired'].toString()),
                 ],
               ),
               const Row(
