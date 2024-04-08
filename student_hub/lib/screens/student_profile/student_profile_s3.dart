@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
@@ -15,8 +17,75 @@ class StundentProfileS3 extends StatefulWidget {
 }
 
 class _StundentProfileS3State extends State<StundentProfileS3> {
-  File? _imageFile;
-  File? _imageFile1;
+  var created = false;
+  var idStudent = -1;
+  var notify = '';
+  String? trancriptImage;
+  String? resumeImage;
+
+  @override
+  void initState() {
+    super.initState();
+    getDataDefault();
+  }
+
+  void getDataIdStudent() async {
+    final dioPrivate = DioClient();
+
+    final responseProfileTranscript = await dioPrivate.request(
+      '/profile/student/$idStudent/transcript',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final responseProfileResume = await dioPrivate.request(
+      '/profile/student/$idStudent/resume',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final trancript = responseProfileTranscript.data['result'];
+    final resume = responseProfileResume.data['result'];
+
+    setState(() {
+      trancriptImage = trancript;
+      resumeImage = resume;
+    });
+  }
+
+  void getDataDefault() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+
+      setState(() {
+        if (user['student'] == null) {
+          created = false;
+        } else {
+          created = true;
+          final student = user['student'];
+          idStudent = student['id'];
+          getDataIdStudent();
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
 
   Widget _buildDropZone() {
     return const Center(
@@ -38,23 +107,111 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
     );
   }
 
-  void _pickImage() async {
+  void _showSuccess() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Thành công'),
+        content: Text(notify),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showError() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Thất bại'),
+        content: Text(notify),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _pickImageResume() async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
+      final dioPrivate = DioClient();
+
+      File imageFile = File(pickedFile.path);
+
+      FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(imageFile.path,
+            filename: pickedFile.path.split('/').last),
       });
+
+      final responseProfileResume = await dioPrivate.request(
+        '/profile/student/$idStudent/resume',
+        data: formData,
+        options: Options(
+          method: 'PUT',
+        ),
+      );
+
+      if (responseProfileResume.statusCode == 200) {
+        setState(() {
+          notify = 'Cập nhật resume thành công.';
+
+          _showSuccess();
+          getDataIdStudent();
+        });
+      } else {
+        notify = 'Cập nhật resume thất bại.';
+
+        _showError();
+      }
     }
   }
 
-  void _pickImage1() async {
+  void _pickImageTranscript() async {
     final pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        _imageFile1 = File(pickedFile.path);
+      final dioPrivate = DioClient();
+
+      File imageFile = File(pickedFile.path);
+
+      FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(imageFile.path,
+            filename: pickedFile.path.split('/').last),
       });
+
+      final responseProfileTranscript = await dioPrivate.request(
+        '/profile/student/$idStudent/transcript',
+        data: formData,
+        options: Options(
+          method: 'PUT',
+        ),
+      );
+
+      if (responseProfileTranscript.statusCode == 200) {
+        setState(() {
+          notify = 'Cập nhật transcript thành công.';
+
+          _showSuccess();
+          getDataIdStudent();
+        });
+      } else {
+        notify = 'Cập nhật transcript thất bại.';
+
+        _showError();
+      }
     }
   }
 
@@ -107,7 +264,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _imageFile == null
+                    resumeImage == null
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: DottedBorder(
@@ -127,16 +284,11 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                                   ) {
                                     return _buildDropZone();
                                   },
-                                  onAccept: (File imageFile) {
-                                    setState(() {
-                                      _imageFile = imageFile;
-                                    });
-                                  },
                                 ),
                               ),
                             ),
                           )
-                        : Image.file(_imageFile!),
+                        : Image.network(resumeImage!),
                     const SizedBox(height: 10),
                     Container(
                       // Đặt padding cho Container để căn chỉnh nút
@@ -145,8 +297,9 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                       child: Padding(
                         padding: const EdgeInsets.all(0.0),
                         child: ElevatedButton(
-                          onPressed: _pickImage,
-                          child: const Text('Choose Image'),
+                          onPressed: _pickImageResume,
+                          child: Text(
+                              resumeImage == null ? 'Choose Image' : 'Change'),
                         ),
                       ),
                     ),
@@ -173,7 +326,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _imageFile1 == null
+                    trancriptImage == null
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: DottedBorder(
@@ -193,19 +346,11 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                                   ) {
                                     return _buildDropZone();
                                   },
-                                  onAccept: (File imageFile) {
-                                    setState(() {
-                                      _imageFile1 = imageFile;
-                                    });
-                                  },
                                 ),
                               ),
                             ),
                           )
-                        : Image.file(
-                            _imageFile1!,
-                            fit: BoxFit.contain,
-                          ),
+                        : Image.network(trancriptImage!),
                     const SizedBox(height: 10),
                     Container(
                       // Đặt padding cho Container để căn chỉnh nút
@@ -214,8 +359,10 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                       child: Padding(
                         padding: const EdgeInsets.all(0.0),
                         child: ElevatedButton(
-                          onPressed: _pickImage1,
-                          child: const Text('Choose Image'),
+                          onPressed: _pickImageTranscript,
+                          child: Text(trancriptImage == null
+                              ? 'Choose Image'
+                              : 'Change'),
                         ),
                       ),
                     ),
@@ -229,8 +376,12 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                 child: Padding(
                   padding: const EdgeInsets.all(0.0),
                   child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
                     onPressed: () {
-                      if (_imageFile == null || _imageFile1 == null) {
+                      if (resumeImage == null || trancriptImage == null) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -260,7 +411,8 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                         );
                       }
                     },
-                    child: const Text('Continue'),
+                    child: const Text('Continue',
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ),
