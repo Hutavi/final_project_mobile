@@ -1,36 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:student_hub/models/company_user.dart';
+import 'package:student_hub/screens/switch_account_page/api_manager.dart';
+import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/models/user.dart';
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
-
+  final CompanyUser companyInfo; 
+  const EditProfile({super.key, required this.companyInfo});
+  
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> with SingleTickerProviderStateMixin {
   int activeIndex = 0;
+  // String getCompanyData = '';//lưu trữ dữ liệu lấy từ API
+  String postCompanyData = '';//lưu trữ dữ liệu post lên API
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   Timer? _timer;
 
-  int? _selectedValue;
+  int? _selectedValue; // Giá trị được chọn trong RadioListTile
 
+  // TextEditingController để điều khiển nội dung của TextField
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  
   @override
   void initState() {
+    super.initState();
+    
+    // Gán giá trị của companyName cho TextEditingController
+    _companyNameController.text = widget.companyInfo.companyName ?? '';
+    _websiteController.text = widget.companyInfo.website ?? '';
+    _descriptionController.text = widget.companyInfo.description ?? '';
+
+    switch (widget.companyInfo.size) {
+      case 0:
+        _selectedValue = 0;
+        break;
+      case 1:
+        _selectedValue = 1;
+        break;
+      case 2:
+        _selectedValue = 2;
+        break;
+      case 3:
+        _selectedValue = 3;
+        break;
+      case 4:
+        _selectedValue = 4;
+        break;
+      default:
+        _selectedValue = null;
+    }
+    
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         setState(() {
-          activeIndex++;
-
-          if (activeIndex == 4) {
-            activeIndex = 0;
-          }
+          // your timer logic here
         });
       }
     });
-
-    super.initState();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -48,9 +84,41 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   void dispose() {
     _timer?.cancel();
     _animationController.dispose();
+    // Giải phóng controller
+    _companyNameController.dispose();
+    _websiteController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
   
+  void _editProfile() async {
+    String token = await TokenManager.getTokenFromLocal();
+    var requestData = json.encode({
+      'companyName': _companyNameController.text,
+      'size': _selectedValue,
+      'website': _websiteController.text,
+      'description': _descriptionController.text,
+    });
+    print(requestData);
+
+    try {
+      // Gửi yêu cầu PUT lên API
+      // ignore: unused_local_variable
+      final response = await DioClient().request(
+        '/profile/company/${widget.companyInfo.id}',
+        data: requestData,
+        options: Options(
+          method: 'PUT'
+          ),
+      );
+
+      User? userInfo = await ApiManager.getUserInfo(token);
+      print(userInfo?.companyUser?.companyName);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +164,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _companyNameController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -146,6 +215,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _websiteController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -194,6 +264,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _descriptionController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -241,13 +312,66 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           title: const Text('It\'s just me',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 100,
+                          value: 0,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
+                        ),
+                        RadioListTile<int>(
+                          title: const Text('2-9 employees',
+                              style: TextStyle(fontSize: 14)),
+                          dense: true,
+                          value: 1,
+                          groupValue: _selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedValue = value;
+                            });
+                          },
+                          activeColor: kBlue400,
+                        ),
+                        RadioListTile<int>(
+                          title: const Text('10-99 employees',
+                              style: TextStyle(fontSize: 14)),
+                          dense: true,
+                          value: 2,
+                          groupValue: _selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedValue = value;
+                            });
+                          },
+                          activeColor: kBlue400,
+                        ),
+                        RadioListTile<int>(
+                          title: const Text('100-1000 employees',
+                              style: TextStyle(fontSize: 14)),
+                          dense: true,
+                          value: 3,
+                          groupValue: _selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedValue = value;
+                            });
+                          },
+                          activeColor: kBlue400,
+                        ),
+                        RadioListTile<int>(
+                          title: const Text('More than 1000 employees',
+                              style: TextStyle(fontSize: 14)),
+                          dense: true,
+                          value: 4,
+                          groupValue: _selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedValue = value;
+                            });
+                          },
+                          activeColor: kBlue400,
                         ),
                       ],
                     ),
@@ -278,7 +402,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: MaterialButton(
-                            onPressed: () {},
+                            onPressed: (){
+                              _editProfile();
+                            },
                             height: 45,
                             color: Colors.black,
                             padding: const EdgeInsets.symmetric(
@@ -315,7 +441,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: MaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                             height: 45,
                             color: Colors.black,
                             padding: const EdgeInsets.symmetric(

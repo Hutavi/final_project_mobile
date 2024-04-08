@@ -12,6 +12,8 @@ class AppRouterName {
   static const projectSaved = '/project-saved';
   static const projectSearch = '/project-search';
   static const profileInput = '/profile-input';
+  static const welcomeScreen = '/welcome-screen';
+  static const editProfileCompany = '/profile-edit-company';
   //post a project flow
   static const postScreen1 = '/post-step-1';
   static const postScreen2 = '/post-step-2';
