@@ -140,6 +140,27 @@ class DashboardState extends State<Dashboard>
     } else {}
   }
 
+  void deleteProject(index) async {
+    final id = projects[index]['id'];
+    try {
+      final dioPrivate = DioClient();
+
+      final response = await dioPrivate.request(
+        '/project/$id',
+        options: Options(
+          method: 'DELETE',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        getDataDefault();
+        print('Delete project success');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   String formatTimeAgo(String dateTimeString) {
     DateTime dateTime = DateTime.parse(dateTimeString);
     DateTime now = DateTime.now();
@@ -209,11 +230,9 @@ class DashboardState extends State<Dashboard>
                 ],
               ),
             ),
-            //nội dung của student dashboard
             const studentAllProject(),
           ],
         ),
-        // bottomNavigationBar: const studentBottomNavigationBar(),
       );
     }
     return Scaffold(
@@ -449,6 +468,7 @@ class DashboardState extends State<Dashboard>
                 ),
                 title: const Text('Remove posting'),
                 onTap: () {
+                  deleteProject(index);
                   Navigator.pop(context);
                 },
               ),

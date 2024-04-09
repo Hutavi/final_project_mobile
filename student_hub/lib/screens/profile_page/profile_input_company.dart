@@ -1,7 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
-import 'package:student_hub/screens/welcome_screen.dart';
+import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/routers/route.dart';
+import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/switch_account_page/api_manager.dart';
+import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/models/user.dart';
+
 class ProfileInput extends StatefulWidget {
   const ProfileInput({super.key});
 
@@ -44,6 +52,11 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
 
   int? _selectedValue;
 
+  // TextEditingController để điều khiển nội dung của TextField
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
   @override
   void initState() {
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
@@ -79,6 +92,34 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
     super.dispose();
   }
 
+  void _createProfile() async {
+    String token = await TokenManager.getTokenFromLocal();
+    var requestData = json.encode({
+      'companyName': _companyNameController.text,
+      'size': _selectedValue,
+      'website': _websiteController.text,
+      'description': _descriptionController.text,
+    });
+    print(requestData);
+
+    try {
+      // Gửi yêu cầu PUT lên API
+      // ignore: unused_local_variable
+      final response = await DioClient().request(
+        '/profile/company/',
+        data: requestData,
+        options: Options(
+          method: 'POST'
+          ),
+      );
+
+      User? userInfo = await ApiManager.getUserInfo(token);
+      print(userInfo?.companyUser?.companyName);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,61 +190,66 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           title: const Text('It\'s just me',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 100,
+                          value: 0,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
                           title: const Text('2-9 employees',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 200,
+                          value: 1,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
                           title: const Text('10-99 employees',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 300,
+                          value: 2,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
                           title: const Text('100-1000 employees',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 400,
+                          value: 3,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
                           title: const Text('More than 1000 employees',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
-                          value: 500,
+                          value: 4,
                           groupValue: _selectedValue,
                           onChanged: (value) {
                             setState(() {
                               _selectedValue = value;
                             });
                           },
+                          activeColor: kBlue400,
                         ),
                       ],
                     ),
@@ -226,6 +272,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _companyNameController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -276,6 +323,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _websiteController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -324,6 +372,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     ),
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
+                      controller: _descriptionController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
                         labelText: '',
@@ -379,10 +428,11 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         opacity: _fadeAnimation,
                         child: MaterialButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> WelcomeScreen()));
+                            _createProfile();
+                            Navigator.pushNamed(context, AppRouterName.welcomeScreen);
                           },
                           height: 45,
-                          color: Colors.black,
+                          color: kBlue400,
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 50),
                           shape: RoundedRectangleBorder(
