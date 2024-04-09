@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/providers/post_project_provider.dart';
 
-class PostScreen3 extends StatefulWidget {
+class PostScreen3 extends ConsumerStatefulWidget {
   const PostScreen3({super.key});
 
   @override
-  State<PostScreen3> createState() => _PostScreenState();
+  ConsumerState<PostScreen3> createState() => _PostScreenState();
 }
 
-class _PostScreenState extends State<PostScreen3> {
+class _PostScreenState extends ConsumerState<PostScreen3> {
+  final descriptionController = TextEditingController();
+  bool _descriptionPost = false;
+
   @override
   Widget build(BuildContext context) {
+    if (ref.watch(postProjectProvider).description != null) {
+      descriptionController.text = ref.watch(postProjectProvider).description!;
+    }
     return Scaffold(
       appBar: const _AppBar(),
       body: Container(
@@ -105,9 +114,10 @@ class _PostScreenState extends State<PostScreen3> {
                 const SizedBox(
                   height: 16.0,
                 ),
-                const TextField(
+                TextField(
+                  controller: descriptionController,
                   maxLines: 6,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: 'Project Description',
                       enabledBorder: OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
@@ -124,6 +134,12 @@ class _PostScreenState extends State<PostScreen3> {
                           )
                       )
                   ),
+                  onChanged: (value) {
+                  ref.read(postProjectProvider.notifier).setProjectDescription(value);
+                  setState(() {
+                    _descriptionPost = value.isNotEmpty;
+                  });
+                },
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height < 600
@@ -149,6 +165,8 @@ class _PostScreenState extends State<PostScreen3> {
                             : 16.0, // Adjust padding for smaller screens
                         vertical: 8.0,
                       ),
+                      backgroundColor: kBlue400,
+                      foregroundColor: kWhiteColor,
                     ),
                     child: const Text('Review your post'),
                   ),

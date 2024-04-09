@@ -418,10 +418,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   height: 30,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(
-                      width: 150, // Chiều rộng cố định cho nút
+                    Expanded(
                       child: SlideTransition(
                         position: Tween<Offset>(
                           begin: const Offset(0, -0.5),
@@ -443,7 +442,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                               _editProfile();
                             },
                             height: 45,
-                            color: Colors.black,
+                            color: kBlue400,
                             padding: const EdgeInsets.symmetric(
                               vertical: 10,
                             ),
@@ -459,8 +458,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                       ),
                     ),
                     SizedBox(width: 10), // Khoảng cách giữa hai button
-                    SizedBox(
-                      width: 150, // Chiều rộng cố định cho nút
+                    Expanded(
                       child: SlideTransition(
                         position: Tween<Offset>(
                           begin: const Offset(0, -0.5),
@@ -482,7 +480,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                               Navigator.pop(context);
                             },
                             height: 45,
-                            color: Colors.black,
+                            color: kRed,
                             padding: const EdgeInsets.symmetric(
                               vertical: 10,
                             ),
