@@ -113,6 +113,27 @@ class DashboardState extends State<Dashboard>
     }
   }
 
+  void deleteProject(index) async {
+    final id = projects[index]['id'];
+    try{
+      final dioPrivate = DioClient();
+
+      final response = await dioPrivate.request(
+        '/project/$id',
+        options: Options(
+          method: 'DELETE',
+        ),
+      );
+
+      if(response.statusCode == 200){
+        getDataDefault();
+        print('Delete project success');
+      }
+    }
+    catch(e){
+      print('Error: $e');
+    }
+  }
   String formatTimeAgo(String dateTimeString) {
     DateTime dateTime = DateTime.parse(dateTimeString);
     DateTime now = DateTime.now();
@@ -182,11 +203,9 @@ class DashboardState extends State<Dashboard>
                 ],
               ),
             ),
-            //nội dung của student dashboard
             const studentAllProject(),
           ],
         ),
-        // bottomNavigationBar: const studentBottomNavigationBar(),
       );
     }
     return Scaffold(
@@ -280,7 +299,8 @@ class DashboardState extends State<Dashboard>
     );
   }
 
-  void _showPopupMenu(BuildContext context) {
+  // void _showPopupMenu(BuildContext context) {
+  void _showPopupMenu(int index) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -322,7 +342,9 @@ class DashboardState extends State<Dashboard>
               ListTile(
                 title: const Text('Remove posting'),
                 onTap: () {
+                  deleteProject(index);
                   Navigator.pop(context);
+
                 },
               ),
               ListTile(
@@ -380,7 +402,7 @@ class DashboardState extends State<Dashboard>
                   ),
                   IconButton(
                     onPressed: () {
-                      _showPopupMenu(context);
+                      _showPopupMenu(index);
                     },
                     icon: Icon(Icons.pending_outlined,
                         size: MediaQuery.of(context).size.width * 0.06,
