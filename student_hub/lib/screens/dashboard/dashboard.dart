@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
@@ -26,6 +27,8 @@ class DashboardState extends State<Dashboard>
   var created = false;
   var idCompany = -1;
   List<dynamic> projects = [];
+  List<dynamic> projectsWorking = [];
+  List<dynamic> projectsArchieved = [];
 
   User? user = User();
   Future<void> getUserInfoFromToken() async {
@@ -73,10 +76,11 @@ class DashboardState extends State<Dashboard>
 
     final project = responseProject.data['result'];
 
-    print(project);
-
     setState(() {
       projects = project;
+      projectsWorking = project.where((item) => item['typeFlag'] == 0).toList();
+      projectsArchieved =
+          project.where((item) => item['typeFlag'] == 1).toList();
     });
   }
 
@@ -92,7 +96,6 @@ class DashboardState extends State<Dashboard>
       );
 
       final user = responseUser.data['result'];
-      print(user);
 
       setState(() {
         if (user['company'] == null) {
@@ -111,6 +114,30 @@ class DashboardState extends State<Dashboard>
         print('Have Error: $e');
       }
     }
+  }
+
+  void _handleStartWorking(int idProject, int index) async {
+    if (projects[index]['typeFlag'] == 0) return;
+    final data = {
+      "projectScopeFlag": projects[index]['projectScopeFlag'],
+      "title": projects[index]['title'],
+      "description": projects[index]['description'],
+      "numberOfStudents": projects[index]['numberOfStudents'],
+      "typeFlag": 0
+    };
+
+    final dioPrivate = DioClient();
+    final responseLanguage = await dioPrivate.request(
+      '/project/$idProject',
+      data: data,
+      options: Options(method: 'PATCH'),
+    );
+
+    if (responseLanguage.statusCode == 200) {
+      setState(() {
+        getDataIdCompany();
+      });
+    } else {}
   }
 
   String formatTimeAgo(String dateTimeString) {
@@ -235,9 +262,9 @@ class DashboardState extends State<Dashboard>
                     child: TabBarView(
                       controller: _tabController,
                       children: [
-                        _buildProjectList(),
-                        const Center(child: Text('Working')),
-                        const Center(child: Text('Archieved')),
+                        _buildProjectListAllProject(),
+                        _buildProjectListProjectWorking(),
+                        _buildProjectListProjectArchieved(),
                       ],
                     ),
                   ),
@@ -264,14 +291,14 @@ class DashboardState extends State<Dashboard>
     );
   }
 
-  Widget _buildProjectList() {
+  Widget _buildProjectListAllProject() {
     return Expanded(
       child: projects.isNotEmpty
           ? ListView.builder(
               itemCount: projects.length,
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return _buildProjectItem(index);
+                return _buildProjectItemAllProject(index);
               },
             )
           : const Center(
@@ -280,7 +307,39 @@ class DashboardState extends State<Dashboard>
     );
   }
 
-  void _showPopupMenu(BuildContext context) {
+  Widget _buildProjectListProjectWorking() {
+    return Expanded(
+      child: projectsWorking.isNotEmpty
+          ? ListView.builder(
+              itemCount: projectsWorking.length,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _buildProjectItemProjectWorking(index);
+              },
+            )
+          : const Center(
+              child: Text('Chưa có project nào đang Working'),
+            ),
+    );
+  }
+
+  Widget _buildProjectListProjectArchieved() {
+    return Expanded(
+      child: projectsArchieved.isNotEmpty
+          ? ListView.builder(
+              itemCount: projectsArchieved.length,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _buildProjectItemProjectArchieved(index);
+              },
+            )
+          : const Center(
+              child: Text('Chưa có project nào đang Archieved'),
+            ),
+    );
+  }
+
+  void _showPopupMenu(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -289,46 +348,119 @@ class DashboardState extends State<Dashboard>
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ListTile(
-                // leading: const Icon(Icons.pending_outlined),
+                leading: const Icon(
+                  FontAwesomeIcons.user,
+                  size: 20,
+                ),
                 title: const Text('View proposals'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SendHired(
+                        idProject: projects[index]['id'],
+                        indexTab: 0,
+                        projectDetail: {
+                          "description": projects[index]['description'],
+                          "projectScopeFlag": projects[index]
+                              ['projectScopeFlag'],
+                          "numberOfStudents": projects[index]
+                              ['numberOfStudents']
+                        },
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.comments,
+                  size: 20,
+                ),
                 title: const Text('View messages'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SendHired(
+                        idProject: projects[index]['id'],
+                        indexTab: 2,
+                        projectDetail: {
+                          "description": projects[index]['description'],
+                          "projectScopeFlag": projects[index]
+                              ['projectScopeFlag'],
+                          "numberOfStudents": projects[index]
+                              ['numberOfStudents']
+                        },
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.clipboardCheck,
+                  size: 20,
+                ),
                 title: const Text('View hired'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SendHired(
+                        idProject: projects[index]['id'],
+                        indexTab: 3,
+                        projectDetail: {
+                          "description": projects[index]['description'],
+                          "projectScopeFlag": projects[index]
+                              ['projectScopeFlag'],
+                          "numberOfStudents": projects[index]
+                              ['numberOfStudents']
+                        },
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.fileImport,
+                  size: 20,
+                ),
                 title: const Text('View job posting'),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.penToSquare,
+                  size: 20,
+                ),
                 title: const Text('Edit posting'),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.trashCan,
+                  size: 20,
+                ),
                 title: const Text('Remove posting'),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.briefcase,
+                  size: 20,
+                ),
                 title: const Text('Start working this project'),
                 onTap: () {
                   Navigator.pop(context);
+                  _handleStartWorking(projects[index]['id'], index);
                   _tabController.animateTo(1);
                 },
               ),
@@ -339,14 +471,21 @@ class DashboardState extends State<Dashboard>
     );
   }
 
-  Widget _buildProjectItem(int index) {
-    print(projects[index]['id']);
+  Widget _buildProjectItemAllProject(int index) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SendHired(idProject: projects[index]['id']),
+            builder: (context) => SendHired(
+              idProject: projects[index]['id'],
+              indexTab: 0,
+              projectDetail: {
+                "description": projects[index]['description'],
+                "projectScopeFlag": projects[index]['projectScopeFlag'],
+                "numberOfStudents": projects[index]['numberOfStudents']
+              },
+            ),
           ),
         );
       },
@@ -380,7 +519,7 @@ class DashboardState extends State<Dashboard>
                   ),
                   IconButton(
                     onPressed: () {
-                      _showPopupMenu(context);
+                      _showPopupMenu(context, index);
                     },
                     icon: Icon(Icons.pending_outlined,
                         size: MediaQuery.of(context).size.width * 0.06,
@@ -423,6 +562,222 @@ class DashboardState extends State<Dashboard>
                   Text(projects[index]['countProposals'].toString()),
                   Text(projects[index]['countMessages'].toString()),
                   Text(projects[index]['countHired'].toString()),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Proposals'),
+                  Text('Message'),
+                  Text('Hired'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProjectItemProjectWorking(int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SendHired(
+              idProject: projectsWorking[index]['id'],
+              indexTab: 0,
+              projectDetail: {
+                "description": projects[index]['description'],
+                "projectScopeFlag": projects[index]['projectScopeFlag'],
+                "numberOfStudents": projects[index]['numberOfStudents']
+              },
+            ),
+          ),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          projectsWorking[index]['title'],
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.04,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          formatTimeAgo(projectsWorking[index]['createdAt']),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _showPopupMenu(context, index);
+                    },
+                    icon: Icon(Icons.pending_outlined,
+                        size: MediaQuery.of(context).size.width * 0.06,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Students are looking for',
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      '•',
+                      style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        projectsWorking[index]['description'],
+                        style: const TextStyle(fontSize: 13.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(projectsWorking[index]['countProposals'].toString()),
+                  Text(projectsWorking[index]['countMessages'].toString()),
+                  Text(projectsWorking[index]['countHired'].toString()),
+                ],
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Proposals'),
+                  Text('Message'),
+                  Text('Hired'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProjectItemProjectArchieved(int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SendHired(
+              idProject: projectsArchieved[index]['id'],
+              indexTab: 0,
+              projectDetail: {
+                "description": projects[index]['description'],
+                "projectScopeFlag": projects[index]['projectScopeFlag'],
+                "numberOfStudents": projects[index]['numberOfStudents']
+              },
+            ),
+          ),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          projectsArchieved[index]['title'],
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.04,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          formatTimeAgo(projectsArchieved[index]['createdAt']),
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _showPopupMenu(context, index);
+                    },
+                    icon: Icon(Icons.pending_outlined,
+                        size: MediaQuery.of(context).size.width * 0.06,
+                        color: Colors.black),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Students are looking for',
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      '•',
+                      style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        projectsArchieved[index]['description'],
+                        style: const TextStyle(fontSize: 13.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(projectsArchieved[index]['countProposals'].toString()),
+                  Text(projectsArchieved[index]['countMessages'].toString()),
+                  Text(projectsArchieved[index]['countHired'].toString()),
                 ],
               ),
               const Row(

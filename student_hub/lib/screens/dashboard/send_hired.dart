@@ -8,9 +8,13 @@ import 'package:student_hub/widgets/describe_item.dart';
 
 class SendHired extends StatefulWidget {
   final int idProject;
+  final int indexTab;
+  final Map projectDetail;
   const SendHired({
     Key? key,
     required this.idProject,
+    required this.indexTab,
+    required this.projectDetail,
   }) : super(key: key);
 
   @override
@@ -23,12 +27,15 @@ class SendHiredState extends State<SendHired>
   String titleIcon = 'Hired';
   int? _idProject;
   List<dynamic> proposals = [];
+  Map? _projectDetaild;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.animateTo(widget.indexTab);
     _idProject = widget.idProject;
+    _projectDetaild = widget.projectDetail;
     getDataProposalIdProject();
   }
 
@@ -55,6 +62,19 @@ class SendHiredState extends State<SendHired>
     });
   }
 
+  String? formatTimeProject(int type) {
+    if (type == 0) {
+      return '• Less than 1 month';
+    } else if (type == 1) {
+      return '• 1 to 3 months';
+    } else if (type == 2) {
+      return '• 3 to 6 months';
+    } else if (type == 3) {
+      return '• More than 6 months';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +94,7 @@ class SendHiredState extends State<SendHired>
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   _buildTabBar(),
@@ -101,7 +121,7 @@ class SendHiredState extends State<SendHired>
 
   Widget _buildTabBar() {
     return TabBar(
-      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
       controller: _tabController,
       indicatorColor: kBlue600,
       labelColor: kBlue600,
@@ -217,83 +237,92 @@ class SendHiredState extends State<SendHired>
 
   Widget _buildProjectDetails() {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Students are looking for',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: kBlackColor,
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Students are looking for',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: kBlackColor,
+                  ),
                 ),
-              ),
-              ListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  DescribeItem(
-                    itemDescribe:
-                        'Clear expectation about your project or deliverables',
-                  ),
-                  DescribeItem(
-                    itemDescribe: 'The skills required for your project',
-                  ),
-                  DescribeItem(
-                    itemDescribe: 'Detail about your project',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            children: [
-              Icon(Icons.alarm),
-              SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Project scope',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                    overflow: TextOverflow.clip,
-                  ),
-                  Text(
-                    '• 3 to 6 months',
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                    overflow: TextOverflow.clip,
-                  )
-                ],
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            children: [
-              Icon(Icons.people),
-              SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Team size',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                    overflow: TextOverflow.clip,
-                  ),
-                  Text(
-                    '• 6 students',
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                    overflow: TextOverflow.clip,
-                  )
-                ],
-              )
-            ],
-          ),
-        ],
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    DescribeItem(
+                      itemDescribe: _projectDetaild!['description'],
+                    ),
+                    // DescribeItem(
+                    //   itemDescribe: 'The skills required for your project',
+                    // ),
+                    // DescribeItem(
+                    //   itemDescribe: 'Detail about your project',
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.alarm),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Project scope',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    ),
+                    Text(
+                      formatTimeProject(_projectDetaild!['projectScopeFlag'])
+                          .toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    )
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.people),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Team size',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    ),
+                    Text(
+                      '• ${_projectDetaild!['numberOfStudents'].toString()} students',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.clip,
+                    )
+                  ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -364,12 +393,13 @@ class SendHiredState extends State<SendHired>
                     Text(
                       'Tran Huu Chinh',
                       style: TextStyle(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
+                    SizedBox(height: 2),
                     Text(
                       '4th year student',
-                      style: TextStyle(),
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
