@@ -16,12 +16,13 @@ class PostScreen1 extends ConsumerStatefulWidget {
 class _PostScreen1State extends ConsumerState<PostScreen1> {
   final titleController = TextEditingController();
   bool _titlePost = false;
-
+  
   @override
   Widget build(BuildContext context) {
     if (ref.watch(postProjectProvider).title != null) {
       titleController.text = ref.watch(postProjectProvider).title!;
     }
+    
     return ProviderScope(
         child: Scaffold(
       appBar: const _AppBar(),
@@ -50,7 +51,6 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                 decoration: const InputDecoration(
                     hintText: "Write a title for your post",
                     enabledBorder: OutlineInputBorder(
-                      // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
                         bottom: Radius.circular(10.0),

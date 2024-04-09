@@ -17,7 +17,8 @@ class PostScreen4 extends ConsumerStatefulWidget {
 }
 
 class _PostScreen4State extends ConsumerState<PostScreen4> {
-  void getDataIdCompany() async {
+  
+  Future<int> getDataIdCompany() async {
     final dioPrivate = DioClient();
 
     final responseProject = await dioPrivate.request(
@@ -29,12 +30,12 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
 
     final companyId = responseProject.data['result']['company']['id'];
     print('Company id: $companyId');
-    ref.read(postProjectProvider.notifier).setCompanyId(companyId);
-    print(ref.watch(postProjectProvider).companyId);
+    return companyId;
   }
   
   void postPoject() async {
-    var requestData = json.encode({
+    try{
+      var requestData = json.encode({
           'companyId': ref.watch(postProjectProvider).companyId,
           'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
           'title': ref.watch(postProjectProvider).title,
@@ -42,7 +43,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
           'description': ref.watch(postProjectProvider).description,
           'typeFlag': ref.watch(postProjectProvider).typeFlag,
         });
-    try{
+      print('Request data1: $requestData');
       final dioPrivate = DioClient();
       final response = await dioPrivate.request(
         '/project',
@@ -51,9 +52,24 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
           method: 'POST',
         ),
       );
+      print('Request data2: $requestData');
       if(response.statusCode == 201){
-        ref.read(postProjectProvider.notifier).setStateModel();
         print('Post project success');
+      }
+      if(response.statusCode == 400){
+        // if(requestData get companyId){
+          if(response.data['projectScopeFlag'] == null){
+            print('projectScopeFlag should not be empty, projectScopeFlag must be one of the following values: 0, 1, 2, 3');
+          }
+          if(response.data['numberOfStudents'] == null){
+            print('numberOfStudents must be a number conforming to the specified constraints, numberOfStudents should not be empty');
+          }
+          if(response.data['description'] == null){
+            print('description should not be empty, description must be a string');
+          }
+          if(response.data['typeFlag'] == ""){
+            print('description should not be empty');
+          }
       }
     }catch(e){
       print('Error: $e');
@@ -125,7 +141,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${scopeProject}',
+                        '• ' '$scopeProject',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -177,10 +193,20 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  getDataIdCompany();
-                  postPoject();
-                  Navigator.pushNamed(context, AppRouterName.navigation);
+                onPressed: (){
+                  setState(() async {
+                    var companyID = await getDataIdCompany();
+                    ref.read(postProjectProvider.notifier).setCompanyId(companyID);
+                    postPoject();
+                    Navigator.pushNamed(context, AppRouterName.navigation);
+                    ref.read(postProjectProvider).companyId = null;
+                    ref.read(postProjectProvider).projectScopeFlag = null;
+                    ref.read(postProjectProvider).title = null;
+                    ref.read(postProjectProvider).numberOfStudents = null;
+                    ref.read(postProjectProvider).description = null;
+                    ref.read(postProjectProvider).typeFlag = null;
+                  });
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,

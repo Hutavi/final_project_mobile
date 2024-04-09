@@ -4,8 +4,8 @@ import 'package:student_hub/models/project_models/project_model_new.dart';
 class PostProjectNotifier extends StateNotifier<ProjectModelNew> {
   PostProjectNotifier() : super(ProjectModelNew());
 
-  void setStateModel() {
-    state = ProjectModelNew();
+  void setStateModel(ProjectModelNew projectModel) {
+    state = projectModel;
   }
 
   void setProjectTitle(String title) {

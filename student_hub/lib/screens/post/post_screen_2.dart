@@ -45,6 +45,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    print(ref.watch(postProjectProvider).title);
     if(ref.watch(postProjectProvider).numberOfStudents != null){
       _numberStudentsController.text = ref.watch(postProjectProvider).numberOfStudents.toString();
     }
