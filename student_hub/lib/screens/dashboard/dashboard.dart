@@ -24,6 +24,8 @@ class DashboardState extends State<Dashboard>
   late TabController _tabController;
   var created = false;
   var idCompany = -1;
+  var idStudent= -1;
+
   List<dynamic> projects = [];
   List<dynamic> projectsWorking = [];
   List<dynamic> projectsArchieved = [];
@@ -37,10 +39,11 @@ class DashboardState extends State<Dashboard>
       // Gọi API để lấy thông tin user
       User? userInfo = await ApiManager.getUserInfo(token);
       setState(() {
+        print('getUserInfoFromToken UserInfor:'); 
         print(userInfo);
         // Cập nhật userCurr với thông tin user được trả về từ API
         user = userInfo;
-        print('User:');
+        print('getUserInfoFromToken User:');
         print(user);
       });
     } else {
@@ -53,7 +56,8 @@ class DashboardState extends State<Dashboard>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     getDataDefault();
-    getUserInfoFromToken();
+    // getUserInfoFromToken();
+    getDataStudent();
   }
 
   @override
@@ -103,6 +107,36 @@ class DashboardState extends State<Dashboard>
           final company = user['company'];
           idCompany = company['id'];
           getDataIdCompany();
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+  void getDataStudent() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+
+      setState(() {
+        if (user['student'] == null) {
+          created = false;
+        } else {
+          created = true;
+          final student = user['student'];
+          idStudent = student['id'];
         }
       });
     } catch (e) {
@@ -179,18 +213,8 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    if (user?.role == null) {
-      // Nếu người dùng không phải là CompanyUser và không phải studentUser, chuyển hướng hoặc hiển thị thông báo
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('You have not profile yet'),
-        ),
-        body: const Center(
-          child: Text('You are not authorized to access this screen.'),
-        ),
-      );
-    }
-    if (user?.studentUser != null) {
+    
+    if (idStudent != -1) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return Scaffold(
         // appBar:
@@ -233,65 +257,67 @@ class DashboardState extends State<Dashboard>
         ),
       );
     }
-    return Scaffold(
-      appBar: const AppBarCustom(title: "Student Hub"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 16.0, bottom: 0, left: 16, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Your Project',
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRouterName.postScreen1);
-                  },
-                  child: const Text(
-                    'Post a projects',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+    else{
+      return Scaffold(
+        appBar: const AppBarCustom(title: "Student Hub"),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 16.0, bottom: 0, left: 16, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTabBar(),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildProjectListAllProject(),
-                        _buildProjectListProjectWorking(),
-                        _buildProjectListProjectArchieved(),
-                      ],
+                  const Text(
+                    'Your Project',
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRouterName.postScreen1);
+                    },
+                    child: const Text(
+                      'Post a projects',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    _buildTabBar(),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildProjectListAllProject(),
+                          _buildProjectListProjectWorking(),
+                          _buildProjectListProjectArchieved(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _buildTabBar() {
