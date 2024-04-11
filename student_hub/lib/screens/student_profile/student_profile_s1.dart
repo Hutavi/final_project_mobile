@@ -58,6 +58,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       final educations = profile['educations'];
       final languages = profile['languages'];
 
+      print(techStack);
+
       setState(() {
         if (techStack != null && dropdownTechStackOptions.isNotEmpty) {
           _selectedValueTech = techStack['name'];
@@ -240,7 +242,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         });
       }
     } else {
-      print(data);
       final dioPrivate = DioClient();
       final responseLanguage = await dioPrivate.request(
         '/profile/student',
@@ -248,7 +249,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         options: Options(method: 'POST'),
       );
 
-      if (responseLanguage.statusCode == 200) {
+      if (responseLanguage.statusCode == 201) {
         setState(() {
           notify = 'Tạo Profile thành công';
           getDataIdStudent();
