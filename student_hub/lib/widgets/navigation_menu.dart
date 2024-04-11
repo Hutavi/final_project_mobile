@@ -32,10 +32,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     super.initState();
     screens = [
       const ProjectListScreen(),
-      Dashboard(
-        companyUser: widget.companyUser,
-        studentUser: widget.studentUser,
-      ),
+      Dashboard(),
       const MessageListScreen(),
       const NotificationPage(),
     ];

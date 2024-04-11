@@ -20,7 +20,7 @@ class ApiManager {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> userData = json.decode(response.body);
-        print('User info: ${userData.toString()}');
+        // print('User info: ${userData.toString()}');
 
         // Tạo đối tượng User từ dữ liệu
         User? user = User.fromMapUser(userData['result']);

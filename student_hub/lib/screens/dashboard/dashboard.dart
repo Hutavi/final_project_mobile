@@ -12,10 +12,8 @@ import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/data/student_user.dart';
 
 class Dashboard extends StatefulWidget {
-  final StudentUser? studentUser;
-  final CompanyUser? companyUser;
-  const Dashboard({super.key, this.companyUser, this.studentUser});
-  // const Dashboard({Key? key}) : super(key: key);
+  // const Dashboard({super.key, this.companyUser, this.studentUser});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   DashboardState createState() => DashboardState();
