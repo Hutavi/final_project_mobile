@@ -216,43 +216,29 @@ class DashboardState extends State<Dashboard>
     
     if (idStudent != -1) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
-      return Scaffold(
+      return const Scaffold(
         // appBar:
-        appBar: const AppBarCustom(title: "Student Hub"),
+        appBar: AppBarCustom(title: "Student Hub"),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                   top: 16.0, bottom: 0, left: 16, right: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Your Project',
                     style: TextStyle(
                       fontSize: 13.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRouterName.postScreen1);
-                    },
-                    child: const Text(
-                      'Post a projects',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
                 ],
               ),
             ),
-            const studentAllProject(),
+            studentAllProject(),
           ],
         ),
       );
