@@ -1,26 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_models/project_model.dart';
+import 'package:student_hub/providers/filter_provider.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
-class BottomSheetFilter extends StatefulWidget {
-  const BottomSheetFilter({super.key});
+class BottomSheetFilter extends ConsumerStatefulWidget {
+  final Function(int?, int?, int?) applyFilters;
+  const BottomSheetFilter({super.key, required this.applyFilters});
 
   @override
-  State<BottomSheetFilter> createState() => _BottomSheetFilterState();
+  ConsumerState<BottomSheetFilter> createState() => _BottomSheetFilterState();
 }
 
-class _BottomSheetFilterState extends State<BottomSheetFilter> {
+class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
   TextEditingController projectSearchController = TextEditingController();
   TextEditingController amountStudentNeedController = TextEditingController();
   TextEditingController proposalsController = TextEditingController();
-  List<ProjectModel> projectLists = allProject;
   String? _selectedLength;
+  int? amountStudentNeed;
+  int? proposalsLessThan;
+  int? selectedLengthValue;
+
+  int? _getLengthValue(String? length) {
+    switch (length) {
+      case "Less than one month":
+        return 0;
+      case "1 to 3 months":
+        return 1;
+      case "3 to 6 months":
+        return 2;
+      case "More than 6 months":
+        return 3;
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    print(ref.watch(filterProvider).projectScopeFlag);
+    print(ref.watch(filterProvider).numberOfStudents);
+    print(ref.watch(filterProvider).proposalsLessThan);
+
+    if (ref.watch(filterProvider).projectScopeFlag != null) {
+      _selectedLength = ref.watch(filterProvider).projectScopeFlag!;
+    }
+
+    if (ref.watch(filterProvider).numberOfStudents != null) {
+      amountStudentNeedController.text =
+          ref.watch(filterProvider).numberOfStudents!;
+    }
+
+    if (ref.watch(filterProvider).proposalsLessThan != null) {
+      proposalsController.text = ref.watch(filterProvider).proposalsLessThan!;
+    }
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -83,6 +117,11 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                     setState(() {
                       _selectedLength = value;
                     });
+                    if (_selectedLength != null) {
+                      ref
+                          .read(filterProvider.notifier)
+                          .setProjectScopeFlag(_selectedLength!);
+                    }
                   },
                   activeColor: kBlue800,
                 ),
@@ -99,6 +138,11 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                     setState(() {
                       _selectedLength = value;
                     });
+                    if (_selectedLength != null) {
+                      ref
+                          .read(filterProvider.notifier)
+                          .setProjectScopeFlag(_selectedLength!);
+                    }
                   },
                   activeColor: kBlue800,
                 ),
@@ -115,6 +159,11 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                     setState(() {
                       _selectedLength = value;
                     });
+                    if (_selectedLength != null) {
+                      ref
+                          .read(filterProvider.notifier)
+                          .setProjectScopeFlag(_selectedLength!);
+                    }
                   },
                   activeColor: kBlue800,
                 ),
@@ -131,6 +180,11 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                     setState(() {
                       _selectedLength = value;
                     });
+                    if (_selectedLength != null) {
+                      ref
+                          .read(filterProvider.notifier)
+                          .setProjectScopeFlag(_selectedLength!);
+                    }
                   },
                   activeColor: kBlue800,
                 ),
@@ -151,8 +205,13 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                 ),
                 BuildTextField(
                   controller: amountStudentNeedController,
-                  inputType: TextInputType.text,
-                  onChange: () {},
+                  inputType: TextInputType.number,
+                  onChange: (value) {
+                    amountStudentNeedController.text = value;
+                    ref
+                        .read(filterProvider.notifier)
+                        .setNumberOfStudents(amountStudentNeedController.text);
+                  },
                   fillColor: kWhiteColor,
                   labelText: 'Enter students needed',
                 )
@@ -173,8 +232,13 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                 ),
                 BuildTextField(
                   controller: proposalsController,
-                  inputType: TextInputType.text,
-                  onChange: () {},
+                  inputType: TextInputType.number,
+                  onChange: (value) {
+                    proposalsController.text = value;
+                    ref
+                        .read(filterProvider.notifier)
+                        .setProposalsLessThan(proposalsController.text);
+                  },
                   fillColor: kWhiteColor,
                   labelText: 'Enter proposals less than',
                 )
@@ -195,6 +259,28 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                               amountStudentNeedController.clear();
                               proposalsController.clear();
                             });
+
+                            ref
+                                .read(filterProvider.notifier)
+                                .setProjectScopeFlag('');
+                            ref
+                                .read(filterProvider.notifier)
+                                .setNumberOfStudents(
+                                    amountStudentNeedController.text);
+                            ref
+                                .read(filterProvider.notifier)
+                                .setProposalsLessThan(proposalsController.text);
+
+                            selectedLengthValue =
+                                _getLengthValue(_selectedLength);
+                            amountStudentNeed =
+                                int.tryParse(amountStudentNeedController.text);
+                            proposalsLessThan =
+                                int.tryParse(proposalsController.text);
+
+                            widget.applyFilters(selectedLengthValue,
+                                amountStudentNeed, proposalsLessThan);
+                            Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -210,7 +296,19 @@ class _BottomSheetFilterState extends State<BottomSheetFilter> {
                       ),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            selectedLengthValue =
+                                _getLengthValue(_selectedLength);
+                            amountStudentNeed =
+                                int.tryParse(amountStudentNeedController.text);
+                            proposalsLessThan =
+                                int.tryParse(proposalsController.text);
+
+                            widget.applyFilters(selectedLengthValue,
+                                amountStudentNeed, proposalsLessThan);
+
+                            Navigator.pop(context);
+                          },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),

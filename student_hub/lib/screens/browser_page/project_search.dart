@@ -1,13 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_filter.dart';
+import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectSearch extends StatefulWidget {
   final String query;
+
   const ProjectSearch({super.key, required this.query});
 
   @override
@@ -16,26 +19,84 @@ class ProjectSearch extends StatefulWidget {
 
 class _ProjectSearchState extends State<ProjectSearch> {
   TextEditingController projectSearchController = TextEditingController();
-  List<ProjectModel> projectLists = allProject;
+  List<ProjectForListModel> listProject = [];
+  String queryData = '';
+  int? selectedLengthValue;
+  int? amountStudentNeed;
+  int? proposalsLessThan;
 
   @override
   void initState() {
     super.initState();
-    filterProjects();
+    queryData = widget.query;
+    // print('Abc ${widget.query}');
+    fetchData();
   }
 
-  void filterProjects() {
+  void applyFilters(int? selectedLengthValue, int? amountStudentNeed,
+      int? proposalsLessThan) {
     setState(() {
-      projectLists = allProject.where((project) {
-        return project.title!
-            .toLowerCase()
-            .contains(widget.query.toLowerCase());
-      }).toList();
+      this.selectedLengthValue = selectedLengthValue;
+      this.amountStudentNeed = amountStudentNeed;
+      this.proposalsLessThan = proposalsLessThan;
     });
+
+    // Gọi lại fetchData khi nhận được dữ liệu mới
+    fetchData();
+  }
+
+  void fetchData() async {
+    print("Fetch dataa");
+    try {
+      final dioPulic = DioClient();
+      // print('Query 1: $queryData');
+      // print('Query 2 $selectedLengthValue');
+      // print('Query 3 $amountStudentNeed');
+      // print('Query 4 $proposalsLessThan');
+
+      Map<String, dynamic> queryParams = {
+        'title': queryData,
+      };
+
+      // Kiểm tra và thêm các tham số truy vấn khác nếu chúng không phải là null
+      if (selectedLengthValue != null) {
+        queryParams['projectScopeFlag'] = selectedLengthValue;
+      }
+      if (amountStudentNeed != null) {
+        queryParams['numberOfStudents'] = amountStudentNeed;
+      }
+      if (proposalsLessThan != null) {
+        queryParams['proposalsLessThan'] = proposalsLessThan;
+      }
+
+      final response = await dioPulic.request(
+        '/project',
+        options: Options(method: 'GET'),
+        queryParameters: queryParams,
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> parsed = response.data!['result'];
+        List<ProjectForListModel> projects =
+            parsed.map<ProjectForListModel>((item) {
+          // print(item);
+          return ProjectForListModel.fromJson(item);
+        }).toList();
+
+        setState(() {
+          listProject = projects;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // print("Vinh test");
+    // print(projectScopeFlag);
+    // print(numberOfStudents);
+    // print(proposalsLessThan);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AppBarCustom(
@@ -83,7 +144,12 @@ class _ProjectSearchState extends State<ProjectSearch> {
                           borderSide: BorderSide(width: 1, color: kGrey1)),
                     ),
                     onTap: () {},
-                    onChanged: searchProject,
+                    onChanged: (value) {
+                      setState(() {
+                        queryData = value;
+                      });
+                      fetchData();
+                    },
                   ),
                 ),
                 const SizedBox(
@@ -100,24 +166,24 @@ class _ProjectSearchState extends State<ProjectSearch> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: projectLists.length,
-                itemBuilder: (context, index) {
-                  final project = projectLists[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, AppRouterName.projectDetail,
-                          arguments: project);
-                    },
-                    // child: ProjectItem(
-                    //   title: project.title!,
-                    //   describe: project.describe,
-                    //   proposals: project.proposals,
-                    //   isFavorite: project.favorite,
-                    // ),
-                  );
-                },
-              ),
+              child: listProject.isEmpty
+                  ? const Center(child: Text('Not found project'))
+                  : ListView.builder(
+                      itemCount: listProject.length,
+                      itemBuilder: (context, index) {
+                        final project = listProject[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, AppRouterName.projectDetail,
+                                arguments: project);
+                          },
+                          child: ProjectItem(
+                            projectForListModel: project,
+                          ),
+                        );
+                      },
+                    ),
             ),
           ]),
         ),
@@ -133,18 +199,10 @@ class _ProjectSearchState extends State<ProjectSearch> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return const BottomSheetFilter();
+        return BottomSheetFilter(
+          applyFilters: applyFilters,
+        );
       },
     );
-  }
-
-  void searchProject(String query) {
-    final suggestions = allProject.where((project) {
-      final projectTitle = project.title!.toLowerCase();
-      final input = query.toLowerCase();
-
-      return projectTitle.contains(input);
-    }).toList();
-    setState(() => projectLists = suggestions);
   }
 }

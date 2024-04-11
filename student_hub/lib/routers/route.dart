@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/chat/user.dart';
 import 'package:student_hub/models/company_user.dart';
+import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/models/user.dart' as USER;
 import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
@@ -9,6 +10,7 @@ import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
 import 'package:student_hub/screens/auth_page/register_role_screen.dart';
 import 'package:student_hub/screens/browser_page/project_detail.dart';
+import 'package:student_hub/screens/browser_page/project_detail_favourite.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
@@ -287,6 +289,28 @@ class AppRoute {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               ProjectDetail(
+            projectItem: args,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+      case AppRouterName.projectDetailFavorite:
+        final args = settings.arguments as ProjectFavourite;
+
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              ProjectDetailFavorite(
             projectItem: args,
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

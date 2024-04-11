@@ -14,10 +14,8 @@ class DioClient {
   }
 
   void _configureInterceptors() {
-    
     _api.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // print(accessToken);
         options.baseUrl = baseURL;
         options.headers = {
           'Authorization': 'Bearer $accessToken',
