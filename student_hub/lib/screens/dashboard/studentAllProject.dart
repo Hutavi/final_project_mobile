@@ -1,20 +1,109 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:student_hub/services/dio_client.dart';
 
-class studentAllProject extends StatefulWidget {
-  const studentAllProject({super.key});
+class StudentAllProject extends StatefulWidget {
+  const StudentAllProject({super.key});
 
   @override
-  State<studentAllProject> createState() => _studentAllProjectState();
+  State<StudentAllProject> createState() => _StudentAllProjectState();
 }
 
-class _studentAllProjectState extends State<studentAllProject>
+class _StudentAllProjectState extends State<StudentAllProject>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  var created = false;
+  var idStudent = -1;
+  List<dynamic> projects = [];
+  List<dynamic> projectsWorking = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    getDataDefault();
+  }
+
+  void getDataIdStudent() async {
+    final dioPrivate = DioClient();
+
+    final responseProject = await dioPrivate.request(
+      '/proposal/project/$idStudent',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final project = responseProject.data['result'];
+
+    setState(() {
+      projects = project;
+      projectsWorking =
+          project.where((item) => item['project']['typeFlag'] == 0).toList();
+    });
+  }
+
+  void getDataDefault() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+
+      setState(() {
+        if (user['student'] == null) {
+          created = false;
+        } else {
+          created = true;
+          final student = user['student'];
+          idStudent = student['id'];
+          getDataIdStudent();
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  String formatTimeAgo(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else {
+      if (difference.inHours < 1) {
+        int minutesDifference = difference.inMinutes;
+        return '$minutesDifference minutes ago';
+      } else {
+        int hoursDifference = difference.inHours;
+        return '$hoursDifference hours ago';
+      }
+    }
+  }
+
+  String? formatTimeProject(int type) {
+    if (type == 0) {
+      return '• Less than 1 month';
+    } else if (type == 1) {
+      return '• 1 to 3 months';
+    } else if (type == 2) {
+      return '• 3 to 6 months';
+    } else if (type == 3) {
+      return '• More than 6 months';
+    }
+    return null;
   }
 
   @override
@@ -117,7 +206,7 @@ class _studentAllProjectState extends State<studentAllProject>
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 4,
+                  itemCount: projects.length,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return _buildProjectItem(index);
@@ -132,9 +221,9 @@ class _studentAllProjectState extends State<studentAllProject>
   }
 
   Widget _buildProjectItem(int index) {
-    return const Card(
+    return Card(
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -146,15 +235,15 @@ class _studentAllProjectState extends State<studentAllProject>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Senior frontend developer (Fintech)',
-                      style: TextStyle(
+                      projects[index]['project']['title'],
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      'Submitted 3 days ago',
-                      style: TextStyle(
+                      'Submitted ${formatTimeAgo(projects[index]['createdAt'])}',
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
                       ),
@@ -163,17 +252,17 @@ class _studentAllProjectState extends State<studentAllProject>
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'Students are looking for',
               style: TextStyle(
                 fontSize: 13.0,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text(
                     '•',
@@ -182,10 +271,10 @@ class _studentAllProjectState extends State<studentAllProject>
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      'Clear expectations about the project or deliverables',
-                      style: TextStyle(fontSize: 13.0),
+                      projects[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
                     ),
                   ),
                 ),
@@ -201,7 +290,7 @@ class _studentAllProjectState extends State<studentAllProject>
   Widget _working() {
     return Expanded(
       child: ListView.builder(
-        itemCount: 1,
+        itemCount: projectsWorking.length,
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return _buildWorkingProjectItem(index);
@@ -211,9 +300,9 @@ class _studentAllProjectState extends State<studentAllProject>
   }
 
   Widget _buildWorkingProjectItem(int index) {
-    return const Card(
+    return Card(
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -225,15 +314,15 @@ class _studentAllProjectState extends State<studentAllProject>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Senior frontend developer (Fintech)',
-                      style: TextStyle(
+                      projectsWorking[index]['project']['title'],
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      'Time 1-3 months, 6 students',
-                      style: TextStyle(
+                      '${formatTimeProject(projectsWorking[index]['project']['projectScopeFlag'])}, ${projectsWorking[index]['project']['numberOfStudents']} students',
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
                       ),
@@ -242,17 +331,17 @@ class _studentAllProjectState extends State<studentAllProject>
                 ),
               ],
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'Students are looking for',
               style: TextStyle(
                 fontSize: 13.0,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Row(
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text(
                     '•',
@@ -261,10 +350,10 @@ class _studentAllProjectState extends State<studentAllProject>
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      'Clear expectations about the project or deliverables',
-                      style: TextStyle(fontSize: 13.0),
+                      projectsWorking[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
                     ),
                   ),
                 ),

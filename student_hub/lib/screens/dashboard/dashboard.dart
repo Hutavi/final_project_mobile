@@ -24,7 +24,7 @@ class DashboardState extends State<Dashboard>
   late TabController _tabController;
   var created = false;
   var idCompany = -1;
-  var idStudent= -1;
+  var idStudent = -1;
 
   List<dynamic> projects = [];
   List<dynamic> projectsWorking = [];
@@ -39,7 +39,7 @@ class DashboardState extends State<Dashboard>
       // Gọi API để lấy thông tin user
       User? userInfo = await ApiManager.getUserInfo(token);
       setState(() {
-        print('getUserInfoFromToken UserInfor:'); 
+        print('getUserInfoFromToken UserInfor:');
         print(userInfo);
         // Cập nhật userCurr với thông tin user được trả về từ API
         user = userInfo;
@@ -117,6 +117,7 @@ class DashboardState extends State<Dashboard>
       }
     }
   }
+
   void getDataStudent() async {
     try {
       final dioPrivate = DioClient();
@@ -213,7 +214,6 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    
     if (idStudent != -1) {
       //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return const Scaffold(
@@ -223,8 +223,8 @@ class DashboardState extends State<Dashboard>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: 16.0, bottom: 0, left: 16, right: 16),
+              padding:
+                  EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -238,12 +238,11 @@ class DashboardState extends State<Dashboard>
                 ],
               ),
             ),
-            studentAllProject(),
+            StudentAllProject(),
           ],
         ),
       );
-    }
-    else{
+    } else {
       return Scaffold(
         appBar: const AppBarCustom(title: "Student Hub"),
         body: Column(
