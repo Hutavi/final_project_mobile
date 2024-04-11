@@ -5,7 +5,7 @@ import 'package:student_hub/data/project_list.dart';
 import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/services/dio_public.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/project_item.dart';
@@ -36,7 +36,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void fecthData() async {
     // Call API to get data
     try {
-      final dioPulic = DioClientWithoutToken();
+      final dioPulic = DioClient();
 
       final response =
           await dioPulic.request('/project', options: Options(method: 'GET'));
@@ -44,6 +44,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
             parsed.map<ProjectForListModel>((item) {
+          // print(item);
           return ProjectForListModel.fromJson(item);
         }).toList();
 
@@ -148,13 +149,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             arguments: project);
                       },
                       child: ProjectItem(
-                        id: project.id!,
-                        title: project.title!,
-                        describe: project.description,
-                        projectScopeFlag: project.projectScopeFlag,
-                        typeFlag: project.typeFlag,
-                        numberOfStudents: project.numberOfStudents,
-                        createdAt: project.createdAt,
+                        projectForListModel: listProject[index],
                       ),
                     );
                   },

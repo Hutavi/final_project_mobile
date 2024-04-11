@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/services/dio_public.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
-import 'package:student_hub/widgets/project_item.dart';
+import 'package:student_hub/widgets/project_item_favourite.dart';
 
 class SavedProject extends StatefulWidget {
   const SavedProject({super.key});
@@ -14,11 +15,13 @@ class SavedProject extends StatefulWidget {
 }
 
 class _SavedProjectState extends State<SavedProject> {
-  late List<ProjectForListModel> favoriteProjects = [];
+  late List<ProjectFavourite> favoriteProjects = [];
+  int? idStudent;
 
   @override
   void initState() {
-    fecthData();
+    fecthMe();
+    // fecthData();
     super.initState();
   }
 
@@ -27,32 +30,45 @@ class _SavedProjectState extends State<SavedProject> {
     super.dispose();
   }
 
-  void fecthData() async {
-    // Call API to get data
+  void fecthMe() async {
     try {
-      final dioPulic = DioClientWithoutToken();
-
+      final dioClient = DioClient();
       final response =
-          await dioPulic.request('/project', options: Options(method: 'GET'));
+          await dioClient.request('/auth/me', options: Options(method: 'GET'));
       if (response.statusCode == 200) {
-        final List<dynamic> parsed = response.data!['result'];
-        List<ProjectForListModel> projects =
-            parsed.map<ProjectForListModel>((item) {
-          return ProjectForListModel.fromJson(item);
-        }).toList();
-
-        setState(() {
-          favoriteProjects = getFavoriteProjectsByTypeFlag(projects);
-        });
+        idStudent = response.data['result']['student']['id'];
+        // print(response.data['result']['student']['id']);
+        fecthData();
       }
     } catch (e) {
       print(e);
     }
   }
 
-  List<ProjectForListModel> getFavoriteProjectsByTypeFlag(
-      List<ProjectForListModel> projects) {
-    return projects.where((project) => project.typeFlag == 1).toList();
+  void fecthData() async {
+    // Call API to get data
+    try {
+      final dioPulic = DioClient();
+      print(idStudent);
+
+      final response = await dioPulic.request('/favoriteProject/$idStudent',
+          options: Options(method: 'GET'));
+      if (response.statusCode == 200) {
+        final List<dynamic> result = response.data!['result'];
+        List<ProjectFavourite> projects = result.map<ProjectFavourite>((item) {
+          // Truy cập vào trường "project" của mỗi phần tử trong danh sách result
+          final projectData = item['project']
+              as Map<String, dynamic>; // Cast sang Map<String, dynamic>
+          return ProjectFavourite.fromJson(projectData);
+        }).toList();
+
+        setState(() {
+          favoriteProjects = projects;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -73,17 +89,12 @@ class _SavedProjectState extends State<SavedProject> {
                   final project = favoriteProjects[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, AppRouterName.projectDetail,
+                      Navigator.pushNamed(
+                          context, AppRouterName.projectDetailFavorite,
                           arguments: project);
                     },
-                    child: ProjectItem(
-                      id: project.id!,
-                      title: project.title!,
-                      describe: project.description,
-                      projectScopeFlag: project.projectScopeFlag,
-                      typeFlag: project.typeFlag,
-                      numberOfStudents: project.numberOfStudents,
-                      createdAt: project.createdAt,
+                    child: ProjectItemFavourite(
+                      projectForListModel: project,
                     ),
                   );
                 },

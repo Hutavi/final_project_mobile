@@ -9,6 +9,7 @@ class AppRouterName {
   static const switchAccount = '/switch-acc';
   static const projectList = '/project-list';
   static const projectDetail = '/project-detail';
+  static const projectDetailFavorite = '/project-detail-favorite';
   static const projectSaved = '/project-saved';
   static const projectSearch = '/project-search';
   static const profileInput = '/profile-input';

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:student_hub/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/services/dio_client.dart';
+
 Future<void> clearLocalStorage() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
@@ -25,14 +26,13 @@ class ApiManager {
         // Tạo đối tượng User từ dữ liệu
         User? user = User.fromMapUser(userData['result']);
         // Kiểm tra dữ liệu người dùng hợp lệ
-        if (user.id != null ) {
+        if (user.id != null) {
           return user;
         } else {
           // Xử lý dữ liệu người dùng không hợp lệ
           print('Invalid user data');
           return null;
         }
-
       } else {
         // Xử lý lỗi từ API
         print('Failed to load user info: ${response.statusCode}');
@@ -49,6 +49,16 @@ class ApiManager {
 class TokenManager {
   static Future<String> getTokenFromLocal() async {
     final prefs = await SharedPreferences.getInstance();
-    return  prefs.getString('accessToken') ?? '';
+    return prefs.getString('accessToken') ?? '';
+  }
+
+  static Future<void> saveTokenToLocal(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('accessToken', token);
+  }
+
+  static Future<void> removeTokenFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('accessToken');
   }
 }

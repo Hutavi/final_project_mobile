@@ -1,5 +1,5 @@
 class ProjectForListModel {
-  int? id;
+  int? projectId;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -9,9 +9,11 @@ class ProjectForListModel {
   String? description;
   int? typeFlag;
   int? numberOfStudents;
+  int? countProposals;
+  bool? isFavorite;
 
   ProjectForListModel({
-    this.id,
+    this.projectId,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -21,11 +23,13 @@ class ProjectForListModel {
     this.description,
     this.typeFlag,
     this.numberOfStudents,
+    this.countProposals,
+    this.isFavorite,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'projectId': projectId,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'deletedAt': deletedAt,
@@ -35,12 +39,14 @@ class ProjectForListModel {
       'description': description,
       'typeFlag': typeFlag,
       'numberOfStudents': numberOfStudents,
+      'countProposals': countProposals,
+      'isFavorite': isFavorite,
     };
   }
 
   factory ProjectForListModel.fromJson(Map<String, dynamic> json) {
     return ProjectForListModel(
-      id: json['id'],
+      projectId: json['projectId'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
@@ -50,6 +56,8 @@ class ProjectForListModel {
       description: json['description'],
       typeFlag: json['typeFlag'],
       numberOfStudents: json['numberOfStudents'],
+      countProposals: json['countProposals'],
+      isFavorite: json['isFavorite'],
     );
   }
 }

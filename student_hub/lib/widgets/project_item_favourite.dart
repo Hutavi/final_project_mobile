@@ -3,31 +3,30 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 
-class ProjectItem extends StatefulWidget {
-  final ProjectForListModel projectForListModel;
-  const ProjectItem({super.key, required this.projectForListModel});
+class ProjectItemFavourite extends StatefulWidget {
+  final ProjectFavourite projectForListModel;
+  const ProjectItemFavourite({super.key, required this.projectForListModel});
 
   @override
-  State<ProjectItem> createState() => _ProjectItemState();
+  State<ProjectItemFavourite> createState() => _ProjectItemFavouriteState();
 }
 
-class _ProjectItemState extends State<ProjectItem> {
-  late bool isFavoriteUpdate = false;
+class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
+  bool disableFlag = false;
   int? idStudent;
   @override
   void initState() {
-    isFavoriteUpdate = widget.projectForListModel.isFavorite ?? false;
     super.initState();
     fecthMe();
   }
 
   @override
   void dispose() {
-    isFavoriteUpdate = false;
     super.dispose();
   }
 
@@ -66,12 +65,12 @@ class _ProjectItemState extends State<ProjectItem> {
 
   void toggleTypeFlag() async {
     setState(() {
-      isFavoriteUpdate = !isFavoriteUpdate;
+      disableFlag = !disableFlag;
     });
 
     var data = json.encode({
-      "projectId": widget.projectForListModel.projectId,
-      "disableFlag": !isFavoriteUpdate == true ? 1 : 0,
+      "projectId": widget.projectForListModel.id,
+      "disableFlag": disableFlag == true ? 1 : 0,
     });
     print(data);
 
@@ -161,7 +160,7 @@ class _ProjectItemState extends State<ProjectItem> {
           ),
           GestureDetector(
             onTap: toggleTypeFlag,
-            child: isFavoriteUpdate == true
+            child: disableFlag == false
                 ? const Icon(
                     Icons.favorite_rounded,
                     color: kRed,
