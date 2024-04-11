@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -19,7 +20,7 @@ class SwitchAccount extends StatefulWidget {
 class _SwitchAccountState extends State<SwitchAccount> {
   //account đã từng đăng nhập
   User? userCurr;
-  
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,30 @@ class _SwitchAccountState extends State<SwitchAccount> {
       });
     }
   }
-  
+
+  void logout() async {
+    //getToken
+
+    // Gọi API để logout
+    try {
+      final dio = DioClient();
+      final response = await dio.request('/auth/logout',
+          options: Options(
+            method: 'POST',
+          ));
+      if (response.statusCode == 201) {
+        // Xóa token từ local storage
+        await TokenManager.removeTokenFromLocal();
+        String? token = await TokenManager.getTokenFromLocal();
+        print(token);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacementNamed(context, AppRouterName.login);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void reloadScreen() {
     //reload account
     Navigator.pushReplacement(context,
@@ -81,7 +105,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         //     .first
                         //     .getFullName(),
                         userCurr?.fullname ?? '',
-                        
+
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -133,15 +157,17 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   onPressed: () {
                     print(userCurr?.printAll());
                     print(userCurr?.companyUser?.printAll());
-                    if(userCurr?.role?[0]== 1 && userCurr?.companyUser == null){
+                    if (userCurr?.role?[0] == 1 &&
+                        userCurr?.companyUser == null) {
                       print('chưa có profile company');
                       Navigator.pushNamed(context, AppRouterName.profileInput);
-                    }
-                    else if(userCurr?.role?[0] == 1 && userCurr?.companyUser != null){
+                    } else if (userCurr?.role?[0] == 1 &&
+                        userCurr?.companyUser != null) {
                       print("(đã có) edit profile company");
-                      Navigator.pushNamed(context, AppRouterName.editProfileCompany, arguments: userCurr?.companyUser);
-                    }
-                    else {
+                      Navigator.pushNamed(
+                          context, AppRouterName.editProfileCompany,
+                          arguments: userCurr?.companyUser);
+                    } else {
                       print('student');
                       Navigator.pushNamed(context, AppRouterName.profileS1);
                     }
@@ -200,7 +226,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () {
-                    // Log out button pressed
+                    logout();
                   },
                   icon:
                       const Icon(Icons.logout, color: Colors.black, size: 28.0),

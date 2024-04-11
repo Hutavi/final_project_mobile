@@ -46,13 +46,9 @@ class _ProjectSearchState extends State<ProjectSearch> {
   }
 
   void fetchData() async {
-    print("Fetch dataa");
+    // print("Fetch dataa");
     try {
       final dioPulic = DioClient();
-      // print('Query 1: $queryData');
-      // print('Query 2 $selectedLengthValue');
-      // print('Query 3 $amountStudentNeed');
-      // print('Query 4 $proposalsLessThan');
 
       Map<String, dynamic> queryParams = {
         'title': queryData,
