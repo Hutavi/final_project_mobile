@@ -16,6 +16,8 @@ class StundentProfileS3 extends StatefulWidget {
 }
 
 class _StundentProfileS3State extends State<StundentProfileS3> {
+  File? imageFileResume;
+  File? imageFileTranscript;
   var created = false;
   var idStudent = -1;
   var notify = '';
@@ -148,10 +150,10 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
     if (pickedFile != null) {
       final dioPrivate = DioClient();
 
-      File imageFile = File(pickedFile.path);
+      imageFileResume = File(pickedFile.path);
 
       FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(imageFile.path,
+        'file': await MultipartFile.fromFile(imageFileResume!.path,
             filename: pickedFile.path.split('/').last),
       });
 
@@ -168,7 +170,9 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
           notify = 'Cập nhật resume thành công.';
 
           _showSuccess();
-          getDataIdStudent();
+          if (resumeImage != null) {
+            getDataIdStudent();
+          }
         });
       } else {
         notify = 'Cập nhật resume thất bại.';
@@ -184,10 +188,10 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
     if (pickedFile != null) {
       final dioPrivate = DioClient();
 
-      File imageFile = File(pickedFile.path);
+      imageFileTranscript = File(pickedFile.path);
 
       FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(imageFile.path,
+        'file': await MultipartFile.fromFile(imageFileTranscript!.path,
             filename: pickedFile.path.split('/').last),
       });
 
@@ -204,7 +208,9 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
           notify = 'Cập nhật transcript thành công.';
 
           _showSuccess();
-          getDataIdStudent();
+          if (trancriptImage != null) {
+            getDataIdStudent();
+          }
         });
       } else {
         notify = 'Cập nhật transcript thất bại.';
@@ -244,7 +250,6 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                 ),
               ),
 
-              // Skillset
               const Row(
                 children: [
                   Expanded(
@@ -264,29 +269,32 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     resumeImage == null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: DottedBorder(
-                              color: Colors.black,
-                              dashPattern: const [8, 4],
-                              strokeWidth: 2,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 30.0),
-                                child: DragTarget(
-                                  builder: (
-                                    BuildContext context,
-                                    List<dynamic> accepted,
-                                    List<dynamic> rejected,
-                                  ) {
-                                    return _buildDropZone();
-                                  },
+                        ? imageFileResume == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: DottedBorder(
+                                  color: Colors.black,
+                                  dashPattern: const [8, 4],
+                                  strokeWidth: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 30.0),
+                                    child: DragTarget(
+                                      builder: (
+                                        BuildContext context,
+                                        List<dynamic> accepted,
+                                        List<dynamic> rejected,
+                                      ) {
+                                        return _buildDropZone();
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
+                              )
+                            : Image.file(imageFileResume!)
                         : Image.network(resumeImage!),
                     const SizedBox(height: 10),
                     Container(
@@ -326,29 +334,32 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     trancriptImage == null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: DottedBorder(
-                              color: Colors.black,
-                              dashPattern: const [8, 4],
-                              strokeWidth: 2,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 30.0),
-                                child: DragTarget(
-                                  builder: (
-                                    BuildContext context,
-                                    List<dynamic> accepted,
-                                    List<dynamic> rejected,
-                                  ) {
-                                    return _buildDropZone();
-                                  },
+                        ? imageFileTranscript == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: DottedBorder(
+                                  color: Colors.black,
+                                  dashPattern: const [8, 4],
+                                  strokeWidth: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 30.0),
+                                    child: DragTarget(
+                                      builder: (
+                                        BuildContext context,
+                                        List<dynamic> accepted,
+                                        List<dynamic> rejected,
+                                      ) {
+                                        return _buildDropZone();
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
+                              )
+                            : Image.file(imageFileTranscript!)
                         : Image.network(trancriptImage!),
                     const SizedBox(height: 10),
                     Container(
