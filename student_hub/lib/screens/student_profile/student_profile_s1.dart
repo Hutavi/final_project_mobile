@@ -181,36 +181,114 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   void _showSuccess() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Thành công'),
-        content: Text(notify),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('OK'),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              'Thành công',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue, // Màu của tiêu đề
+              ),
+            ),
           ),
-        ],
-      ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                notify,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    child: Text(
+                      'OK',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
   void _showError() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Thất bại'),
-        content: Text(notify),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('OK'),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              'Thất bại',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.red, // Màu của tiêu đề
+              ),
+            ),
           ),
-        ],
-      ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                notify,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    child: Text(
+                      'Cancle',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -499,7 +577,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       options: Options(method: 'PUT'),
     );
 
-    if (responseEducation.statusMessage == 'OK') {
+    if (responseEducation.statusCode == 200) {
       setState(() {
         notify = 'Cập nhật Education thành công';
 
@@ -603,414 +681,486 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(title: "Student Hub"),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            // Welcome message
-            const Padding(
-              padding: EdgeInsets.only(bottom: 12.0),
-              child: Text(
-                'Welcome to Student Hub',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            // Tell us about yourself
-            const Text(
-              'Tell us about yourself and you will be on your way to connect with real-world projects.',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-            ),
-
-            const Row(
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'TechStack',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+        appBar: const AppBarCustom(title: "Student Hub"),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: <Widget>[
+              // Welcome message
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  'Welcome to Student Hub',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                )),
-              ],
-            ),
-
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black, width: 1),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  menuMaxHeight: 200,
-                  value: _selectedValueTech,
-                  hint: const Text('Select Techstack',
-                      style: TextStyle(fontSize: 13, color: Colors.grey)),
-                  items: dropdownTechStackOptions
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: _onDropdownChangedTech,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  iconSize: 26,
-                  underline: const SizedBox(),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
 
-            // Skillset
-            const Row(
-              children: [
-                Expanded(
-                  child: Padding(
+              // Tell us about yourself
+              const Text(
+                'Tell us about yourself and you will be on your way to connect with real-world projects.',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+
+              const Row(
+                children: [
+                  Expanded(
+                      child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Skillset',
+                      'TechStack',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                  )),
+                ],
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black, width: 1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    menuMaxHeight: 200,
+                    value: _selectedValueTech,
+                    hint: const Text('Select Techstack',
+                        style: TextStyle(fontSize: 13, color: Colors.grey)),
+                    items: dropdownTechStackOptions
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: _onDropdownChangedTech,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconSize: 26,
+                    underline: const SizedBox(),
                   ),
                 ),
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black, width: 1),
-                borderRadius: BorderRadius.circular(6),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  menuMaxHeight: 200,
-                  hint: const Text('Select Skillset',
-                      style: TextStyle(fontSize: 13, color: Colors.grey)),
-                  value: _selectedValue,
-                  onChanged: _onDropdownChanged,
-                  items: dropdownSkillSetOptions.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
+
+              // Skillset
+              const Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        value,
+                        'Skillset',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    );
-                  }).toList(),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  iconSize: 26,
-                  underline: const SizedBox(),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black, width: 1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    menuMaxHeight: 200,
+                    hint: const Text('Select Skillset',
+                        style: TextStyle(fontSize: 13, color: Colors.grey)),
+                    value: _selectedValue,
+                    onChanged: _onDropdownChanged,
+                    items: dropdownSkillSetOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                        ),
+                      );
+                    }).toList(),
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconSize: 26,
+                    underline: const SizedBox(),
+                  ),
                 ),
               ),
-            ),
 
-            // Display selected skillset tags
-            SkillsetTagsDisplay(
-              skillsetTags: skillsetTags,
-              onRemoveSkillsetTag: _removeSkillsetTag,
-            ),
+              // Display selected skillset tags
+              SkillsetTagsDisplay(
+                skillsetTags: skillsetTags,
+                onRemoveSkillsetTag: _removeSkillsetTag,
+              ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: isTechStackChanged || isSkillSetChanged
-                      ? _selectedValueTech!.isNotEmpty &&
-                              skillsetTags.isNotEmpty
-                          ? _handlePostProfile
-                          : _errorNull
-                      : null,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: isTechStackChanged || isSkillSetChanged
+                        ? _selectedValueTech!.isNotEmpty &&
+                                skillsetTags.isNotEmpty
+                            ? _handlePostProfile
+                            : _errorNull
+                        : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
                         isTechStackChanged || isSkillSetChanged
                             ? Colors.blue
-                            : Colors
-                                .grey), // Thiết lập màu nền là màu xanh dương
-                  ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Languages
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Căn văn bản sang trái
-                    children: [
-                      const Text(
-                        'Languages',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 14),
+                            : Colors.grey,
                       ),
-                      Row(
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(50),
-                            onTap: created ? _showLanguageModal : null,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromARGB(255, 228, 232, 228),
-                              ),
-                              padding: const EdgeInsets.all(
-                                  6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                              child: const Icon(
-                                Icons.add,
-                                size: 16,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(const Size(120, 36)),
+                    ),
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
-            ),
 
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: listLanguage.length,
-              itemBuilder: (context, index) {
-                final language = listLanguage[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${language['languageName']}: ${language['level']}',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                onTap: () {
-                                  _updateLanguageModal(index);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(255, 228, 232, 228),
-                                  ),
-                                  padding: const EdgeInsets.all(
-                                      6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                                  child: const Icon(
-                                    Icons.edit,
-                                    size: 16,
-                                  ),
+              const SizedBox(height: 8),
+
+              // Languages
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Căn văn bản sang trái
+                      children: [
+                        const Text(
+                          'Languages',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 14),
+                        ),
+                        Row(
+                          children: [
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: created ? _showLanguageModal : null,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(6),
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 16,
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                onTap: () {
-                                  _removeLanguage(index);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(255, 228, 232, 228),
-                                  ),
-                                  padding: const EdgeInsets.all(
-                                      6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                                  child: const Icon(
-                                    Icons.delete,
-                                    size: 16,
-                                  ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: listLanguage.length,
+                itemBuilder: (context, index) {
+                  final language = listLanguage[index];
+                  return Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${language['languageName']}: ${language['level']}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              )
+                              ),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(50),
+                                    onTap: () {
+                                      _updateLanguageModal(index);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(6),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(50),
+                                    onTap: () {
+                                      _removeLanguage(index);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(6),
+                                      child: const Icon(
+                                        Icons.delete,
+                                        size: 16,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Căn văn bản sang trái
-                    children: [
-                      const Text(
-                        'Education',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 14),
-                      ),
-                      Row(
-                        children: [
-                          InkWell(
-                            borderRadius: BorderRadius.circular(50),
-                            onTap: created ? _addEducationModal : null,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromARGB(255, 228, 232, 228),
-                              ),
-                              padding: const EdgeInsets.all(
-                                  6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                              child: const Icon(
-                                Icons.add,
-                                size: 16,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  );
+                },
               ),
-            ),
 
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: listEducation.length,
-              itemBuilder: (context, index) {
-                final education = listEducation[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            education['schoolName'] ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                onTap: () {
-                                  _updateEducationModal(index);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(255, 228, 232, 228),
-                                  ),
-                                  padding: const EdgeInsets.all(
-                                      6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                                  child: const Icon(
-                                    Icons.edit,
-                                    size: 16,
-                                  ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Education',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 14),
+                        ),
+                        Row(
+                          children: [
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: created ? _addEducationModal : null,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(
+                                    6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 16,
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                onTap: () {
-                                  _removeEducation(index);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(255, 228, 232, 228),
-                                  ),
-                                  padding: const EdgeInsets.all(
-                                      6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                                  child: const Icon(
-                                    Icons.delete,
-                                    size: 16,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        '${education['startYear']} - ${education['endYear']}',
-                        style:
-                            const TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-
-            // Next button
-            Container(
-              padding: const EdgeInsets.only(top: 16.0),
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    created
-                        ? Navigator.pushNamed(context, AppRouterName.profileS2)
-                        : null;
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(created
-                        ? Colors.blue
-                        : Colors.grey), // Thiết lập màu nền là màu xanh dương
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            )
-          ],
+
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: listEducation.length,
+                itemBuilder: (context, index) {
+                  final education = listEducation[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  education['schoolName'] ?? '',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(50),
+                                      onTap: () {
+                                        _updateEducationModal(index);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              spreadRadius: 2,
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        padding: const EdgeInsets.all(6),
+                                        child: const Icon(
+                                          Icons.edit,
+                                          size: 16,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(50),
+                                      onTap: () {
+                                        _removeEducation(index);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              spreadRadius: 2,
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        padding: const EdgeInsets.all(6),
+                                        child: const Icon(
+                                          Icons.delete,
+                                          size: 16,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2.0),
+                            Text(
+                              '${education['startYear']} - ${education['endYear']}',
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
+          decoration: BoxDecoration(
+            color: Colors.white, // Màu nền của bottomNavigationBar
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
+                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
+                blurRadius: 4, // Độ mờ của đổ bóng
+                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              created
+                  ? Navigator.pushNamed(context, AppRouterName.profileS2)
+                  : null;
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(10),
+              backgroundColor: Colors.blue, // Màu nền của nút
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+              ),
+            ),
+            child:
+                const Text('Continue', style: TextStyle(color: Colors.white)),
+          ),
+        ));
   }
 }
