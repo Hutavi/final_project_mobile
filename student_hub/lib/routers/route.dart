@@ -19,6 +19,7 @@ import 'package:student_hub/screens/chat/chat.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/notification/notification.dart';
+import 'package:student_hub/screens/post/edit_project.dart';
 import 'package:student_hub/screens/profile_page/edit_profile.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/screens/schedule_interview/video_conference_screen.dart';
@@ -30,6 +31,7 @@ import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
 import 'package:student_hub/screens/post/post_screen_3.dart';
 import 'package:student_hub/screens/post/post_screen_4.dart';
+import 'package:student_hub/screens/post/review_post.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 import 'package:student_hub/screens/welcome_screen.dart';
 // import 'package:todolist_app/main.dart';
@@ -253,6 +255,47 @@ class AppRoute {
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const PostScreen4(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+      case AppRouterName.reviewPost:
+        final args = settings.arguments as int;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              ReviewPost(
+                projectID: args,
+              ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+        
+      case AppRouterName.editPoject:
+        final args = settings.arguments as int;
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              EditProject(
+                projectID: args,
+              ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
