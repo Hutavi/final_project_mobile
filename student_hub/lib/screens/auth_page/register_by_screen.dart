@@ -67,8 +67,9 @@ class _LoginByScreenState extends State<RegisterByScreen> {
         );
 
         if (response.statusCode == 201) {
+          _showSuccessDialog();
           // ignore: use_build_context_synchronously
-          Navigator.pushNamed(context, AppRouterName.navigation);
+          // Navigator.pushReplacementNamed(context, AppRouterName.login);
           print("Ok");
         } else {
           print("Sign failed: ${response.data}");
@@ -107,6 +108,27 @@ class _LoginByScreenState extends State<RegisterByScreen> {
         }
       }
     }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Đăng ký thành công"),
+          content: const Text("Hãy thực hiện xác nhận email"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Đóng"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, AppRouterName.login);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
