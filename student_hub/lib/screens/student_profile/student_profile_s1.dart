@@ -252,7 +252,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       if (responseLanguage.statusCode == 201) {
         setState(() {
           notify = 'Tạo Profile thành công';
-          getDataDefault();
+          getDataIdStudent();
           _showSuccess();
           created = true;
           isTechStackChanged = false;
