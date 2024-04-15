@@ -72,35 +72,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   void initState() {
     super.initState();
     getUserInfoFromToken();
-    // Gán giá trị của companyName cho TextEditingController
-    // _companyNameController.text = widget.companyInfo.companyName ?? '';
-    // _websiteController.text = widget.companyInfo.website ?? '';
-    // _descriptionController.text = widget.companyInfo.description ?? '';
-    
-    // switch (userCurr?.companyUser?.size) {
-    //   case 0:
-    //     _selectedValue = 0;
-    //     break;
-    //   case 1:
-    //     _selectedValue = 1;
-    //     break;
-    //   case 2:
-    //     _selectedValue = 2;
-    //     break;
-    //   case 3:
-    //     _selectedValue = 3;
-    //     break;
-    //   case 4:
-    //     _selectedValue = 4;
-    //     break;
-    //   default:
-    //     _selectedValue = null;
-    // }
-    
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         setState(() {
-          // your timer logic here
         });
       }
     });
