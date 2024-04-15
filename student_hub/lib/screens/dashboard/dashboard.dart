@@ -469,7 +469,8 @@ class DashboardState extends State<Dashboard>
                 ),
                 title: const Text('Edit posting'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRouterName.reviewPost,
+                      arguments: projects[index]['id']);
                 }
               ),
               ListTile(
