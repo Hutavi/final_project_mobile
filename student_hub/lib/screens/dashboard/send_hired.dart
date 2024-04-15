@@ -324,27 +324,6 @@ class SendHiredState extends State<SendHired>
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: const BoxDecoration(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                // Navigator.pushNamed(context, AppRouterName.submitProposal);
-              },
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  backgroundColor: kWhiteColor,
-                  foregroundColor: kBlue700),
-              child: const Text('Post Job'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

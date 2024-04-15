@@ -384,288 +384,283 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const AppBarCustom(title: "Student Hub"),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: <Widget>[
-                // Welcome message
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
-                  child: Text(
-                    'Experiences',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+      appBar: const AppBarCustom(title: "Student Hub"),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: <Widget>[
+            // Welcome message
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12.0),
+              child: Text(
+                'Experiences',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
+              ),
+            ),
 
-                const Padding(
-                  padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
-                  child: Text(
-                    'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                ),
+            const Padding(
+              padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+              child: Text(
+                'Tell us about yourself and you will be on your way to connect with real-world projects.',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
 
-                Column(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text(
+                      'Projects',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // Căn văn bản sang trái
                       children: [
-                        const Text(
-                          'Projects',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 14),
-                        ),
-                        Row(
-                          children: [
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: () async {
-                                type = 'add';
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddProjectScreen(
-                                      type: type,
-                                    ),
-                                  ),
-                                );
-                                if (result != null) {
-                                  // Xử lý kết quả trả về từ màn hình nhập dự án
-                                  setState(() {
-                                    sendData(result);
-                                  });
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.all(6),
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 16,
+                        InkWell(
+                          borderRadius: BorderRadius.circular(50),
+                          onTap: () async {
+                            type = 'add';
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddProjectScreen(
+                                  type: type,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            );
+                            if (result != null) {
+                              // Xử lý kết quả trả về từ màn hình nhập dự án
+                              setState(() {
+                                sendData(result);
+                              });
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            child: const Icon(
+                              Icons.add,
+                              size: 16,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ],
                 ),
+              ],
+            ),
 
-                const SizedBox(height: 8.0),
-                // Danh sách dự án
-                Column(
-                  children: List.generate(
-                    projects.length,
-                    (index) => Card(
-                      elevation: 4, // Độ nâng cao của thẻ
-                      margin: const EdgeInsets.only(bottom: 16),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 8.0),
+
+            // Danh sách dự án
+            Expanded(
+              child: ListView.builder(
+                itemCount: projects.length,
+                itemBuilder: (context, index) => Card(
+                  elevation: 4, // Độ nâng cao của thẻ
+                  margin: const EdgeInsets.only(bottom: 16),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Expanded(
+                              child: Text(
+                                projects[index]['title']!.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    projects[index]['title']!.toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(50),
+                                  onTap: () {
+                                    type = 'udpate';
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddProjectScreen(
+                                          defaultTitle: projects[index]
+                                                  ['title']!
+                                              .toString(),
+                                          defaultStartDate: projects[index]
+                                              ['startMonth']!,
+                                          defaultEndDate: projects[index]
+                                              ['endMonth']!,
+                                          defaultDescription: projects[index]
+                                                  ['description']!
+                                              .toString(),
+                                          defaultSkillset: projects[index]
+                                              ['skillset']! as List<dynamic>,
+                                          type: type,
+                                        ),
+                                      ),
+                                    ).then((result) {
+                                      if (result != null) {
+                                        updateData(index, result);
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    padding: const EdgeInsets.all(6),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      size: 16,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      borderRadius: BorderRadius.circular(50),
-                                      onTap: () {
-                                        type = 'udpate';
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddProjectScreen(
-                                              defaultTitle: projects[index]
-                                                      ['title']!
-                                                  .toString(),
-                                              defaultStartDate: projects[index]
-                                                  ['startMonth']!,
-                                              defaultEndDate: projects[index]
-                                                  ['endMonth']!,
-                                              defaultDescription:
-                                                  projects[index]
-                                                          ['description']!
-                                                      .toString(),
-                                              defaultSkillset: projects[index]
-                                                      ['skillset']!
-                                                  as List<dynamic>,
-                                              type: type,
-                                            ),
-                                          ),
-                                        ).then((result) {
-                                          if (result != null) {
-                                            updateData(index, result);
-                                          }
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                        ),
-                                        padding: const EdgeInsets.all(6),
-                                        child: const Icon(
-                                          Icons.edit,
-                                          size: 16,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
+                                const SizedBox(width: 8.0),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(50),
+                                  onTap: () {
+                                    removeProject(index);
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
                                     ),
-                                    const SizedBox(width: 8.0),
-                                    InkWell(
-                                      borderRadius: BorderRadius.circular(50),
-                                      onTap: () {
-                                        removeProject(index);
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                        ),
-                                        padding: const EdgeInsets.all(6),
-                                        child: const Icon(Icons.delete,
-                                            size: 16, color: Colors.red),
-                                      ),
-                                    ),
-                                  ],
+                                    padding: const EdgeInsets.all(6),
+                                    child: const Icon(Icons.delete,
+                                        size: 16, color: Colors.red),
+                                  ),
                                 ),
                               ],
                             ),
-
-                            const SizedBox(height: 8.0),
-                            Text(
-                              durationDate(
-                                projects[index]['startMonth']!,
-                                projects[index]['endMonth']!,
-                              ),
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.grey),
-                            ),
-
-                            const SizedBox(height: 8.0),
-                            Text(projects[index]['description']!.toString(),
-                                style: const TextStyle(
-                                    fontSize: 13, color: Colors.black),
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis),
-                            const SizedBox(height: 8.0),
-                            // Tiêu đề Skillset
-                            const Text(
-                              'Skillset',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 6.0),
-
-                            // Danh sách các kỹ năng
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              padding: const EdgeInsets.all(8.0),
-                              child: Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
-                                children: [
-                                  for (var skill in (projects[index]['skillset']
-                                          .map<dynamic>((element) =>
-                                              element['name'].toString())
-                                          .toList() as List<dynamic>? ??
-                                      []))
-                                    Card(
-                                      elevation: 2,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12.0, vertical: 4),
-                                        child: Text(
-                                          skill,
-                                          style: const TextStyle(fontSize: 13),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
-                      ),
+
+                        const SizedBox(height: 8.0),
+                        Text(
+                          durationDate(
+                            projects[index]['startMonth']!,
+                            projects[index]['endMonth']!,
+                          ),
+                          style:
+                              const TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+
+                        const SizedBox(height: 8.0),
+                        Text(projects[index]['description']!.toString(),
+                            style: const TextStyle(
+                                fontSize: 13, color: Colors.black),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 8.0),
+                        // Tiêu đề Skillset
+                        const Text(
+                          'Skillset',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6.0),
+
+                        // Danh sách các kỹ năng
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: [
+                              for (var skill in (projects[index]['skillset']
+                                      .map<dynamic>((element) =>
+                                          element['name'].toString())
+                                      .toList() as List<dynamic>? ??
+                                  []))
+                                Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0, vertical: 4),
+                                    child: Text(
+                                      skill,
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
-          decoration: BoxDecoration(
-            color: Colors.white, // Màu nền của bottomNavigationBar
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-                blurRadius: 4, // Độ mờ của đổ bóng
-                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
-              ),
-            ],
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, AppRouterName.profileS3);
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              backgroundColor: Colors.blue, // Màu nền của nút
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
-              ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
+        decoration: BoxDecoration(
+          color: Colors.white, // Màu nền của bottomNavigationBar
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
+              spreadRadius: 2, // Bán kính lan rộng của đổ bóng
+              blurRadius: 4, // Độ mờ của đổ bóng
+              offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
             ),
-            child:
-                const Text('Continue', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AppRouterName.profileS3);
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(10),
+            backgroundColor: Colors.blue, // Màu nền của nút
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+            ),
           ),
-        ));
+          child: const Text('Continue', style: TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
   }
 }
