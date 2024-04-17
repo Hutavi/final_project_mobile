@@ -31,9 +31,16 @@ class AddLanguageModalState extends State<AddLanguageModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding:
+          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       title: const Text(
         'Add Language',
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
         textAlign: TextAlign.center,
       ),
       content: Column(
@@ -42,17 +49,12 @@ class AddLanguageModalState extends State<AddLanguageModal> {
         children: [
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.black),
-                color: Colors.white),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.black),
+              color: Colors.white,
+            ),
             child: TextField(
               controller: _languageNameController,
-              onChanged: (value) {
-                setState(() {
-                  _languageNameController.text =
-                      value; // Cập nhật giá trị mới vào controller
-                });
-              },
               style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 hintText: 'Language Name',
@@ -67,7 +69,7 @@ class AddLanguageModalState extends State<AddLanguageModal> {
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(color: Colors.black),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -96,26 +98,55 @@ class AddLanguageModalState extends State<AddLanguageModal> {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel', style: TextStyle(fontSize: 13)),
-        ),
-        TextButton(
-          onPressed: () {
-            if (_languageNameController.text.isNotEmpty &&
-                _selectedLanguageLevel.isNotEmpty) {
-              widget.onAccept(
-                  _languageNameController.text, _selectedLanguageLevel);
-              Navigator.of(context).pop();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Please enter language and level.'),
-              ));
-            }
-          },
-          child: const Text('Accept', style: TextStyle(fontSize: 13)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
+                child: const Text('Cancel',
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  if (_languageNameController.text.isNotEmpty &&
+                      _selectedLanguageLevel.isNotEmpty) {
+                    widget.onAccept(
+                        _languageNameController.text, _selectedLanguageLevel);
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please enter language and level.'),
+                    ));
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
+                child: const Text('Accept',
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+              ),
+            ),
+          ],
         ),
       ],
     );

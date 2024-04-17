@@ -25,6 +25,7 @@ class AddEducationModalState extends State<AddEducationModal> {
   late String _selectedEducationEndYear;
   List<String> yearsList =
       List.generate(51, (index) => (2000 + index).toString());
+  var title = '';
 
   @override
   void initState() {
@@ -33,14 +34,24 @@ class AddEducationModalState extends State<AddEducationModal> {
         TextEditingController(text: widget.initialEducationName);
     _selectedEducationStartYear = widget.initialSelectedEducationStartYear;
     _selectedEducationEndYear = widget.initialSelectedEducationEndYear;
+    title = widget.initialEducationName != ''
+        ? 'Update Education'
+        : 'Add Education';
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(
-        'Add Education',
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      contentPadding:
+          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
         textAlign: TextAlign.center,
       ),
       content: Column(
@@ -54,12 +65,6 @@ class AddEducationModalState extends State<AddEducationModal> {
                 color: Colors.white),
             child: TextField(
               controller: _educationNameController,
-              onChanged: (value) {
-                setState(() {
-                  _educationNameController.text =
-                      value; // Cập nhật giá trị mới vào controller
-                });
-              },
               style: const TextStyle(fontSize: 13),
               decoration: const InputDecoration(
                 hintText: 'Education Name',
@@ -144,27 +149,57 @@ class AddEducationModalState extends State<AddEducationModal> {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel', style: TextStyle(fontSize: 13)),
-        ),
-        TextButton(
-          onPressed: () {
-            if (_educationNameController.text.isNotEmpty &&
-                _selectedEducationStartYear.isNotEmpty &&
-                _selectedEducationEndYear.isNotEmpty) {
-              widget.onAccept(_educationNameController.text,
-                  _selectedEducationStartYear, _selectedEducationEndYear);
-              Navigator.of(context).pop();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Please enter language and level.'),
-              ));
-            }
-          },
-          child: const Text('Accept', style: TextStyle(fontSize: 13)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
+                child: const Text('Cancel',
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  if (_educationNameController.text.isNotEmpty &&
+                      _selectedEducationStartYear.isNotEmpty &&
+                      _selectedEducationEndYear.isNotEmpty) {
+                    widget.onAccept(_educationNameController.text,
+                        _selectedEducationStartYear, _selectedEducationEndYear);
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(
+                          'Please enter education, start year and end year.'),
+                    ));
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
+                child: const Text('Accept',
+                    style: TextStyle(fontSize: 13, color: Colors.white)),
+              ),
+            ),
+          ],
         ),
       ],
     );

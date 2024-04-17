@@ -35,7 +35,7 @@ class AddProjectScreenState extends State<AddProjectScreen> {
   final List<String> _dropdownSkillSetOptions = [];
   List<Map<String, dynamic>> dropdownSkillSetOptionsData = [];
   List<dynamic> dropdownSkillSetOptionsDataRemove = [];
-  // List<int> skillsetTagsID = [];
+  var notify = '';
 
   @override
   void initState() {
@@ -105,6 +105,15 @@ class AddProjectScreenState extends State<AddProjectScreen> {
       initialDate: _startDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.blue,
+            colorScheme: const ColorScheme.light(primary: Colors.blue),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _startDate) {
       setState(() {
@@ -119,6 +128,15 @@ class AddProjectScreenState extends State<AddProjectScreen> {
       initialDate: _endDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.red,
+            colorScheme: const ColorScheme.light(primary: Colors.red),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _endDate) {
       setState(() {
@@ -156,239 +174,312 @@ class AddProjectScreenState extends State<AddProjectScreen> {
     });
   }
 
+  void _showError() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              'Thất bại',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.red, // Màu của tiêu đề
+              ),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                notify,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    child: Text(
+                      'Cancle',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(widget.type == 'add' ? 'Add Project' : 'Update Project')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const Text(
-              'Title',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+        appBar: AppBar(
+          title: Text(
+            widget.type == 'add' ? 'Add Project' : 'Update Project',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(
-              height: 2,
+          ),
+          backgroundColor: Colors.blue,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
             ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  color: Colors.white),
-              child: TextField(
-                controller: _titleController,
-                onChanged: (value) {
-                  setState(() {
-                    _titleController.text = value;
-                  });
-                },
-                style: const TextStyle(fontSize: 13),
-                decoration: const InputDecoration(
-                  hintText: 'Project Title',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                  hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const Text(
+                'Title',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Time',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: TextButton(
-                    onPressed: () => _selectStartDate(context),
-                    child: Text(
-                      'Start Date: ${_startDate.month}/${_startDate.year}',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
+              const SizedBox(
+                height: 2,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.black, width: 0.5),
+                    color: Colors.white),
+                child: TextField(
+                  controller: _titleController,
+                  onChanged: (value) {
+                    setState(() {
+                      _titleController.text = value;
+                    });
+                  },
+                  style: const TextStyle(fontSize: 13),
+                  decoration: const InputDecoration(
+                    hintText: 'Project Title',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10),
+                    hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                 ),
-                const SizedBox(width: 16.0),
-                Expanded(
-                  flex: 5,
-                  child: TextButton(
-                    onPressed: () => _selectEndDate(context),
-                    child: Text(
-                      'End Date: ${_endDate.month}/${_endDate.year}',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10.0),
-            const Text(
-              'Description',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  color: Colors.white),
-              child: TextField(
-                controller: _descriptionController,
-                maxLines: 3,
-                onChanged: (value) {
-                  setState(() {
-                    _descriptionController.text = value;
-                  });
-                },
-                style: const TextStyle(fontSize: 13),
-                decoration: const InputDecoration(
-                  hintText: 'Description',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(10),
-                  hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                ),
               ),
-            ),
-            const Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      'Skillset',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+              const SizedBox(height: 16.0),
+              const Text(
+                'Time',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    flex: 5,
+                    child: TextButton(
+                      onPressed: () => _selectStartDate(context),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.blue)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 2),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black, width: 0.5),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  menuMaxHeight: 200,
-                  hint: const Text('Select Skillset',
-                      style: TextStyle(fontSize: 13, color: Colors.grey)),
-                  value: _selectedValue,
-                  onChanged: _onDropdownChanged,
-                  items: _dropdownSkillSetOptions.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
                       child: Text(
-                        value,
+                        'Start Date: ${_startDate.month}/${_startDate.year}',
+                        style: const TextStyle(color: Colors.blue),
                       ),
-                    );
-                  }).toList(),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  iconSize: 26,
-                  underline: const SizedBox(),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    flex: 5,
+                    child: TextButton(
+                      onPressed: () => _selectEndDate(context),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.red)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                      ),
+                      child: Text(
+                        'End Date: ${_endDate.month}/${_endDate.year}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'Description',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.black, width: 0.5),
+                    color: Colors.white),
+                child: TextField(
+                  controller: _descriptionController,
+                  maxLines: 3,
+                  onChanged: (value) {
+                    setState(() {
+                      _descriptionController.text = value;
+                    });
+                  },
+                  style: const TextStyle(fontSize: 13),
+                  decoration: const InputDecoration(
+                    hintText: 'Description',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(10),
+                    hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
                 ),
               ),
-            ),
-
-            // Display selected skillset tags
-            SkillsetTagsDisplay(
-              skillsetTags: _skillsetTags,
-              onRemoveSkillsetTag: _removeSkillsetTag,
-            ),
-
-            const SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (_titleController.text.isNotEmpty &&
-                        _descriptionController.text.isNotEmpty &&
-                        _skillsetTags.isNotEmpty) {
-                      if (_endDate.isBefore(_startDate) ||
-                          _startDate.isAfter(DateTime.now()) ||
-                          _endDate.isAfter(DateTime.now())) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Lỗi'),
-                            content: const Text(
-                                'EndDate không thể có trước startDate or không thể chọn ngày quá thời gian hiện tại được.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                        return;
-                      }
-
-                      Navigator.pop(
-                        context,
-                        {
-                          'title': _titleController.text,
-                          'startMonth': _startDate,
-                          'endMonth': _endDate,
-                          'description': _descriptionController.text,
-                          'skillsetName': _skillsetTags,
-                          'skillset': dropdownSkillSetOptionsDataRemove,
-                          'skillsetID': dropdownSkillSetOptionsDataRemove
-                              .map<int>((element) => element['id'])
-                              .toList()
-                        },
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Lỗi'),
-                          content:
-                              const Text('Hãy nhập dữ liệu cho đủ các trường'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
+              const Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text(
+                        'Skillset',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black, width: 0.5),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    menuMaxHeight: 200,
+                    hint: const Text('Select Skillset',
+                        style: TextStyle(fontSize: 13, color: Colors.grey)),
+                    value: _selectedValue,
+                    onChanged: _onDropdownChanged,
+                    items: _dropdownSkillSetOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
                         ),
                       );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Colors.blue), // Thiết lập màu nền là màu xanh dương
-                  ),
-                  child: Text(
-                    widget.type == 'add' ? 'Add Project' : 'Update Project',
-                    style: const TextStyle(color: Colors.white),
+                    }).toList(),
+                    icon: const Icon(Icons.arrow_drop_down),
+                    iconSize: 26,
+                    underline: const SizedBox(),
                   ),
                 ),
-              ],
-            )
-          ],
+              ),
+
+              // Display selected skillset tags
+              SkillsetTagsDisplay(
+                skillsetTags: _skillsetTags,
+                onRemoveSkillsetTag: _removeSkillsetTag,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
+          decoration: BoxDecoration(
+            color: Colors.white, // Màu nền của bottomNavigationBar
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
+                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
+                blurRadius: 4, // Độ mờ của đổ bóng
+                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_titleController.text.isNotEmpty &&
+                  _descriptionController.text.isNotEmpty &&
+                  _skillsetTags.isNotEmpty) {
+                if (_endDate.isBefore(_startDate) ||
+                    _startDate.isAfter(DateTime.now()) ||
+                    _endDate.isAfter(DateTime.now())) {
+                  setState(() {
+                    notify =
+                        'EndDate không thể có trước startDate or không thể chọn ngày quá thời gian hiện tại được.';
+                    _showError();
+                  });
+                  return;
+                }
+
+                Navigator.pop(
+                  context,
+                  {
+                    'title': _titleController.text,
+                    'startMonth': _startDate,
+                    'endMonth': _endDate,
+                    'description': _descriptionController.text,
+                    'skillsetName': _skillsetTags,
+                    'skillset': dropdownSkillSetOptionsDataRemove,
+                    'skillsetID': dropdownSkillSetOptionsDataRemove
+                        .map<int>((element) => element['id'])
+                        .toList()
+                  },
+                );
+              } else {
+                setState(() {
+                  notify = 'Hãy nhập dữ liệu cho đủ các trường';
+                  _showError();
+                });
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(10),
+              backgroundColor: Colors.blue, // Màu nền của nút
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+              ),
+            ),
+            child: Text(
+              widget.type == 'add' ? 'Add Project' : 'Update Project',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ));
   }
 }
