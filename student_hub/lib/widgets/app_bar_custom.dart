@@ -17,15 +17,18 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.blue,
       leading: showBackButton
           ? IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -33,7 +36,10 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           : null,
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.person),
+          icon: const Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pushNamed(context, AppRouterName.switchAccount);
           },

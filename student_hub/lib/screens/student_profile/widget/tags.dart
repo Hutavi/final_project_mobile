@@ -45,14 +45,15 @@ class SkillsetTagsDisplay extends StatelessWidget {
                             onRemoveSkillsetTag(skill);
                           },
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.red,
                             ),
-                            padding: const EdgeInsets.all(6.0),
+                            padding: const EdgeInsets.all(4.0),
                             child: const Icon(
                               Icons.close,
                               size: 14.0,
+                              color: Colors.white,
                             ),
                           ),
                         ),

@@ -94,7 +94,8 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
         children: [
           Icon(
             Icons.cloud_upload,
-            size: 40,
+            size: 60,
+            color: Colors.blue,
           ),
           Text(
             'Drop and Drag Image Here',
@@ -223,213 +224,272 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(title: "Student Hub"),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              // Welcome message
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12.0),
-                child: Text(
-                  'CV & Transcript',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
-                child: Text(
-                  'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                ),
-              ),
-
-              const Row(
-                children: [
-                  Expanded(
-                      child: Text(
-                    'Resume/CV (*)',
+        appBar: const AppBarCustom(title: "Student Hub"),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: <Widget>[
+                // Welcome message
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12.0),
+                  child: Text(
+                    'CV & Transcript',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                  )),
-                ],
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    resumeImage == null
-                        ? imageFileResume == null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: DottedBorder(
-                                  color: Colors.black,
-                                  dashPattern: const [8, 4],
-                                  strokeWidth: 2,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 30.0),
-                                    child: DragTarget(
-                                      builder: (
-                                        BuildContext context,
-                                        List<dynamic> accepted,
-                                        List<dynamic> rejected,
-                                      ) {
-                                        return _buildDropZone();
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Image.file(imageFileResume!)
-                        : Image.network(resumeImage!),
-                    const SizedBox(height: 10),
-                    Container(
-                      // Đặt padding cho Container để căn chỉnh nút
-                      alignment: Alignment
-                          .bottomRight, // Căn chỉnh nút ở dưới cùng bên phải
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: ElevatedButton(
-                          onPressed: _pickImageResume,
-                          child: Text(
-                              resumeImage == null ? 'Choose Image' : 'Change'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Transcript (*)',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
+                ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    trancriptImage == null
-                        ? imageFileTranscript == null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: DottedBorder(
-                                  color: Colors.black,
-                                  dashPattern: const [8, 4],
-                                  strokeWidth: 2,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 30.0),
-                                    child: DragTarget(
-                                      builder: (
-                                        BuildContext context,
-                                        List<dynamic> accepted,
-                                        List<dynamic> rejected,
-                                      ) {
-                                        return _buildDropZone();
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Image.file(imageFileTranscript!)
-                        : Image.network(trancriptImage!),
-                    const SizedBox(height: 10),
-                    Container(
-                      // Đặt padding cho Container để căn chỉnh nút
-                      alignment: Alignment
-                          .bottomRight, // Căn chỉnh nút ở dưới cùng bên phải
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: ElevatedButton(
-                          onPressed: _pickImageTranscript,
-                          child: Text(trancriptImage == null
-                              ? 'Choose Image'
-                              : 'Change'),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                  child: Text(
+                    'Tell us about yourself and you will be on your way to connect with real-world projects.',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
+                ),
+
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Resume/CV (*)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
 
-              // Next button
-              Container(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                    ),
-                    onPressed: () {
-                      if (resumeImage == null || trancriptImage == null) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Lỗi'),
-                              content: const Text('Hãy chọn đủ ảnh.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        // Nếu cả hai hình ảnh đều đã được chọn, chuyển đến màn hình tiếp theo
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NavigationMenu(
-                              companyUser: accountList[0],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      resumeImage == null
+                          ? imageFileResume == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: DottedBorder(
+                                    color: Colors.black,
+                                    dashPattern: const [8, 4],
+                                    strokeWidth: 2,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 30.0),
+                                      child: DragTarget(
+                                        builder: (
+                                          BuildContext context,
+                                          List<dynamic> accepted,
+                                          List<dynamic> rejected,
+                                        ) {
+                                          return _buildDropZone();
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Image.file(imageFileResume!)
+                          : Image.network(resumeImage!),
+                      const SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: ElevatedButton(
+                            onPressed: _pickImageResume,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.blue,
+                              padding:
+                                  const EdgeInsets.all(10), // Padding của nút
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(6), // Bo tròn cho nút
+                              ),
                             ),
+                            child: Text(resumeImage == null
+                                ? 'Choose Image'
+                                : 'Change'),
                           ),
-                        );
-                      }
-                    },
-                    child: const Text('Continue',
-                        style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+
+                const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Transcript (*)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      trancriptImage == null
+                          ? imageFileTranscript == null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: DottedBorder(
+                                    color: Colors.black,
+                                    dashPattern: const [8, 4],
+                                    strokeWidth: 2,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 30.0),
+                                      child: DragTarget(
+                                        builder: (
+                                          BuildContext context,
+                                          List<dynamic> accepted,
+                                          List<dynamic> rejected,
+                                        ) {
+                                          return _buildDropZone();
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Image.file(imageFileTranscript!)
+                          : Image.network(trancriptImage!),
+                      const SizedBox(height: 10),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: ElevatedButton(
+                            onPressed: _pickImageTranscript,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.blue,
+                              padding:
+                                  const EdgeInsets.all(10), // Padding của nút
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(6), // Bo tròn cho nút
+                              ),
+                            ),
+                            child: Text(trancriptImage == null
+                                ? 'Choose Image'
+                                : 'Change'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
+          decoration: BoxDecoration(
+            color: Colors.white, // Màu nền của bottomNavigationBar
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
+                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
+                blurRadius: 4, // Độ mờ của đổ bóng
+                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
               ),
             ],
           ),
-        ),
-      ),
-    );
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NavigationMenu(
+                    companyUser: accountList[0],
+                  ),
+                ),
+              );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Center(
+                      child: Text(
+                        'Welcome',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue, // Màu của tiêu đề
+                        ),
+                      ),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6)),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                'Next',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(10),
+              backgroundColor: Colors.blue, // Màu nền của nút
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+              ),
+            ),
+            child:
+                const Text('Continue', style: TextStyle(color: Colors.white)),
+          ),
+        ));
   }
 }
