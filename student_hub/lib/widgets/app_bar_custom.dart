@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/screens/schedule_interview/schedule_interview.dart';
+import 'package:student_hub/routers/route_name.dart';
 
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const AppBarCustom({Key? key, required this.title}) : super(key: key);
+  final bool showBackButton;
+  const AppBarCustom(
+      {Key? key, required this.title, this.showBackButton = true})
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -14,58 +17,34 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.blue,
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          : null,
       actions: <Widget>[
-        PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'scheduleInterview') {
-              // Hiển thị bottom sheet khi chọn "Schedule an interview"
-              // _showSearchBottomSheet(context);
-            } else if (value == 'cancel') {
-              // Không làm gì khi chọn "Cancel"
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return [
-              const PopupMenuItem(
-                value: 'scheduleInterview',
-                child: Text('Schedule an interview'),
-              ),
-              const PopupMenuItem(
-                value: 'cancel',
-                child: Text('Cancel'),
-              ),
-            ];
+        IconButton(
+          icon: const Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, AppRouterName.switchAccount);
           },
         ),
       ],
-      // actions: <Widget>[
-      //   IconButton(
-      //     icon: const Icon(Icons.person),
-      //     onPressed: () {
-
-      //       //  Navigator.pushNamed(context, AppRouterName.projectSaved);
-      //     },
-      //   ),
-      // ],
     );
   }
-
-  // void _showSearchBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (BuildContext context) {
-  //       return const ScheduleInterview();
-  //     },
-  //   );
-  // }
 }

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum ProjectDuration {
   oneToThreeMonths,
   threeToSixMonths,
 }
 
-class PostScreen2 extends StatefulWidget {
+class PostScreen2 extends ConsumerStatefulWidget {
   const PostScreen2({Key? key}) : super(key: key);
 
   @override
-  State<PostScreen2> createState() => _PostScreen2State();
+  ConsumerState<PostScreen2> createState() => _PostScreen2State();
 }
 
-class _PostScreen2State extends State<PostScreen2> {
+class _PostScreen2State extends ConsumerState<PostScreen2> {
   ProjectDuration _projectDuration = ProjectDuration.oneToThreeMonths;
   final _numberStudentsController = TextEditingController();
-  bool _isDisabledNextButton = true;
+  // bool _isDisabledNextButton = true;
   int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
 
   @override
@@ -26,16 +29,15 @@ class _PostScreen2State extends State<PostScreen2> {
     super.dispose();
   }
 
-  void onHandledButtonWithTextfield(String value) {
-    // Cập nhật giá trị số không âm
-    setState(() {
-      _numberOfStudents = int.tryParse(value) ?? 0;
-      // _isDisabledNextButton = value != null? true : false;
-    });
-  }
 
   // change value of project-duration when selecting another duration
   void onSelectedDuration(ProjectDuration? duration) {
+    if(duration?.index == 0){
+      ref.read(postProjectProvider.notifier).setProjectScopeFlag(0);
+    }
+    else{
+      ref.read(postProjectProvider.notifier).setProjectScopeFlag(1);
+    }
     setState(() {
       _projectDuration = duration!;
     });
@@ -43,6 +45,18 @@ class _PostScreen2State extends State<PostScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    print(ref.watch(postProjectProvider).title);
+    if(ref.watch(postProjectProvider).numberOfStudents != null){
+      _numberStudentsController.text = ref.watch(postProjectProvider).numberOfStudents.toString();
+    }
+    if(ref.watch(postProjectProvider).projectScopeFlag != null){
+      if(ref.watch(postProjectProvider).projectScopeFlag == 0){
+        _projectDuration = ProjectDuration.oneToThreeMonths;
+      }
+      else{
+        _projectDuration = ProjectDuration.threeToSixMonths;
+      }
+    }
     return Scaffold(
       appBar: _AppBar(),
       body: Padding(
@@ -123,7 +137,14 @@ class _PostScreen2State extends State<PostScreen2> {
                   FilteringTextInputFormatter.allow(
                       RegExp(r'^[0-9]*$')), // Chỉ cho phép nhập số
                 ],
-                onChanged: onHandledButtonWithTextfield,
+                onChanged: (value){
+                  setState(() {
+                    ref.read(postProjectProvider.notifier).setNumberOfStudents(int.tryParse(value) ?? 0);
+                    //onHandledButtonWithTextfield,
+                    _numberOfStudents = int.tryParse(value) ?? 0;
+                    // _isDisabledNextButton = value != null? true : false;
+                  });
+                },
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.width < 300
                       ? 14 // Điều chỉnh kích thước chữ cho màn hình nhỏ hơn
@@ -155,6 +176,10 @@ class _PostScreen2State extends State<PostScreen2> {
                           : 16.0, // Adjust padding for smaller screens
                       vertical: 8.0,
                     ),
+                    backgroundColor: kBlue400,
+                    foregroundColor: _numberOfStudents > 0
+                        ? null
+                        : kWhiteColor, // Disable button if no value
                   ),
                 ),
               ),

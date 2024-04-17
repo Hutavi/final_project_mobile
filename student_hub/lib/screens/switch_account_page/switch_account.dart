@@ -1,8 +1,14 @@
+import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
+import 'package:student_hub/models/user.dart';
+import 'package:student_hub/screens/switch_account_page/api_manager.dart';
+import 'package:student_hub/services/dio_client.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -13,7 +19,53 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   //account đã từng đăng nhập
-  String currentAccount = '';
+  User? userCurr;
+
+  @override
+  void initState() {
+    super.initState();
+    // Gọi phương thức để lấy thông tin user từ token khi widget được tạo
+    getUserInfoFromToken();
+  }
+
+  // Phương thức để lấy thông tin user từ token
+  Future<void> getUserInfoFromToken() async {
+    // Lấy token từ local storage
+    String? token = await TokenManager.getTokenFromLocal();
+    print(token);
+    if (token != null) {
+      // Gọi API để lấy thông tin user
+      User? userInfo = await ApiManager.getUserInfo(token);
+      setState(() {
+        print(userInfo);
+        // Cập nhật userCurr với thông tin user được trả về từ API
+        userCurr = userInfo;
+      });
+    }
+  }
+
+  void logout() async {
+    //getToken
+
+    // Gọi API để logout
+    try {
+      final dio = DioClient();
+      final response = await dio.request('/auth/logout',
+          options: Options(
+            method: 'POST',
+          ));
+      if (response.statusCode == 201) {
+        // Xóa token từ local storage
+        await TokenManager.removeTokenFromLocal();
+        String? token = await TokenManager.getTokenFromLocal();
+        print(token);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacementNamed(context, AppRouterName.login);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void reloadScreen() {
     //reload account
@@ -21,39 +73,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
         MaterialPageRoute(builder: (context) => const SwitchAccount()));
   }
 
-  void updateAccountName(String name) {
-    setState(() {
-      currentAccount = name;
-    });
-  }
-
-  void showAccountList(List<CompanyUser> accounts, BuildContext contextVar) {
-    //show account list
-
-    showModalBottomSheet(
-        context: contextVar,
-        builder: (_) {
-          return GestureDetector(
-            onTap: () {},
-            behavior: HitTestBehavior.opaque,
-            child: AccountList(
-              accounts,
-              (CompanyUser companyUser) {
-                for (var i = 0; i < accounts.length; i++) {
-                  accounts[i].isLogin = false;
-                }
-                companyUser.isLogin = true;
-                updateAccountName(companyUser.getFullName());
-                reloadScreen();
-              },
-              updateAccountName,
-              reloadScreen,
-            ),
-          );
-        });
-  }
-
-  // bool isExpended = false;
   AccountManager accountManager = AccountManager();
   @override
   Widget build(BuildContext context) {
@@ -81,10 +100,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         width: 10,
                       ),
                       Text(
-                        accountList
-                            .where((element) => element.isLogin == true)
-                            .first
-                            .getFullName(),
+                        // accountList
+                        //     .where((element) => element.isLogin == true)
+                        //     .first
+                        //     .getFullName(),
+                        userCurr?.fullname ?? '',
+
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -112,7 +133,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
                             accountList[i].isLogin = true;
                           }
                         }
-                        updateAccountName(account.getFullName());
                         reloadScreen();
                       },
                       child: AccountTile(
@@ -135,7 +155,22 @@ class _SwitchAccountState extends State<SwitchAccount> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRouterName.profileInput);
+                    print(userCurr?.printAll());
+                    print(userCurr?.companyUser?.printAll());
+                    if (userCurr?.role?[0] == 1 &&
+                        userCurr?.companyUser == null) {
+                      print('chưa có profile company');
+                      Navigator.pushNamed(context, AppRouterName.profileInput);
+                    } else if (userCurr?.role?[0] == 1 &&
+                        userCurr?.companyUser != null) {
+                      print("(đã có) edit profile company");
+                      Navigator.pushNamed(
+                          context, AppRouterName.editProfileCompany,
+                          arguments: userCurr?.companyUser);
+                    } else {
+                      print('student');
+                      Navigator.pushNamed(context, AppRouterName.profileS1);
+                    }
                   },
                   icon:
                       const Icon(Icons.person, color: Colors.black, size: 28.0),
@@ -191,7 +226,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () {
-                    // Log out button pressed
+                    logout();
                   },
                   icon:
                       const Icon(Icons.logout, color: Colors.black, size: 28.0),

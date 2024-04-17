@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DioClientWithoutToken {
   final Dio _api;
-  String baseURL = dotenv.env['API_BASE_URL']!;
+  String baseURL = 'http://34.16.137.128/api';
 
   DioClientWithoutToken() : _api = Dio() {
     _configureInterceptors();

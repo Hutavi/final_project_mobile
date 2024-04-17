@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
-import 'package:student_hub/screens/browser_page/project_list.dart';
-import 'package:student_hub/screens/chat/chat.dart';
-import 'package:student_hub/screens/dashboard/dashboard.dart';
-import 'package:student_hub/screens/home_page/home_page.dart';
-import 'package:student_hub/screens/home_page/main_page.dart';
-import 'package:student_hub/screens/notification/notification.dart';
-import 'package:student_hub/screens/switch_account_page/switch_account.dart';
-import 'package:student_hub/screens/post/post_screen_1.dart';
-import 'package:student_hub/screens/welcome_screen.dart';
-import 'package:student_hub/widgets/schedule_invite.dart';
-import 'package:student_hub/widgets/schedule_message.dart';
+// import 'package:student_hub/screens/browser_page/project_list.dart';
+// import 'package:student_hub/screens/chat/chat.dart';
+// import 'package:student_hub/screens/dashboard/dashboard.dart';
+// import 'package:student_hub/screens/home_page/home_page.dart';
+// import 'package:student_hub/widgets/navigation_menu.dart';
+// import 'package:student_hub/screens/notification/notification.dart';
+// import 'package:student_hub/screens/switch_account_page/switch_account.dart';
+// import 'package:student_hub/screens/post/post_screen_1.dart';
+// import 'package:student_hub/screens/welcome_screen.dart';
+// import 'package:student_hub/widgets/schedule_invite.dart';
+// import 'package:student_hub/widgets/schedule_message.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       // theme: AppThemes.lightTheme,
       // initialRoute: '/navigation',
       // home: SwitchAccount(),
-      // home: LoginScreen(),
+      home: LoginScreen(),
       // home: ProjectListScreen(),
       // home: NotificationPage(),
       // home: Dashboard(),
@@ -41,8 +41,10 @@ class _MyAppState extends State<MyApp> {
       // home: ChatRoomScreen(),
       // home: HomePage(),
       // home: MainPage(),
-      home: WelcomeScreen(),
+      // home: WelcomeScreen(),
+      // home: HomePage(),
 
+      // home: NavigationMenu(),
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }

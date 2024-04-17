@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/screens/dashboard/dashboard.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/screens/home_page/main_page.dart';
+import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -103,22 +103,19 @@ class _Content extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MainPage(
-                          companyUser: accountList[0],
+                    builder: (context) => NavigationMenu(
                         )),
               );
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: kBlue400, // Đặt màu nền của nút thành màu xanh
+            ),
             child: const Text(
               'Get Started',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: kWhiteColor),
+              
             ),
           ),
         ]);
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: WelcomeScreen(),
-  ));
 }

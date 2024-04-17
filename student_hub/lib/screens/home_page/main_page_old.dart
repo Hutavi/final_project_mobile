@@ -30,7 +30,7 @@ class _BuildMainPage extends State<MainPage> {
     super.initState();
     _pages = [
       ProjectListScreen(),
-      Dashboard(widget.studentUser, widget.companyUser),
+      // Dashboard(widget.studentUser, widget.companyUser),
       MessageListScreen(),
       NotificationPage(),
     ];

@@ -1,11 +1,21 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 
 class SendHired extends StatefulWidget {
-  const SendHired({Key? key}) : super(key: key);
+  final int idProject;
+  final int indexTab;
+  final Map projectDetail;
+  const SendHired({
+    Key? key,
+    required this.idProject,
+    required this.indexTab,
+    required this.projectDetail,
+  }) : super(key: key);
 
   @override
   SendHiredState createState() => SendHiredState();
@@ -15,17 +25,54 @@ class SendHiredState extends State<SendHired>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String titleIcon = 'Hired';
+  int? _idProject;
+  List<dynamic> proposals = [];
+  Map? _projectDetaild;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.animateTo(widget.indexTab);
+    _idProject = widget.idProject;
+    _projectDetaild = widget.projectDetail;
+    getDataProposalIdProject();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void getDataProposalIdProject() async {
+    final dioPrivate = DioClient();
+
+    final responseProppsal = await dioPrivate.request(
+      '/proposal/getByProjectId/$_idProject',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final proposal = responseProppsal.data['result']['items'];
+
+    setState(() {
+      proposals = proposal;
+    });
+  }
+
+  String? formatTimeProject(int type) {
+    if (type == 0) {
+      return '• Less than 1 month';
+    } else if (type == 1) {
+      return '• 1 to 3 months';
+    } else if (type == 2) {
+      return '• 3 to 6 months';
+    } else if (type == 3) {
+      return '• More than 6 months';
+    }
+    return null;
   }
 
   @override
@@ -47,7 +94,7 @@ class SendHiredState extends State<SendHired>
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   _buildTabBar(),
@@ -74,8 +121,10 @@ class SendHiredState extends State<SendHired>
 
   Widget _buildTabBar() {
     return TabBar(
-      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
       controller: _tabController,
+      indicatorColor: kBlue600,
+      labelColor: kBlue600,
       tabs: const [
         Tab(text: 'Proposals'),
         Tab(text: 'Detail'),
@@ -86,13 +135,17 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectList() {
-    return ListView.builder(
-      itemCount: 4,
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return _buildProjectItem(context, index);
-      },
-    );
+    return proposals.isNotEmpty
+        ? ListView.builder(
+            itemCount: proposals.length,
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return _buildProjectItem(context, index);
+            },
+          )
+        : const Center(
+            child: Text('Không có Proposal'),
+          );
   }
 
   void _showHiredConfirmationDialog(BuildContext context) {
@@ -135,6 +188,14 @@ class SendHiredState extends State<SendHired>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.red,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(context).pop(); // Đóng dialog
                       },
@@ -144,6 +205,14 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          kBlue600,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                      ),
                       onPressed: () {
                         // Xử lý khi nhấn nút Send
                         setState(() {
@@ -167,103 +236,114 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Students are looking for',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: kBlackColor,
-              ),
-            ),
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                DescribeItem(
-                  itemDescribe:
-                      'Clear expectation about your project or deliverables',
-                ),
-                DescribeItem(
-                  itemDescribe: 'The skills required for your project',
-                ),
-                DescribeItem(
-                  itemDescribe: 'Detail about your project',
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Row(
-          children: [
-            Icon(Icons.alarm),
-            SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Project scope',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                  overflow: TextOverflow.clip,
+                const Text(
+                  'Students are looking for',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: kBlackColor,
+                  ),
                 ),
-                Text(
-                  '• 3 to 6 months',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                  overflow: TextOverflow.clip,
-                )
+                ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    DescribeItem(
+                      itemDescribe: _projectDetaild!['description'],
+                    ),
+                    // DescribeItem(
+                    //   itemDescribe: 'The skills required for your project',
+                    // ),
+                    // DescribeItem(
+                    //   itemDescribe: 'Detail about your project',
+                    // ),
+                  ],
+                ),
               ],
-            )
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Row(
-          children: [
-            Icon(Icons.people),
-            SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            const SizedBox(height: 10),
+            Row(
               children: [
-                Text(
-                  'Team size',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                  overflow: TextOverflow.clip,
-                ),
-                Text(
-                  '• 6 students',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                  overflow: TextOverflow.clip,
+                const Icon(Icons.alarm),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Project scope',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    ),
+                    Text(
+                      formatTimeProject(_projectDetaild!['projectScopeFlag'])
+                          .toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w400, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    )
+                  ],
                 )
               ],
-            )
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.people),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Team size',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                      overflow: TextOverflow.clip,
+                    ),
+                    Text(
+                      '• ${_projectDetaild!['numberOfStudents'].toString()} students',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.clip,
+                    )
+                  ],
+                )
+              ],
+            ),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildListText(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(
-              width: 40, child: Icon(Icons.fiber_manual_record, size: 6)),
-          Expanded(
-              child: Text(
-            text,
-            style: const TextStyle(fontSize: 13),
-          )),
-        ],
       ),
     );
   }
+
+  // Widget _buildListText(String text) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         const SizedBox(
+  //             width: 40, child: Icon(Icons.fiber_manual_record, size: 6)),
+  //         Expanded(
+  //             child: Text(
+  //           text,
+  //           style: const TextStyle(fontSize: 13),
+  //         )),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildProjectItem(BuildContext context, int index) {
     return Card(
@@ -290,30 +370,31 @@ class SendHiredState extends State<SendHired>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tên sinh viên',
+                      'Tran Huu Chinh',
                       style: TextStyle(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
+                    SizedBox(height: 2),
                     Text(
-                      'Năm học',
-                      style: TextStyle(),
+                      '4th year student',
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Fullstack Engineer',
-                  style: TextStyle(
+                  proposals[index]['student']['techStack']['name'],
+                  style: const TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                Text(
+                const Text(
                   'Excellent',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
@@ -322,8 +403,8 @@ class SendHiredState extends State<SendHired>
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Đoạn text dài, nếu quá 2 dòng sẽ hiển thị dấu Đoạn text dài, nếu quá 2 dòng sẽ hiển thị dấu Đoạn text dài, nếu quá 2 dòng sẽ hiển thị dấu ',
+            Text(
+              proposals[index]['coverLetter'],
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -335,21 +416,36 @@ class SendHiredState extends State<SendHired>
                     onPressed: () {
                       // Xử lý khi nhấn nút Message
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
+                      ),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                    ),
                     child: const Text(
                       'Message',
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10), // Khoảng cách giữa 2 nút
                 Expanded(
                   child: ElevatedButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red,
+                      ),
+                    ),
                     onPressed: () {
                       _showHiredConfirmationDialog(context);
                     },
                     child: Text(
                       titleIcon,
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
@@ -360,10 +456,4 @@ class SendHiredState extends State<SendHired>
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: SendHired(),
-  ));
 }

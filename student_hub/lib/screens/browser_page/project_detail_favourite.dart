@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 
-class ProjectDetail extends StatefulWidget {
-  final ProjectForListModel projectItem;
-  const ProjectDetail({super.key, required this.projectItem});
+class ProjectDetailFavorite extends StatefulWidget {
+  final ProjectFavourite projectItem;
+  const ProjectDetailFavorite({super.key, required this.projectItem});
 
   @override
-  State<ProjectDetail> createState() => _ProjectDetailState();
+  State<ProjectDetailFavorite> createState() => _ProjectDetailFavouriteState();
 }
 
-class _ProjectDetailState extends State<ProjectDetail> {
+class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

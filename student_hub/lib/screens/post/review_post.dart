@@ -9,34 +9,39 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
 
-class PostScreen4 extends ConsumerStatefulWidget {
-  const PostScreen4({super.key});
-
+class ReviewPost extends ConsumerStatefulWidget {
+  final int? projectID;
+  // const ReviewPost({super.key});
+  const ReviewPost({Key? key, this.projectID}) : super(key: key);
   @override
-  ConsumerState<PostScreen4> createState() => _PostScreen4State();
+  ConsumerState<ReviewPost> createState() => _ReviewPostState();
 }
 
-class _PostScreen4State extends ConsumerState<PostScreen4> {
-  
-  Future<int> getDataIdCompany() async {
-    final dioPrivate = DioClient();
-
-    final responseProject = await dioPrivate.request(
-      '/auth/me',
-      options: Options(
-        method: 'GET',
-      ),
-    );
-
-    final companyId = responseProject.data['result']['company']['id'];
-    print('Company id: $companyId');
-    return companyId;
+class _ReviewPostState extends ConsumerState<ReviewPost> {
+  Future<void> getProject()async{
+    try{
+      print('projectID: ${widget.projectID}');
+      final dioPrivate = DioClient();
+      final response = await dioPrivate.request(
+        '/project/${widget.projectID}',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+      ref.read(postProjectProvider.notifier).setProjectScopeFlag(response.data['result']['projectScopeFlag']);
+      ref.read(postProjectProvider.notifier).setProjectTitle(response.data['result']['title']);
+      ref.read(postProjectProvider.notifier).setNumberOfStudents(response.data['result']['numberOfStudents']);
+      ref.read(postProjectProvider.notifier).setProjectDescription(response.data['result']['description']);
+      ref.read(postProjectProvider.notifier).setTypeFlag(response.data['result']['typeFlag']);
+    }
+    catch(e){
+      print('Error: $e');
+    }
   }
-  
-  void postPoject() async {
+
+  void editPoject() async {
     try{
       var requestData = json.encode({
-          'companyId': ref.watch(postProjectProvider).companyId,
           'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
           'title': ref.watch(postProjectProvider).title,
           'numberOfStudents': ref.watch(postProjectProvider).numberOfStudents,
@@ -46,10 +51,10 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
       print('Request data1: $requestData');
       final dioPrivate = DioClient();
       final response = await dioPrivate.request(
-        '/project',
+        '/project/${widget.projectID}',
         data: requestData,
         options: Options(
-          method: 'POST',
+          method: 'PATCH',
         ),
       );
       print('Request data2: $requestData');
@@ -77,7 +82,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
   }
   @override
   Widget build(BuildContext context) {
-    
+    getProject();
     final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
         ? '1 to 3 months'
         : '3 to 6 months';
@@ -92,7 +97,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "4/4-Project details",
+                "Project details",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -195,16 +200,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
               ElevatedButton(
                 onPressed: (){
                   setState(() async {
-                    var companyID = await getDataIdCompany();
-                    ref.read(postProjectProvider.notifier).setCompanyId(companyID);
-                    postPoject();
-                    Navigator.pushNamed(context, AppRouterName.navigation);
-                    ref.read(postProjectProvider).companyId = null;
-                    ref.read(postProjectProvider).projectScopeFlag = null;
-                    ref.read(postProjectProvider).title = null;
-                    ref.read(postProjectProvider).numberOfStudents = null;
-                    ref.read(postProjectProvider).description = null;
-                    ref.read(postProjectProvider).typeFlag = null;
+                    Navigator.pushNamed(context, AppRouterName.editPoject,
+                    arguments: widget.projectID);
                   });
                   
                 },
@@ -212,7 +209,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   backgroundColor: kBlue400,
                   foregroundColor: kWhiteColor,
                 ),
-                child: const Text('Post a job'),
+                child: const Text('Edit project'),
               ),
             ],
           ),

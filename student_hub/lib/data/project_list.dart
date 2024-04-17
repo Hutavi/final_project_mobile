@@ -1,4 +1,4 @@
-import 'package:student_hub/models/project_model.dart';
+import 'package:student_hub/models/project_models/project_model.dart';
 
 final allProject = [
   ProjectModel(
