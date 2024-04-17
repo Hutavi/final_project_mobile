@@ -269,11 +269,6 @@ class _EditProjectState extends ConsumerState<EditProject> {
                   setState(() async {
                     editPoject();
                     Navigator.pushNamed(context, AppRouterName.navigation);
-                    ref.read(postProjectProvider).projectScopeFlag = null;
-                    ref.read(postProjectProvider).title = null;
-                    ref.read(postProjectProvider).numberOfStudents = null;
-                    ref.read(postProjectProvider).description = null;
-                    ref.read(postProjectProvider).typeFlag = null;
                   });
                 },
                 style: ElevatedButton.styleFrom(
@@ -289,33 +284,4 @@ class _EditProjectState extends ConsumerState<EditProject> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

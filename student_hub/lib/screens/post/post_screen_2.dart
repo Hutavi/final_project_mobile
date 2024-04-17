@@ -4,6 +4,7 @@ import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 enum ProjectDuration {
   oneToThreeMonths,
@@ -58,7 +59,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
       }
     }
     return Scaffold(
-      appBar: _AppBar(),
+      appBar: const AppBarCustom(title: 'Student Hub'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
