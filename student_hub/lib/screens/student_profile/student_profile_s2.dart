@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_project.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class StundentProfileS2 extends StatefulWidget {
   const StundentProfileS2({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
   var created = false;
   var idStudent = -1;
   var notify = '';
+  var isLoading = true;
 
   @override
   void initState() {
@@ -62,9 +65,10 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
             'skillsetID': skillSets.map<int>((skill) => skill['id']).toList(),
           };
 
-          projects.add(project);
+          projects.insert(0, project);
         }
       }
+      isLoading = false;
     });
   }
 
@@ -250,7 +254,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
         notify = 'Thêm Project mới thành công';
 
         _showSuccess();
-        projects.add(result);
+        projects.insert(0, result);
       });
     } else {
       setState(() {
@@ -385,282 +389,314 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarCustom(title: "Student Hub"),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            // Welcome message
-            const Padding(
-              padding: EdgeInsets.only(bottom: 12.0),
-              child: Text(
-                'Experiences',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+      body: isLoading
+          ? const LoadingWidget()
+          : Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: <Widget>[
+                  // Welcome message
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12.0),
+                    child: Text(
+                      'Experiences',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
 
-            const Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
-              child: Text(
-                'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-            ),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Projects',
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                    child: Text(
+                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
                       style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                     ),
-                    Row(
-                      children: [
-                        InkWell(
-                          borderRadius: BorderRadius.circular(50),
-                          onTap: () async {
-                            type = 'add';
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddProjectScreen(
-                                  type: type,
-                                ),
-                              ),
-                            );
-                            if (result != null) {
-                              // Xử lý kết quả trả về từ màn hình nhập dự án
-                              setState(() {
-                                sendData(result);
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(6),
-                            child: const Icon(
-                              Icons.add,
-                              size: 16,
-                            ),
+                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Projects',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 14),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8.0),
-
-            // Danh sách dự án
-            Expanded(
-              child: ListView.builder(
-                itemCount: projects.length,
-                itemBuilder: (context, index) => Card(
-                  elevation: 4, // Độ nâng cao của thẻ
-                  margin: const EdgeInsets.only(bottom: 16),
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                projects[index]['title']!.toString(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
+                          Row(
+                            children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(50),
+                                onTap: () async {
+                                  type = 'add';
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddProjectScreen(
+                                        type: type,
+                                      ),
+                                    ),
+                                  );
+                                  if (result != null) {
+                                    setState(() {
+                                      sendData(result);
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: const EdgeInsets.all(6),
+                                  child: const Icon(
+                                    Icons.add,
+                                    size: 16,
+                                  ),
                                 ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(50),
-                                  onTap: () {
-                                    type = 'udpate';
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AddProjectScreen(
-                                          defaultTitle: projects[index]
-                                                  ['title']!
-                                              .toString(),
-                                          defaultStartDate: projects[index]
-                                              ['startMonth']!,
-                                          defaultEndDate: projects[index]
-                                              ['endMonth']!,
-                                          defaultDescription: projects[index]
-                                                  ['description']!
-                                              .toString(),
-                                          defaultSkillset: projects[index]
-                                              ['skillset']! as List<dynamic>,
-                                          type: type,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8.0),
+
+                  // Danh sách dự án
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: projects.length,
+                      itemBuilder: (context, index) => Card(
+                        elevation: 4, // Độ nâng cao của thẻ
+                        margin: const EdgeInsets.only(bottom: 16),
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      projects[index]['title']!.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(50),
+                                        onTap: () {
+                                          type = 'udpate';
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddProjectScreen(
+                                                defaultTitle: projects[index]
+                                                        ['title']!
+                                                    .toString(),
+                                                defaultStartDate:
+                                                    projects[index]
+                                                        ['startMonth']!,
+                                                defaultEndDate: projects[index]
+                                                    ['endMonth']!,
+                                                defaultDescription:
+                                                    projects[index]
+                                                            ['description']!
+                                                        .toString(),
+                                                defaultSkillset: projects[index]
+                                                        ['skillset']!
+                                                    as List<dynamic>,
+                                                type: type,
+                                              ),
+                                            ),
+                                          ).then((result) {
+                                            if (result != null) {
+                                              updateData(index, result);
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                spreadRadius: 2,
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.all(6),
+                                          child: const Icon(
+                                            Icons.edit,
+                                            size: 16,
+                                            color: Colors.blue,
+                                          ),
                                         ),
                                       ),
-                                    ).then((result) {
-                                      if (result != null) {
-                                        updateData(index, result);
-                                      }
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                    ),
-                                    padding: const EdgeInsets.all(6),
-                                    child: const Icon(
-                                      Icons.edit,
-                                      size: 16,
-                                      color: Colors.blue,
-                                    ),
+                                      const SizedBox(width: 8.0),
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(50),
+                                        onTap: () {
+                                          removeProject(index);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                spreadRadius: 2,
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.all(6),
+                                          child: const Icon(Icons.delete,
+                                              size: 16, color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(width: 8.0),
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(50),
-                                  onTap: () {
-                                    removeProject(index);
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white,
-                                    ),
-                                    padding: const EdgeInsets.all(6),
-                                    child: const Icon(Icons.delete,
-                                        size: 16, color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                ],
+                              ),
 
-                        const SizedBox(height: 8.0),
-                        Text(
-                          durationDate(
-                            projects[index]['startMonth']!,
-                            projects[index]['endMonth']!,
-                          ),
-                          style:
-                              const TextStyle(fontSize: 13, color: Colors.grey),
-                        ),
-
-                        const SizedBox(height: 8.0),
-                        Text(projects[index]['description']!.toString(),
-                            style: const TextStyle(
-                                fontSize: 13, color: Colors.black),
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis),
-                        const SizedBox(height: 8.0),
-                        // Tiêu đề Skillset
-                        const Text(
-                          'Skillset',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 6.0),
-
-                        // Danh sách các kỹ năng
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: [
-                              for (var skill in (projects[index]['skillset']
-                                      .map<dynamic>((element) =>
-                                          element['name'].toString())
-                                      .toList() as List<dynamic>? ??
-                                  []))
-                                Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0, vertical: 4),
-                                    child: Text(
-                                      skill,
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
-                                  ),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                durationDate(
+                                  projects[index]['startMonth']!,
+                                  projects[index]['endMonth']!,
                                 ),
+                                style: const TextStyle(
+                                    fontSize: 13, color: Colors.grey),
+                              ),
+
+                              const SizedBox(height: 8.0),
+                              Text(projects[index]['description']!.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 13, color: Colors.black),
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 8.0),
+                              // Tiêu đề Skillset
+                              const Text(
+                                'Skillset',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 6.0),
+
+                              // Danh sách các kỹ năng
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: kGrey2),
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Wrap(
+                                  spacing: 8.0,
+                                  runSpacing: 8.0,
+                                  children: [
+                                    for (var skill in (projects[index]
+                                                ['skillset']
+                                            .map<dynamic>((element) =>
+                                                element['name'].toString())
+                                            .toList() as List<dynamic>? ??
+                                        []))
+                                      Card(
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.0, vertical: 4),
+                                          child: Text(
+                                            skill,
+                                            style:
+                                                const TextStyle(fontSize: 13),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
-        decoration: BoxDecoration(
-          color: Colors.white, // Màu nền của bottomNavigationBar
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-              spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-              blurRadius: 4, // Độ mờ của đổ bóng
-              offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
-            ),
-          ],
-        ),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRouterName.profileS3);
-          },
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(10),
-            backgroundColor: Colors.blue, // Màu nền của nút
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
-            ),
-          ),
-          child: const Text('Continue', style: TextStyle(color: Colors.white)),
-        ),
-      ),
+      bottomNavigationBar: !isLoading
+          ? Container(
+              padding:
+                  const EdgeInsets.all(10), // Padding của bottomNavigationBar
+              decoration: BoxDecoration(
+                color: Colors.white, // Màu nền của bottomNavigationBar
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
+                    spreadRadius: 2, // Bán kính lan rộng của đổ bóng
+                    blurRadius: 4, // Độ mờ của đổ bóng
+                    offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRouterName.profileS3);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(10),
+                  backgroundColor: Colors.blue, // Màu nền của nút
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+                  ),
+                ),
+                child: const Text('Continue',
+                    style: TextStyle(color: Colors.white)),
+              ),
+            )
+          : const SizedBox(),
     );
   }
 }
