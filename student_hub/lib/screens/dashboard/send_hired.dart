@@ -5,6 +5,7 @@ import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class SendHired extends StatefulWidget {
   final int idProject;
@@ -28,6 +29,7 @@ class SendHiredState extends State<SendHired>
   int? _idProject;
   List<dynamic> proposals = [];
   Map? _projectDetaild;
+  var isLoading = true;
 
   @override
   void initState() {
@@ -59,6 +61,7 @@ class SendHiredState extends State<SendHired>
 
     setState(() {
       proposals = proposal;
+      isLoading = false;
     });
   }
 
@@ -79,43 +82,45 @@ class SendHiredState extends State<SendHired>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarCustom(title: "Student Hub"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-            child: Text(
-              'Senior frontend developer (Fintech)',
-              style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  _buildTabBar(),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
+      body: isLoading
+          ? const LoadingWidget()
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+                  child: Text(
+                    'Senior frontend developer (Fintech)',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
                       children: [
-                        _buildProjectList(),
-                        _buildProjectDetails(),
-                        const Center(child: Text('Message')),
-                        const Center(child: Text('Hired')),
+                        _buildTabBar(),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _buildProjectList(),
+                              _buildProjectDetails(),
+                              const Center(child: Text('Message')),
+                              const Center(child: Text('Hired')),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -326,24 +331,6 @@ class SendHiredState extends State<SendHired>
       ),
     );
   }
-
-  // Widget _buildListText(String text) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         const SizedBox(
-  //             width: 40, child: Icon(Icons.fiber_manual_record, size: 6)),
-  //         Expanded(
-  //             child: Text(
-  //           text,
-  //           style: const TextStyle(fontSize: 13),
-  //         )),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildProjectItem(BuildContext context, int index) {
     return Card(

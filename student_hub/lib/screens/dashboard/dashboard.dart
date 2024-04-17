@@ -1,20 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
-import 'package:student_hub/screens/post/review_post.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/data/student_user.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class Dashboard extends StatefulWidget {
-  // const Dashboard({super.key, this.companyUser, this.studentUser});
   const Dashboard({Key? key}) : super(key: key);
 
   @override
@@ -27,6 +23,7 @@ class DashboardState extends State<Dashboard>
   var created = false;
   var idCompany = -1;
   var idStudent = -1;
+  var isLoading = true;
 
   List<dynamic> projects = [];
   List<dynamic> projectsWorking = [];
@@ -85,6 +82,8 @@ class DashboardState extends State<Dashboard>
       projectsWorking = project.where((item) => item['typeFlag'] == 0).toList();
       projectsArchieved =
           project.where((item) => item['typeFlag'] == 1).toList();
+
+      isLoading = false;
     });
   }
 
@@ -247,62 +246,65 @@ class DashboardState extends State<Dashboard>
     } else {
       return Scaffold(
         appBar: const AppBarCustom(title: "Student Hub"),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 16.0, bottom: 0, left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: isLoading
+            ? const LoadingWidget()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Your Project',
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, bottom: 0, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Your Project',
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.blue),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, AppRouterName.postScreen1);
+                          },
+                          child: const Text(
+                            'Post a projects',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRouterName.postScreen1);
-                    },
-                    child: const Text(
-                      'Post a projects',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildTabBar(),
+                          const SizedBox(height: 12),
+                          Expanded(
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                _buildProjectListAllProject(),
+                                _buildProjectListProjectWorking(),
+                                _buildProjectListProjectArchieved(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    _buildTabBar(),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _buildProjectListAllProject(),
-                          _buildProjectListProjectWorking(),
-                          _buildProjectListProjectArchieved(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       );
     }
   }
