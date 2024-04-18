@@ -4,6 +4,7 @@ import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class PostScreen3 extends ConsumerStatefulWidget {
   const PostScreen3({super.key});
@@ -22,7 +23,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
       descriptionController.text = ref.watch(postProjectProvider).description!;
     }
     return Scaffold(
-      appBar: const _AppBar(),
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         child: Padding(
           // padding: EdgeInsets.all(16),

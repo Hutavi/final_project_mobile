@@ -9,6 +9,7 @@ import 'package:student_hub/screens/switch_account_page/add_account.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -18,7 +19,6 @@ class SwitchAccount extends StatefulWidget {
 }
 
 class _SwitchAccountState extends State<SwitchAccount> {
-  //account đã từng đăng nhập
   User? userCurr;
 
   @override
@@ -77,7 +77,9 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
+      appBar: const AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Column(
         children: <Widget>[
           accountList.isEmpty
@@ -96,7 +98,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         ],
                       ),
                       const SizedBox(
-                        //khoảng cách giữa ảnh và tên
                         width: 10,
                       ),
                       Text(

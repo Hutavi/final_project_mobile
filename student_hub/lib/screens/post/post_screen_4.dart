@@ -8,6 +8,7 @@ import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class PostScreen4 extends ConsumerStatefulWidget {
   const PostScreen4({super.key});
@@ -83,7 +84,9 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
         : '3 to 6 months';
     print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
-      appBar: const _AppBar(),
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         padding: const EdgeInsets.only(
             left: 16.0, right: 16.0, top: 10.0, bottom: 0.0),

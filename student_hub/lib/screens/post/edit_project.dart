@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-
+import 'package:student_hub/models/project_models/project_model_new.dart';
+import 'package:student_hub/models/user.dart';
+import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 enum ProjectDuration {
   oneToThreeMonths,
   threeToSixMonths,
@@ -22,20 +24,21 @@ class EditProject extends ConsumerStatefulWidget {
 }
 
 class _EditProjectState extends ConsumerState<EditProject> {
+  ProjectModelNew project = ProjectModelNew();
   final titleController = TextEditingController();
   bool _titlePost = false;
-  final _numberStudentsController = TextEditingController();
+  
   ProjectDuration _projectDuration = ProjectDuration.oneToThreeMonths;
-  int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   final descriptionController = TextEditingController();
+  int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   bool _descriptionPost = false;
   
   void onSelectedDuration(ProjectDuration? duration) {
     if(duration?.index == 0){
-      ref.read(postProjectProvider.notifier).setProjectScopeFlag(0);
+      project.projectScopeFlag = 0;
     }
     else{
-      ref.read(postProjectProvider.notifier).setProjectScopeFlag(1);
+      project.projectScopeFlag = 1;
     }
     setState(() {
       _projectDuration = duration!;
@@ -45,11 +48,11 @@ class _EditProjectState extends ConsumerState<EditProject> {
   void editPoject() async {
     try{
       var requestData = json.encode({
-          'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
-          'title': ref.watch(postProjectProvider).title,
-          'numberOfStudents': ref.watch(postProjectProvider).numberOfStudents,
-          'description': ref.watch(postProjectProvider).description,
-          'typeFlag': ref.watch(postProjectProvider).typeFlag,
+          'projectScopeFlag': project.projectScopeFlag,
+          'title': project.title,
+          'numberOfStudents': project.numberOfStudents,
+          'description': project.description,
+          'typeFlag': project.typeFlag,
         });
       print('Request data1: $requestData');
 
@@ -90,7 +93,9 @@ class _EditProjectState extends ConsumerState<EditProject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         padding: const EdgeInsets.only(
             left: 16.0, right: 16.0, top: 10.0, bottom: 0.0),
@@ -98,8 +103,20 @@ class _EditProjectState extends ConsumerState<EditProject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Center(
+                child: Text(
+                  "Project details",
+                  style: TextStyle(fontWeight: FontWeight.bold,
+                  fontSize: 20,),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height < 600
+                    ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
+                    : 16,
+              ),
               const Text(
-                "Project details",
+                "Project title",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -123,9 +140,9 @@ class _EditProjectState extends ConsumerState<EditProject> {
                             top: Radius.circular(10.0),
                             bottom: Radius.circular(10.0)))),
                 onChanged: (value) {
-                  ref.read(postProjectProvider).projectScopeFlag=null;
-                  ref.read(postProjectProvider.notifier).setProjectTitle(value);
+                  
                   setState(() {
+                    project.title = value;
                     _titlePost = value.isNotEmpty;
                   });
                 },
@@ -159,19 +176,13 @@ class _EditProjectState extends ConsumerState<EditProject> {
                       )
                   ),
                   onChanged: (value) {
-                  ref.read(postProjectProvider).description = null;
-                  ref.read(postProjectProvider.notifier).setProjectDescription(value);
+                  project.description = value;
                   setState(() {
                     _descriptionPost = value.isNotEmpty;
                   });
                 },
                 ),
               const Divider(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height < 600
-                    ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
-                    : 16,
-              ),
               const Text(
                 'How many students do you want for this project?',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -182,7 +193,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     : 16,
               ),
               TextFormField(
-                controller: _numberStudentsController,
+                // controller: _numberStudentsController,
                 decoration: const InputDecoration(
                     hintText: 'Number of students',
                     enabledBorder: OutlineInputBorder(
@@ -204,8 +215,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 ],
                 onChanged: (value){
                   setState(() {
-                    ref.read(postProjectProvider.notifier).setNumberOfStudents(int.tryParse(value) ?? 0);
-                    //onHandledButtonWithTextfield,
+                    project.numberOfStudents = int.tryParse(value) ?? 1;
                     _numberOfStudents = int.tryParse(value) ?? 0;
                     // _isDisabledNextButton = value != null? true : false;
                   });
@@ -257,15 +267,8 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ElevatedButton(
                 onPressed: (){
                   setState(() async {
-                    print(ref.watch(postProjectProvider).projectScopeFlag);
-                    print(ref.watch(postProjectProvider).title);
                     editPoject();
-                    // Navigator.pushNamed(context, AppRouterName.navigation);
-                    ref.read(postProjectProvider).projectScopeFlag = null;
-                    ref.read(postProjectProvider).title = null;
-                    ref.read(postProjectProvider).numberOfStudents = null;
-                    ref.read(postProjectProvider).description = null;
-                    ref.read(postProjectProvider).typeFlag = null;
+                    Navigator.pushNamed(context, AppRouterName.navigation);
                   });
                 },
                 style: ElevatedButton.styleFrom(
@@ -281,33 +284,4 @@ class _EditProjectState extends ConsumerState<EditProject> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

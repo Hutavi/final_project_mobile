@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 // final countProvider = StateProvider<int>((ref) => 0);
 
@@ -25,103 +28,105 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
     
     return ProviderScope(
         child: Scaffold(
-      appBar: const _AppBar(),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.only(
-              left: 18.0, right: 18.0, top: 36.0, bottom: 0.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Text(
-                "1/4-Let's start with a strong title",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 14 * 2,
-              ),
-              const Text(
-                "This helps your post stand out to the right students. It's the first thing they will see, so make it impressive",
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height < 600 ? 14 : 14 * 4,
-              ),
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                    hintText: "Write a title for your post",
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(10.0),
-                        bottom: Radius.circular(10.0),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+        appBar: AppBarCustom(
+          title: 'Student Hub'
+          ),
+        body: Container(
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 18.0, right: 18.0, top: 36.0, bottom: 0.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text(
+                  "1/4-Let's start with a strong title",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 14 * 2,
+                ),
+                const Text(
+                  "This helps your post stand out to the right students. It's the first thing they will see, so make it impressive",
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height < 600 ? 14 : 14 * 4,
+                ),
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                      hintText: "Write a title for your post",
+                      enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(10.0),
-                            bottom: Radius.circular(10.0)))),
-                onChanged: (value) {
-                  ref.read(postProjectProvider.notifier).setProjectTitle(value);
-                  setState(() {
-                    _titlePost = value.isNotEmpty;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 14 * 4,
-              ),
-              const Text(
-                "Example titles",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const ListTile(
-                        title: Text(
-                          "• Build responsive WorldPress site with booking/paying functionality",
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
+                          top: Radius.circular(10.0),
+                          bottom: Radius.circular(10.0),
                         ),
                       ),
-                      const ListTile(
-                        title: Text(
-                          "• Facebook ad specialist need for product launch",
-                          style: TextStyle(
-                            fontSize: 14,
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(10.0),
+                              bottom: Radius.circular(10.0)))),
+                  onChanged: (value) {
+                    ref.read(postProjectProvider.notifier).setProjectTitle(value);
+                    setState(() {
+                      _titlePost = value.isNotEmpty;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 14 * 4,
+                ),
+                const Text(
+                  "Example titles",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const ListTile(
+                          title: Text(
+                            "• Build responsive WorldPress site with booking/paying functionality",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 14 * 4,
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRouterName.postScreen2);
-                          },
-                          child: Text("Next Scope"),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: _titlePost ? null : kWhiteColor,
-                            backgroundColor: kBlue400,
+                        const ListTile(
+                          title: Text(
+                            "• Facebook ad specialist need for product launch",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 14 * 4,
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRouterName.postScreen2);
+                            },
+                            child: Text("Next Scope"),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: _titlePost ? null : kWhiteColor,
+                              backgroundColor: kBlue400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ));
-  }
+      ));
+    }
 }
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {

@@ -465,14 +465,16 @@ class DashboardState extends State<Dashboard>
                 },
               ),
               ListTile(
-                  leading: const Icon(
-                    FontAwesomeIcons.penToSquare,
-                    size: 20,
-                  ),
-                  title: const Text('Edit posting'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
+                leading: const Icon(
+                  FontAwesomeIcons.penToSquare,
+                  size: 20,
+                ),
+                title: const Text('Edit posting'),
+                onTap: () {
+                  Navigator.pushNamed(context, AppRouterName.reviewPost,
+                      arguments: projects[index]['id']);
+                }
+              ),
               ListTile(
                 leading: const Icon(
                   FontAwesomeIcons.trashCan,
