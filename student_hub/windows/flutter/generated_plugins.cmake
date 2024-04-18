@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   permission_handler_windows
+  syncfusion_pdfviewer_windows
+  url_launcher_windows
   zego_express_engine
 )
 

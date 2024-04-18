@@ -483,7 +483,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     child: ListView.builder(
                       itemCount: projects.length,
                       itemBuilder: (context, index) => Card(
-                        elevation: 4, // Độ nâng cao của thẻ
+                        elevation: 4,
                         margin: const EdgeInsets.only(bottom: 16),
                         color: Colors.white,
                         child: Padding(
@@ -683,7 +683,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.profileS3);
+                  Navigator.pushNamed(context, AppRouterName.profileS3Resume);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(10),
