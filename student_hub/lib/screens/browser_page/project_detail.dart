@@ -157,7 +157,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.submitProposal);
+                  Navigator.pushNamed(context, AppRouterName.submitProposal, arguments: widget.projectItem);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -177,7 +177,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     backgroundColor: kWhiteColor,
-                    foregroundColor: kBlueGray600),
+                    foregroundColor: Colors.green,),
                 child: const Text('Saved'),
               ),
             ),

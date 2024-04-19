@@ -70,7 +70,7 @@ class _ProjectItemState extends State<ProjectItem> {
     });
 
     var data = json.encode({
-      "projectId": widget.projectForListModel.projectId,
+      "projectId": widget.projectForListModel.id,
       "disableFlag": !isFavoriteUpdate == true ? 1 : 0,
     });
     print(data);
