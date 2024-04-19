@@ -1,34 +1,37 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:file_picker/file_picker.dart';
 
-class StundentProfileS3 extends StatefulWidget {
-  const StundentProfileS3({super.key});
+class StundentProfileS3Transcript extends StatefulWidget {
+  const StundentProfileS3Transcript({super.key});
 
   @override
-  State<StundentProfileS3> createState() => _StundentProfileS3State();
+  State<StundentProfileS3Transcript> createState() =>
+      _StundentProfileS3TranscriptState();
 }
 
-class _StundentProfileS3State extends State<StundentProfileS3> {
-  File? imageFileResume;
-  File? imageFileTranscript;
+class _StundentProfileS3TranscriptState
+    extends State<StundentProfileS3Transcript> {
   var created = false;
   var idStudent = -1;
   var notify = '';
   String? trancriptImage;
-  String? resumeImage;
   var isLoading = true;
+  late PdfViewerController pdfController;
 
   @override
   void initState() {
     super.initState();
+    pdfController = PdfViewerController();
     getDataDefault();
   }
 
@@ -42,71 +45,69 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
       ),
     );
 
-    final responseProfileResume = await dioPrivate.request(
-      '/profile/student/$idStudent/resume',
-      options: Options(
-        method: 'GET',
-      ),
-    );
-
     final trancript = responseProfileTranscript.data['result'];
-    final resume = responseProfileResume.data['result'];
 
     setState(() {
       trancriptImage = trancript;
-      resumeImage = resume;
       isLoading = false;
     });
   }
 
   void getDataDefault() async {
-    try {
-      final dioPrivate = DioClient();
+    final dioPrivate = DioClient();
 
-      final responseUser = await dioPrivate.request(
-        '/auth/me',
-        options: Options(
-          method: 'GET',
-        ),
-      );
+    final responseUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
 
-      final user = responseUser.data['result'];
+    final user = responseUser.data['result'];
 
-      setState(() {
-        if (user['student'] == null) {
-          created = false;
-        } else {
-          created = true;
-          final student = user['student'];
-          idStudent = student['id'];
-          getDataIdStudent();
-        }
-      });
-    } catch (e) {
-      if (e is DioException && e.response != null) {
-        print(e);
+    setState(() {
+      if (user['student'] == null) {
+        created = false;
       } else {
-        print('Have Error: $e');
+        created = true;
+        final student = user['student'];
+        idStudent = student['id'];
+        getDataIdStudent();
       }
-    }
+    });
   }
 
   Widget _buildDropZone() {
-    return const Center(
+    return Center(
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.cloud_upload,
             size: 60,
             color: Colors.blue,
           ),
-          Text(
-            'Drop and Drag Image Here',
+          const Text(
+            'Choose File Here',
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: Colors.black),
           ),
+          if (trancriptImage == null)
+            Container(
+              padding: const EdgeInsets.only(top: 10),
+              child: ElevatedButton(
+                onPressed: _pickImageTranscript,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  padding: const EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: const Text('Choose Image'),
+              ),
+            ),
         ],
       ),
     );
@@ -114,7 +115,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
 
   void _showSuccess() {
     showDialog(
-      context: context,
+      context: this.context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Center(
@@ -123,7 +124,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue, // Màu của tiêu đề
+                color: Colors.blue,
               ),
             ),
           ),
@@ -171,7 +172,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
 
   void _showError() {
     showDialog(
-      context: context,
+      context: this.context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Center(
@@ -180,7 +181,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.red, // Màu của tiêu đề
+                color: Colors.red,
               ),
             ),
           ),
@@ -226,55 +227,22 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
     );
   }
 
-  void _pickImageResume() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final dioPrivate = DioClient();
-
-      imageFileResume = File(pickedFile.path);
-
-      FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(imageFileResume!.path,
-            filename: pickedFile.path.split('/').last),
-      });
-
-      final responseProfileResume = await dioPrivate.request(
-        '/profile/student/$idStudent/resume',
-        data: formData,
-        options: Options(
-          method: 'PUT',
-        ),
-      );
-
-      if (responseProfileResume.statusCode == 200) {
-        setState(() {
-          notify = 'Cập nhật resume thành công.';
-
-          _showSuccess();
-          if (resumeImage != null) {
-            getDataIdStudent();
-          }
-        });
-      } else {
-        notify = 'Cập nhật resume thất bại.';
-
-        _showError();
-      }
-    }
-  }
-
   void _pickImageTranscript() async {
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+    );
     if (pickedFile != null) {
+      setState(() {
+        isLoading = true;
+      });
       final dioPrivate = DioClient();
 
-      imageFileTranscript = File(pickedFile.path);
+      File imageFile = File(pickedFile.files.single.path!);
 
       FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(imageFileTranscript!.path,
-            filename: pickedFile.path.split('/').last),
+        'file': await MultipartFile.fromFile(imageFile.path,
+            filename: pickedFile.files.single.path!.split('/').last),
       });
 
       final responseProfileTranscript = await dioPrivate.request(
@@ -289,10 +257,8 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
         setState(() {
           notify = 'Cập nhật transcript thành công.';
 
+          getDataIdStudent();
           _showSuccess();
-          if (trancriptImage != null) {
-            getDataIdStudent();
-          }
         });
       } else {
         notify = 'Cập nhật transcript thất bại.';
@@ -300,6 +266,33 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
         _showError();
       }
     }
+  }
+
+  String? getFileNameFromUrl(String url) {
+    return basename(Uri.parse(url).path);
+  }
+
+  Widget _showData(String? url) {
+    if (url == null) {
+      return const SizedBox();
+    }
+
+    String? fileName = getFileNameFromUrl(url);
+
+    if (fileName != null && fileName.toLowerCase().endsWith('.pdf')) {
+      return SizedBox(
+        width: double.infinity,
+        height: MediaQuery.of(this.context).size.height * 0.58,
+        child: SfPdfViewer.network(
+          url,
+          controller: pdfController,
+        ),
+      );
+    }
+    return Image.network(
+      url,
+      key: UniqueKey(),
+    );
   }
 
   @override
@@ -332,79 +325,9 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                               fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Expanded(
-                            child: Text(
-                              'Resume/CV (*)',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            resumeImage == null
-                                ? imageFileResume == null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: DottedBorder(
-                                          color: Colors.black,
-                                          dashPattern: const [8, 4],
-                                          strokeWidth: 2,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0,
-                                                vertical: 30.0),
-                                            child: DragTarget(
-                                              builder: (
-                                                BuildContext context,
-                                                List<dynamic> accepted,
-                                                List<dynamic> rejected,
-                                              ) {
-                                                return _buildDropZone();
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Image.file(imageFileResume!)
-                                : Image.network(resumeImage!),
-                            const SizedBox(height: 10),
-                            Container(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: ElevatedButton(
-                                  onPressed: _pickImageResume,
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.blue,
-                                    padding: const EdgeInsets.all(10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                  ),
-                                  child: Text(resumeImage == null
-                                      ? 'Choose Image'
-                                      : 'Change'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Row(
-                        children: [
-                          Expanded(
+                          const Expanded(
                             child: Text(
                               'Transcript (*)',
                               style: TextStyle(
@@ -413,6 +336,28 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                               ),
                             ),
                           ),
+                          if (trancriptImage != null)
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: _pickImageTranscript,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(6),
+                                child: const Icon(Icons.edit,
+                                    size: 16, color: Colors.blue),
+                              ),
+                            )
                         ],
                       ),
                       Padding(
@@ -421,56 +366,31 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             trancriptImage == null
-                                ? imageFileTranscript == null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: DottedBorder(
-                                          color: Colors.black,
-                                          dashPattern: const [8, 4],
-                                          strokeWidth: 2,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0,
-                                                vertical: 30.0),
-                                            child: DragTarget(
-                                              builder: (
-                                                BuildContext context,
-                                                List<dynamic> accepted,
-                                                List<dynamic> rejected,
-                                              ) {
-                                                return _buildDropZone();
-                                              },
-                                            ),
-                                          ),
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: DottedBorder(
+                                      color: Colors.blue,
+                                      dashPattern: const [8, 4],
+                                      strokeWidth: 2,
+                                      borderType: BorderType.RRect,
+                                      radius: const Radius.circular(12),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 30.0),
+                                        child: DragTarget(
+                                          builder: (
+                                            BuildContext context,
+                                            List<dynamic> accepted,
+                                            List<dynamic> rejected,
+                                          ) {
+                                            return _buildDropZone();
+                                          },
                                         ),
-                                      )
-                                    : Image.file(imageFileTranscript!)
-                                : Image.network(trancriptImage!),
-                            const SizedBox(height: 10),
-                            Container(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: ElevatedButton(
-                                  onPressed: _pickImageTranscript,
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.blue,
-                                    padding: const EdgeInsets.all(
-                                        10), // Padding của nút
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          6), // Bo tròn cho nút
+                                      ),
                                     ),
-                                  ),
-                                  child: Text(trancriptImage == null
-                                      ? 'Choose Image'
-                                      : 'Change'),
-                                ),
-                              ),
-                            ),
+                                  )
+                                : _showData(trancriptImage),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
@@ -480,16 +400,15 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
               ),
         bottomNavigationBar: !isLoading
             ? Container(
-                padding:
-                    const EdgeInsets.all(10), // Padding của bottomNavigationBar
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Màu nền của bottomNavigationBar
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-                      spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-                      blurRadius: 4, // Độ mờ của đổ bóng
-                      offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -513,7 +432,7 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue, // Màu của tiêu đề
+                                color: Colors.blue,
                               ),
                             ),
                           ),
@@ -562,9 +481,9 @@ class _StundentProfileS3State extends State<StundentProfileS3> {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(10),
-                    backgroundColor: Colors.blue, // Màu nền của nút
+                    backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                   child: const Text('Continue',
