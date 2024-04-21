@@ -30,7 +30,6 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
     );
 
     final companyId = responseProject.data['result']['company']['id'];
-    print('Company id: $companyId');
     return companyId;
   }
   

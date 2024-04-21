@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:student_hub/services/dio_client.dart';
 
 class StudentAllProject extends StatefulWidget {
@@ -15,7 +16,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
   var created = false;
   var idStudent = -1;
   List<dynamic> projects = [];
-  List<dynamic> projectsWorking = [];
+  List<dynamic> submittedProposal = [];
+  List<dynamic> activeProposal = [];    //statusFlag = 1
+  List<dynamic> projectsWorking = [];   //typeFlag = 0
+  List<dynamic> projectsArchieved = []; //typeFlag = 1
 
   @override
   void initState() {
@@ -38,8 +42,14 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
     setState(() {
       projects = project;
-      projectsWorking =
-          project.where((item) => item['project']['typeFlag'] == 0).toList();
+      submittedProposal = 
+                        project.where((item) => item['statusFlag'] == 0).toList();
+      activeProposal = 
+                        project.where((item) => item['statusFlag'] == 1).toList();
+      projectsWorking = 
+                        project.where((item) => item['project']['typeFlag'] == 0).toList();
+      projectsArchieved = 
+                        project.where((item) => item['project']['typeFlag'] == 1).toList();
     });
   }
 
@@ -127,7 +137,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                 children: [
                   _allProject(),
                   _working(),
-                  const Center(child: Text('Archieved')),
+                  _archieved(),
                 ],
               ),
             ),
@@ -152,7 +162,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
   Widget _allProject() {
     return Column(
       children: [
-        Container(
+        Expanded(
           child: _activeProposal(),
         ),
         Expanded(
@@ -166,61 +176,40 @@ class _StudentAllProjectState extends State<StudentAllProject>
     return Card(
       color: Colors.grey[200],
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          width: double.infinity,
-          child: const Text(
-            "Active Proposal (0)",
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _submittedProposal() {
-    return Expanded(
-      child: Card(
-        color: Colors.grey[200],
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Submitted Proposal (0)",
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(
+                    "Active Proposal (${activeProposal.length})",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
+                  ),
+                ],
                 ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: activeProposal.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildActivityProposalItem(index);
+                },
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: projects.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return _buildProjectItem(index);
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+          ]
         ),
       ),
     );
   }
 
-  Widget _buildProjectItem(int index) {
+  Widget _buildActivityProposalItem(int index){
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -235,14 +224,14 @@ class _StudentAllProjectState extends State<StudentAllProject>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      projects[index]['project']['title'],
+                      activeProposal[index]['project']['title'],
                       style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      'Submitted ${formatTimeAgo(projects[index]['createdAt'])}',
+                      'Submitted ${formatTimeAgo(activeProposal[index]['createdAt'])}',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
@@ -273,7 +262,109 @@ class _StudentAllProjectState extends State<StudentAllProject>
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      projects[index]['project']['description'],
+                      activeProposal[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _submittedProposal() {
+    return Card(
+        color: Colors.grey[200],
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Submitted Proposal (${submittedProposal.length})",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: submittedProposal.length,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return _buildProjectItem(index);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
+  }
+
+  Widget _buildProjectItem(int index) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      submittedProposal[index]['project']['title'],
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'Submitted ${formatTimeAgo(submittedProposal[index]['createdAt'])}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              'Students are looking for',
+              style: TextStyle(
+                fontSize: 13.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    '•',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      submittedProposal[index]['project']['description'],
                       style: const TextStyle(fontSize: 13.0),
                     ),
                   ),
@@ -288,14 +379,12 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   //working
   Widget _working() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: projectsWorking.length,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return _buildWorkingProjectItem(index);
-        },
-      ),
+    return ListView.builder(
+      itemCount: projectsWorking.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return _buildWorkingProjectItem(index);
+      },
     );
   }
 
@@ -353,6 +442,82 @@ class _StudentAllProjectState extends State<StudentAllProject>
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       projectsWorking[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _archieved() {
+    return ListView.builder(
+      itemCount: projectsArchieved.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return _buildArchievedProjectItem(index);
+      },
+    );
+  }
+
+  Widget _buildArchievedProjectItem(int index){
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      projectsArchieved[index]['project']['title'],
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '${formatTimeProject(projectsArchieved[index]['project']['projectScopeFlag'])}, ${projectsArchieved[index]['project']['numberOfStudents']} students',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              'Students are looking for',
+              style: TextStyle(
+                fontSize: 13.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    '•',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      projectsArchieved[index]['project']['description'],
                       style: const TextStyle(fontSize: 13.0),
                     ),
                   ),

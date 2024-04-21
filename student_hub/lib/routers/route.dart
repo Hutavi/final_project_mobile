@@ -452,9 +452,10 @@ class AppRoute {
         );
 
       case AppRouterName.submitProposal:
+      final args = settings.arguments as ProjectForListModel;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const submitProposal(),
+              SubmitProposal(projectId: args,),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
