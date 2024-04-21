@@ -59,103 +59,103 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const AppBarCustom(
-        title: 'Student Hub',
-        showBackButton: false,
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: projectSearchController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: "Search for project",
-                        hintStyle:
-                            const TextStyle(fontWeight: FontWeight.normal),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(color: Colors.blue),
-                        ),
-                        disabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 0, color: kBlue600),
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 0, color: kGrey1),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 1, color: kBlue600),
-                        ),
-                        focusedErrorBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            borderSide: BorderSide(width: 1, color: kGrey1)),
-                      ),
-                      // onChanged: searchProject,
-                      onTap: () {
-                        _showSearchBottomSheet(
-                            context); // Call function to show BottomSheet
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, AppRouterName.projectSaved)
-                          .then((_) => {
-                                setState(() {
-                                  fecthData();
-                                })
-                              });
-                      // Navigator.pushNamed(context, AppRouterName.projectSaved)
-                      //     .then((val) => {_getRequests()});
-                    },
-                    child: const Icon(
-                      Icons.favorite,
-                      color: kRed,
-                    ),
-                  )
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: listProject.length,
-                  itemBuilder: (context, index) {
-                    final project = listProject[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, AppRouterName.projectDetail,
-                            arguments: project);
-                      },
-                      child: ProjectItem(
-                        projectForListModel: listProject[index],
-                      ),
-                    );
-                  },
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: null,
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: projectSearchController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: "Search for project",
+                          hintStyle:
+                              const TextStyle(fontWeight: FontWeight.normal),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(color: Colors.blue),
+                          ),
+                          disabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 0, color: kBlue600),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 0, color: kGrey1),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 1, color: kBlue600),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              borderSide: BorderSide(width: 1, color: kGrey1)),
+                        ),
+                        // onChanged: searchProject,
+                        onTap: () {
+                          _showSearchBottomSheet(
+                              context); // Call function to show BottomSheet
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRouterName.projectSaved)
+                            .then((_) => {
+                                  setState(() {
+                                    fecthData();
+                                  })
+                                });
+                        // Navigator.pushNamed(context, AppRouterName.projectSaved)
+                        //     .then((val) => {_getRequests()});
+                      },
+                      child: const Icon(
+                        Icons.favorite,
+                        color: kRed,
+                      ),
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: listProject.length,
+                    itemBuilder: (context, index) {
+                      final project = listProject[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRouterName.projectDetail,
+                              arguments: project);
+                        },
+                        child: ProjectItem(
+                          projectForListModel: listProject[index],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

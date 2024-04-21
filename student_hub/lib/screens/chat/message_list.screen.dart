@@ -27,21 +27,23 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarCustom(title: "Student Hub"),
-      body: Column(children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: SearchBox(controller: _searchController),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (ctx, index) {
-                return const MessageItem();
-              }),
-        )
-      ]),
+    return SafeArea(
+      child: Scaffold(
+        appBar: null,
+        body: Column(children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: SearchBox(controller: _searchController),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (ctx, index) {
+                  return const MessageItem();
+                }),
+          )
+        ]),
+      ),
     );
   }
 }

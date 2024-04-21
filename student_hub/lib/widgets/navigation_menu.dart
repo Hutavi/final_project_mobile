@@ -8,6 +8,7 @@ import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/chat/message_list.screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class NavigationMenu extends StatefulWidget {
   final CompanyUser? companyUser;
@@ -32,7 +33,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     super.initState();
     screens = [
       const ProjectListScreen(),
-      Dashboard(),
+      const Dashboard(),
       const MessageListScreen(),
       const NotificationPage(),
     ];
@@ -45,7 +46,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
     return Scaffold(
       extendBodyBehindAppBar:
           true, //this is to extend the body behind the appbar
-      appBar: null,
+      appBar: const AppBarCustom(
+        title: "Student Hub",
+        showBackButton: false,
+      ),
       body: Obx(() => screens[controller.selectedIndex.value]),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(0.0),

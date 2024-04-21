@@ -82,45 +82,43 @@ class SendHiredState extends State<SendHired>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarCustom(title: "Student Hub"),
-      body: isLoading
-          ? const LoadingWidget()
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-                  child: Text(
-                    'Senior frontend developer (Fintech)',
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+            child: Text(
+              'Senior frontend developer (Fintech)',
+              style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  _buildTabBar(),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
                       children: [
-                        _buildTabBar(),
-                        const SizedBox(height: 12),
-                        Expanded(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              _buildProjectList(),
-                              _buildProjectDetails(),
-                              const Center(child: Text('Message')),
-                              const Center(child: Text('Hired')),
-                            ],
-                          ),
-                        ),
+                        _buildProjectList(),
+                        _buildProjectDetails(),
+                        const Center(child: Text('Message')),
+                        const Center(child: Text('Hired')),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -130,6 +128,14 @@ class SendHiredState extends State<SendHired>
       controller: _tabController,
       indicatorColor: kBlue600,
       labelColor: kBlue600,
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.hovered) ||
+            states.contains(MaterialState.focused)) {
+          return Colors.blue.withOpacity(0.1);
+        }
+        return null;
+      }),
       tabs: const [
         Tab(text: 'Proposals'),
         Tab(text: 'Detail'),
@@ -140,17 +146,19 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectList() {
-    return proposals.isNotEmpty
-        ? ListView.builder(
-            itemCount: proposals.length,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return _buildProjectItem(context, index);
-            },
-          )
-        : const Center(
-            child: Text('Không có Proposal'),
-          );
+    return isLoading
+        ? const LoadingWidget()
+        : proposals.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposals.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectItem(context, index);
+                },
+              )
+            : const Center(
+                child: Text('Không có Proposal'),
+              );
   }
 
   void _showHiredConfirmationDialog(BuildContext context) {
@@ -241,95 +249,98 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectDetails() {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Students are looking for',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kBlackColor,
-                  ),
-                ),
-                ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    DescribeItem(
-                      itemDescribe: _projectDetaild!['description'],
-                    ),
-                    // DescribeItem(
-                    //   itemDescribe: 'The skills required for your project',
-                    // ),
-                    // DescribeItem(
-                    //   itemDescribe: 'Detail about your project',
-                    // ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Icon(Icons.alarm),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Project scope',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    ),
-                    Text(
-                      formatTimeProject(_projectDetaild!['projectScopeFlag'])
-                          .toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    )
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Icon(Icons.people),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Team size',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    ),
-                    Text(
-                      '• ${_projectDetaild!['numberOfStudents'].toString()} students',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+    return isLoading
+        ? const LoadingWidget()
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Students are looking for',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: kBlackColor,
+                        ),
                       ),
-                      overflow: TextOverflow.clip,
-                    )
-                  ],
-                )
-              ],
+                      ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          DescribeItem(
+                            itemDescribe: _projectDetaild!['description'],
+                          ),
+                          // DescribeItem(
+                          //   itemDescribe: 'The skills required for your project',
+                          // ),
+                          // DescribeItem(
+                          //   itemDescribe: 'Detail about your project',
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.alarm),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Project scope',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          ),
+                          Text(
+                            formatTimeProject(
+                                    _projectDetaild!['projectScopeFlag'])
+                                .toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.people),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Team size',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          ),
+                          Text(
+                            '• ${_projectDetaild!['numberOfStudents'].toString()} students',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.clip,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
