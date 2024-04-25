@@ -28,6 +28,7 @@ class SendHiredState extends State<SendHired>
   String titleIcon = 'Hired';
   int? _idProject;
   List<dynamic> proposals = [];
+  List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
 
@@ -57,10 +58,19 @@ class SendHiredState extends State<SendHired>
       ),
     );
 
+    final responseMessageProppsal = await dioPrivate.request(
+      '/message/$_idProject',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
     final proposal = responseProppsal.data['result']['items'];
+    final message = responseMessageProppsal.data['result'];
 
     setState(() {
       proposals = proposal;
+      listMessage = message;
       isLoading = false;
     });
   }
@@ -76,6 +86,42 @@ class SendHiredState extends State<SendHired>
       return '• More than 6 months';
     }
     return null;
+  }
+
+  String findMaxYearAndCalculate(List<dynamic> data) {
+    int maxYear = 0;
+    dynamic maxYearElement;
+
+    for (var element in data) {
+      int currentMaxYear = element['startYear'] > element['endYear']
+          ? element['startYear']
+          : element['endYear'];
+
+      if (currentMaxYear > maxYear) {
+        maxYear = currentMaxYear;
+        maxYearElement = element;
+      }
+    }
+
+    int currentYear = DateTime.now().year;
+    int difference = currentYear - maxYear;
+
+    if (maxYearElement != null) {
+      String result;
+
+      if (difference == 0) {
+        result = '4th year students';
+      } else if (difference == 1) {
+        result = '3rd year students';
+      } else if (difference == 2) {
+        result = '2nd year students';
+      } else {
+        result = '1st year students';
+      }
+      return result;
+    } else {
+      return 'Không có dữ liệu để xử lý.';
+    }
   }
 
   @override
@@ -108,7 +154,7 @@ class SendHiredState extends State<SendHired>
                       children: [
                         _buildProjectList(),
                         _buildProjectDetails(),
-                        const Center(child: Text('Message')),
+                        _buildProjectMessage(),
                         const Center(child: Text('Hired')),
                       ],
                     ),
@@ -158,6 +204,22 @@ class SendHiredState extends State<SendHired>
               )
             : const Center(
                 child: Text('Không có Proposal'),
+              );
+  }
+
+  Widget _buildProjectMessage() {
+    return isLoading
+        ? const LoadingWidget()
+        : listMessage.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposals.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectMessageItem(context, index);
+                },
+              )
+            : const Center(
+                child: Text('Không có Message'),
               );
   }
 
@@ -364,19 +426,20 @@ class SendHiredState extends State<SendHired>
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tran Huu Chinh',
-                      style: TextStyle(
+                      proposals[index]['student']['user']['fullname'],
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      '4th year student',
-                      style: TextStyle(fontSize: 12),
+                      findMaxYearAndCalculate(
+                          proposals[index]['student']['educations']),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -403,6 +466,118 @@ class SendHiredState extends State<SendHired>
             const SizedBox(height: 10),
             Text(
               proposals[index]['coverLetter'],
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Xử lý khi nhấn nút Message
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
+                      ),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                    ),
+                    child: const Text(
+                      'Message',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                Expanded(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showHiredConfirmationDialog(context);
+                    },
+                    child: Text(
+                      titleIcon,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProjectMessageItem(BuildContext context, int index) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(ImageManagent.imgAvatar),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '1',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'cc',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'hii',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  'Excellent',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'haha',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

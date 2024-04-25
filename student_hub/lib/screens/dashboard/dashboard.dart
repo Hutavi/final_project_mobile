@@ -57,10 +57,23 @@ class DashboardState extends State<Dashboard>
     final project = responseProject.data['result'];
 
     setState(() {
-      projects = project;
-      projectsWorking = project.where((item) => item['typeFlag'] == 0).toList();
-      projectsArchieved =
-          project.where((item) => item['typeFlag'] == 1).toList();
+      projects = project
+          .where((item) => item['typeFlag'] != 1 && item['typeFlag'] != 2)
+          .toList()
+          .reversed
+          .toList();
+
+      projectsWorking = project
+          .where((item) => item['typeFlag'] == 1)
+          .toList()
+          .reversed
+          .toList();
+
+      projectsArchieved = project
+          .where((item) => item['typeFlag'] == 2)
+          .toList()
+          .reversed
+          .toList();
 
       isLoading = false;
     });
@@ -113,43 +126,27 @@ class DashboardState extends State<Dashboard>
     });
   }
 
-  void _handleStartWorking(int idProject, int index) async {
-    if (projects[index]['typeFlag'] == 0) return;
-    setState(() {
-      isLoading = true;
-    });
-    final data = {
-      "projectScopeFlag": projects[index]['projectScopeFlag'],
-      "title": projects[index]['title'],
-      "description": projects[index]['description'],
-      "numberOfStudents": projects[index]['numberOfStudents'],
-      "typeFlag": 0
-    };
-
-    final dioPrivate = DioClient();
-    final responseLanguage = await dioPrivate.request(
-      '/project/$idProject',
-      data: data,
-      options: Options(method: 'PATCH'),
-    );
-
-    if (responseLanguage.statusCode == 200) {
-      setState(() {
-        getDataIdCompany();
-      });
-    } else {}
+  List<dynamic> handleAssignData() {
+    if (_tabController.index == 0) {
+      return projects;
+    } else if (_tabController.index == 1) {
+      return projectsWorking;
+    }
+    return projectsArchieved;
   }
 
-  void _handleStartArchieved(int idProject, int index) async {
-    if (projects[index]['typeFlag'] == 1) return;
+  void _handleStartWorking(int idProject, int index) async {
+    List<dynamic> dataList = handleAssignData();
+
+    if (dataList[index]['typeFlag'] == 1) return;
     setState(() {
       isLoading = true;
     });
     final data = {
-      "projectScopeFlag": projects[index]['projectScopeFlag'],
-      "title": projects[index]['title'],
-      "description": projects[index]['description'],
-      "numberOfStudents": projects[index]['numberOfStudents'],
+      "projectScopeFlag": dataList[index]['projectScopeFlag'],
+      "title": dataList[index]['title'],
+      "description": dataList[index]['description'],
+      "numberOfStudents": dataList[index]['numberOfStudents'],
       "typeFlag": 1
     };
 
@@ -167,8 +164,44 @@ class DashboardState extends State<Dashboard>
     } else {}
   }
 
+  void _handleStartArchieved(int idProject, int index) async {
+    List<dynamic> dataList = handleAssignData();
+
+    if (projects[index]['typeFlag'] == 2) return;
+    setState(() {
+      isLoading = true;
+    });
+
+    final data = {
+      "projectScopeFlag": dataList[index]['projectScopeFlag'],
+      "title": dataList[index]['title'],
+      "description": dataList[index]['description'],
+      "numberOfStudents": dataList[index]['numberOfStudents'],
+      "typeFlag": 2
+    };
+
+    final dioPrivate = DioClient();
+    final responseLanguage = await dioPrivate.request(
+      '/project/$idProject',
+      data: data,
+      options: Options(method: 'PATCH'),
+    );
+
+    if (responseLanguage.statusCode == 200) {
+      setState(() {
+        getDataIdCompany();
+      });
+    } else {}
+  }
+
   void deleteProject(index) async {
-    final id = projects[index]['id'];
+    List<dynamic> data = handleAssignData();
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final id = data[index]['id'];
     final dioPrivate = DioClient();
 
     final response = await dioPrivate.request(
@@ -204,7 +237,6 @@ class DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     if (idStudent != -1) {
-      //Nếu người dùng là studentUser, hiển thị giao diện dành cho studentUser
       return const Scaffold(
         // appBar:
         appBar: null,
@@ -383,132 +415,142 @@ class DashboardState extends State<Dashboard>
   }
 
   void _showPopupMenu(BuildContext context, int index) {
+    List<dynamic> data = handleAssignData();
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.user,
-                  size: 20,
-                ),
-                title: const Text('View proposals'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SendHired(
-                        idProject: projects[index]['id'],
-                        indexTab: 0,
-                        projectDetail: {
-                          "description": projects[index]['description'],
-                          "projectScopeFlag": projects[index]
-                              ['projectScopeFlag'],
-                          "numberOfStudents": projects[index]
-                              ['numberOfStudents']
-                        },
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.user,
+                        size: 20,
                       ),
+                      title: const Text('View proposals'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SendHired(
+                              idProject: data[index]['id'],
+                              indexTab: 0,
+                              projectDetail: {
+                                "description": data[index]['description'],
+                                "projectScopeFlag": data[index]
+                                    ['projectScopeFlag'],
+                                "numberOfStudents": data[index]
+                                    ['numberOfStudents']
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.comments,
-                  size: 20,
-                ),
-                title: const Text('View messages'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SendHired(
-                        idProject: projects[index]['id'],
-                        indexTab: 2,
-                        projectDetail: {
-                          "description": projects[index]['description'],
-                          "projectScopeFlag": projects[index]
-                              ['projectScopeFlag'],
-                          "numberOfStudents": projects[index]
-                              ['numberOfStudents']
-                        },
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.comments,
+                        size: 20,
                       ),
+                      title: const Text('View messages'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SendHired(
+                              idProject: projects[index]['id'],
+                              indexTab: 2,
+                              projectDetail: {
+                                "description": data[index]['description'],
+                                "projectScopeFlag": data[index]
+                                    ['projectScopeFlag'],
+                                "numberOfStudents": data[index]
+                                    ['numberOfStudents']
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.clipboardCheck,
-                  size: 20,
-                ),
-                title: const Text('View hired'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SendHired(
-                        idProject: projects[index]['id'],
-                        indexTab: 3,
-                        projectDetail: {
-                          "description": projects[index]['description'],
-                          "projectScopeFlag": projects[index]
-                              ['projectScopeFlag'],
-                          "numberOfStudents": projects[index]
-                              ['numberOfStudents']
-                        },
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.clipboardCheck,
+                        size: 20,
                       ),
+                      title: const Text('View hired'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SendHired(
+                              idProject: data[index]['id'],
+                              indexTab: 3,
+                              projectDetail: {
+                                "description": data[index]['description'],
+                                "projectScopeFlag": data[index]
+                                    ['projectScopeFlag'],
+                                "numberOfStudents": data[index]
+                                    ['numberOfStudents']
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.fileImport,
-                  size: 20,
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.fileImport,
+                        size: 20,
+                      ),
+                      title: const Text('Archieve this project'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _handleStartArchieved(data[index]['id'], index);
+                        _tabController.animateTo(2);
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.penToSquare,
+                        size: 20,
+                      ),
+                      title: const Text('Edit posting'),
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRouterName.reviewPost,
+                            arguments: data[index]['id']);
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.trashCan,
+                        size: 20,
+                      ),
+                      title: const Text('Remove posting'),
+                      onTap: () {
+                        deleteProject(index);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.briefcase,
+                        size: 20,
+                      ),
+                      title: const Text('Start working this project'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _handleStartWorking(data[index]['id'], index);
+                        _tabController.animateTo(1);
+                      },
+                    ),
+                  ],
                 ),
-                title: const Text('Archieve this project'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _handleStartArchieved(projects[index]['id'], index);
-                  _tabController.animateTo(2);
-                },
-              ),
-              ListTile(
-                  leading: const Icon(
-                    FontAwesomeIcons.penToSquare,
-                    size: 20,
-                  ),
-                  title: const Text('Edit posting'),
-                  onTap: () {
-                    Navigator.pushNamed(context, AppRouterName.reviewPost,
-                        arguments: projects[index]['id']);
-                  }),
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.trashCan,
-                  size: 20,
-                ),
-                title: const Text('Remove posting'),
-                onTap: () {
-                  deleteProject(index);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.briefcase,
-                  size: 20,
-                ),
-                title: const Text('Start working this project'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _handleStartWorking(projects[index]['id'], index);
-                  _tabController.animateTo(1);
-                },
               ),
             ],
           ),
@@ -635,9 +677,9 @@ class DashboardState extends State<Dashboard>
               idProject: projectsWorking[index]['id'],
               indexTab: 0,
               projectDetail: {
-                "description": projects[index]['description'],
-                "projectScopeFlag": projects[index]['projectScopeFlag'],
-                "numberOfStudents": projects[index]['numberOfStudents']
+                "description": projectsWorking[index]['description'],
+                "projectScopeFlag": projectsWorking[index]['projectScopeFlag'],
+                "numberOfStudents": projectsWorking[index]['numberOfStudents']
               },
             ),
           ),
@@ -743,9 +785,10 @@ class DashboardState extends State<Dashboard>
               idProject: projectsArchieved[index]['id'],
               indexTab: 0,
               projectDetail: {
-                "description": projects[index]['description'],
-                "projectScopeFlag": projects[index]['projectScopeFlag'],
-                "numberOfStudents": projects[index]['numberOfStudents']
+                "description": projectsArchieved[index]['description'],
+                "projectScopeFlag": projectsArchieved[index]
+                    ['projectScopeFlag'],
+                "numberOfStudents": projectsArchieved[index]['numberOfStudents']
               },
             ),
           ),
