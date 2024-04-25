@@ -237,30 +237,31 @@ class DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     if (idStudent != -1) {
-      return const Scaffold(
-        // appBar:
-        appBar: null,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Your Project',
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
+      return const SafeArea(
+        child: Scaffold(
+          appBar: null,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Your Project',
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            StudentAllProject(),
-          ],
+              StudentAllProject(),
+            ],
+          ),
         ),
       );
     } else {
