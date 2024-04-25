@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
+import 'package:student_hub/screens/post/review_post.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -468,7 +470,7 @@ class DashboardState extends State<Dashboard>
                 title: const Text('Edit posting'),
                 onTap: () {
                   Navigator.pop(context);
-                },
+                }
               ),
               ListTile(
                 leading: const Icon(

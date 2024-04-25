@@ -330,6 +330,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       if (responseLanguage.statusCode == 201) {
         setState(() {
           notify = 'Tạo Profile thành công';
+          // getDataDefault();
           getDataIdStudent();
           _showSuccess();
           created = true;
@@ -676,8 +677,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
     }
   }
 
-  void _errorNull() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -814,7 +813,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         ? _selectedValueTech!.isNotEmpty &&
                                 skillsetTags.isNotEmpty
                             ? _handlePostProfile
-                            : _errorNull
+                            : null
                         : null,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -825,9 +824,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                       minimumSize:
                           MaterialStateProperty.all<Size>(const Size(120, 36)),
                     ),
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(color: Colors.white),
+                    child: Text(
+                      created ? 'Save' : 'Create',
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
