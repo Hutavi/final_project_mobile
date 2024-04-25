@@ -7,6 +7,7 @@ import 'package:student_hub/screens/student_profile/widget/tags.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class StudentProfileS1 extends StatefulWidget {
   const StudentProfileS1({super.key});
@@ -33,11 +34,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   var created = false;
   var idStudent = -1;
   var notify = '';
+  var isLoading = true;
 
   @override
   void initState() {
     super.initState();
     getDataDefault();
+    getDataDropOption();
   }
 
   void getDataIdStudent() async {
@@ -57,8 +60,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       final skillSet = profile['skillSets'];
       final educations = profile['educations'];
       final languages = profile['languages'];
-
-      print(techStack);
 
       setState(() {
         if (techStack != null && dropdownTechStackOptions.isNotEmpty) {
@@ -103,7 +104,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
           dropdownSkillSetOptionsData = resultArrayData;
 
           for (var item in languages) {
-            listLanguage.add({
+            listLanguage.insert(0, {
               'id': item['id'],
               'languageName': item['languageName'].toString(),
               'level': item['level'].toString()
@@ -116,22 +117,16 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
               'endYear': item['endYear'].toString()
             });
           }
+
+          isLoading = false;
         }
       });
     });
   }
 
-  void getDataDefault() async {
+  void getDataDropOption() async {
     try {
       final dioPublic = DioClientWithoutToken();
-      final dioPrivate = DioClient();
-
-      final responseUser = await dioPrivate.request(
-        '/auth/me',
-        options: Options(
-          method: 'GET',
-        ),
-      );
 
       final responseTeckStack = await dioPublic.request(
         '/techstack/getAllTechStack',
@@ -147,7 +142,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
       final listTechStack = responseTeckStack.data['result'];
       final listSkillSet = responseSkillSet.data['result'];
-      final user = responseUser.data['result'];
 
       setState(() {
         for (var item in listTechStack) {
@@ -159,7 +153,30 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
           dropdownSkillSetOptionsData
               .add({'id': item['id'], 'name': item['name']});
         }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
 
+  void getDataDefault() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+
+      setState(() {
         if (user['student'] == null) {
           created = false;
         } else {
@@ -167,6 +184,37 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
           final student = user['student'];
           idStudent = student['id'];
           getDataIdStudent();
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  void getIDStudent() async {
+    try {
+      final dioPrivate = DioClient();
+
+      final responseUser = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final user = responseUser.data['result'];
+
+      setState(() {
+        if (user['student'] == null) {
+          created = false;
+        } else {
+          created = true;
+          final student = user['student'];
+          idStudent = student['id'];
         }
       });
     } catch (e) {
@@ -309,7 +357,6 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         setState(() {
           notify = 'Cập nhật Profile thành công';
           _showSuccess();
-          // getDataIdStudent();
           isTechStackChanged = false;
           isSkillSetChanged = false;
         });
@@ -330,10 +377,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       if (responseLanguage.statusCode == 201) {
         setState(() {
           notify = 'Tạo Profile thành công';
-          // getDataDefault();
-          getDataIdStudent();
+          getIDStudent();
           _showSuccess();
-          created = true;
           isTechStackChanged = false;
           isSkillSetChanged = false;
         });
@@ -417,7 +462,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       setState(() {
         notify = 'Tạo Language mới thành công';
         _showSuccess();
-        listLanguage.add({
+        listLanguage.insert(0, {
           'languageName': languageName,
           'level': languageLevel,
         });
@@ -526,7 +571,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         notify = 'Tạo Education mới thành công';
 
         _showSuccess();
-        listEducation.add({
+        listEducation.insert(0, {
           'schoolName': educationName,
           'startYear': educationStartYear,
           'endYear': educationEndYear,
@@ -681,241 +726,188 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const AppBarCustom(title: "Student Hub"),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              // Welcome message
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12.0),
-                child: Text(
-                  'Welcome to Student Hub',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-              // Tell us about yourself
-              const Text(
-                'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-
-              const Row(
-                children: [
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      'TechStack',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  )),
-                ],
-              ),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    menuMaxHeight: 200,
-                    value: _selectedValueTech,
-                    hint: const Text('Select Techstack',
-                        style: TextStyle(fontSize: 13, color: Colors.grey)),
-                    items: dropdownTechStackOptions
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: _onDropdownChangedTech,
-                    icon: const Icon(Icons.arrow_drop_down),
-                    iconSize: 26,
-                    underline: const SizedBox(),
-                  ),
-                ),
-              ),
-
-              // Skillset
-              const Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+        body: isLoading
+            ? const LoadingWidget()
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: <Widget>[
+                    // Welcome message
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 12.0),
                       child: Text(
-                        'Skillset',
+                        'Welcome to Student Hub',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    menuMaxHeight: 200,
-                    hint: const Text('Select Skillset',
-                        style: TextStyle(fontSize: 13, color: Colors.grey)),
-                    value: _selectedValue,
-                    onChanged: _onDropdownChanged,
-                    items: dropdownSkillSetOptions.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                        ),
-                      );
-                    }).toList(),
-                    icon: const Icon(Icons.arrow_drop_down),
-                    iconSize: 26,
-                    underline: const SizedBox(),
-                  ),
-                ),
-              ),
 
-              // Display selected skillset tags
-              SkillsetTagsDisplay(
-                skillsetTags: skillsetTags,
-                onRemoveSkillsetTag: _removeSkillsetTag,
-              ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: isTechStackChanged || isSkillSetChanged
-                        ? _selectedValueTech!.isNotEmpty &&
-                                skillsetTags.isNotEmpty
-                            ? _handlePostProfile
-                            : null
-                        : null,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        isTechStackChanged || isSkillSetChanged
-                            ? Colors.blue
-                            : Colors.grey,
-                      ),
-                      minimumSize:
-                          MaterialStateProperty.all<Size>(const Size(120, 36)),
+                    // Tell us about yourself
+                    const Text(
+                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                     ),
-                    child: Text(
-                      created ? 'Save' : 'Create',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
 
-              const SizedBox(height: 8),
-
-              // Languages
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // Căn văn bản sang trái
+                    const Row(
                       children: [
-                        const Text(
-                          'Languages',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 14),
-                        ),
-                        Row(
-                          children: [
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: created ? _showLanguageModal : null,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.all(6),
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 16,
-                                ),
+                        Expanded(
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'TechStack',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        )),
+                      ],
+                    ),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          menuMaxHeight: 200,
+                          value: _selectedValueTech,
+                          hint: const Text('Select Techstack',
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.grey)),
+                          items: dropdownTechStackOptions
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(fontSize: 13),
                               ),
-                            )
-                          ],
+                            );
+                          }).toList(),
+                          onChanged: _onDropdownChangedTech,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          iconSize: 26,
+                          underline: const SizedBox(),
+                        ),
+                      ),
+                    ),
+
+                    // Skillset
+                    const Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Skillset',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          menuMaxHeight: 200,
+                          hint: const Text('Select Skillset',
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.grey)),
+                          value: _selectedValue,
+                          onChanged: _onDropdownChanged,
+                          items: dropdownSkillSetOptions.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                              ),
+                            );
+                          }).toList(),
+                          icon: const Icon(Icons.arrow_drop_down),
+                          iconSize: 26,
+                          underline: const SizedBox(),
+                        ),
+                      ),
+                    ),
 
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: listLanguage.length,
-                itemBuilder: (context, index) {
-                  final language = listLanguage[index];
-                  return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
+                    // Display selected skillset tags
+                    SkillsetTagsDisplay(
+                      skillsetTags: skillsetTags,
+                      onRemoveSkillsetTag: _removeSkillsetTag,
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: isTechStackChanged || isSkillSetChanged
+                              ? _selectedValueTech!.isNotEmpty &&
+                                      skillsetTags.isNotEmpty
+                                  ? _handlePostProfile
+                                  : null
+                              : null,
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              isTechStackChanged || isSkillSetChanged
+                                  ? Colors.white
+                                  : Colors.grey,
+                            ),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                                const Size(100, 36)),
+                          ),
+                          child: Text(
+                            created ? 'Save' : 'Create',
+                            style: TextStyle(
+                              color: isTechStackChanged || isSkillSetChanged
+                                  ? Colors.blue
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Languages
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 6),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${language['languageName']}: ${language['level']}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              const Text(
+                                'Languages',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 14),
                               ),
                               Row(
                                 children: [
                                   InkWell(
                                     borderRadius: BorderRadius.circular(50),
-                                    onTap: () {
-                                      _updateLanguageModal(index);
-                                    },
+                                    onTap: created ? _showLanguageModal : null,
                                     child: Container(
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
@@ -932,40 +924,11 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                       ),
                                       padding: const EdgeInsets.all(6),
                                       child: const Icon(
-                                        Icons.edit,
+                                        Icons.add,
                                         size: 16,
-                                        color: Colors.blue,
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(50),
-                                    onTap: () {
-                                      _removeLanguage(index);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            spreadRadius: 2,
-                                            blurRadius: 4,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      padding: const EdgeInsets.all(6),
-                                      child: const Icon(
-                                        Icons.delete,
-                                        size: 16,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ],
@@ -973,193 +936,309 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Education',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 14),
-                        ),
-                        Row(
-                          children: [
-                            InkWell(
-                              borderRadius: BorderRadius.circular(50),
-                              onTap: created ? _addEducationModal : null,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
+                    SizedBox(
+                      height: listLanguage.isNotEmpty &&
+                              listLanguage.length * 120 > 120
+                          ? 120
+                          : null,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: listLanguage.length,
+                        itemBuilder: (context, index) {
+                          final language = listLanguage[index];
+                          return Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6)),
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${language['languageName']}: ${language['level']}',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            onTap: () {
+                                              _updateLanguageModal(index);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 2,
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              padding: const EdgeInsets.all(6),
+                                              child: const Icon(
+                                                Icons.edit,
+                                                size: 16,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8.0),
+                                          InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            onTap: () {
+                                              _removeLanguage(index);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 2,
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              padding: const EdgeInsets.all(6),
+                                              child: const Icon(
+                                                Icons.delete,
+                                                size: 16,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Education',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 14),
+                              ),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(50),
+                                    onTap: created ? _addEducationModal : null,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(6),
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: listEducation.isNotEmpty &&
+                              listEducation.length * 100 > 100
+                          ? 84
+                          : null,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: listEducation.length,
+                        itemBuilder: (context, index) {
+                          final education = listEducation[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          education['schoolName'] ?? '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              onTap: () {
+                                                _updateEducationModal(index);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 2,
+                                                      blurRadius: 4,
+                                                      offset:
+                                                          const Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(6),
+                                                child: const Icon(
+                                                  Icons.edit,
+                                                  size: 16,
+                                                  color: Colors.blue,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8.0),
+                                            InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              onTap: () {
+                                                _removeEducation(index);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 2,
+                                                      blurRadius: 4,
+                                                      offset:
+                                                          const Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(6),
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  size: 16,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2.0),
+                                    Text(
+                                      '${education['startYear']} - ${education['endYear']}',
+                                      style: const TextStyle(
+                                          fontSize: 13, color: Colors.grey),
                                     ),
                                   ],
                                 ),
-                                padding: const EdgeInsets.all(
-                                    6), // Điều chỉnh kích thước của nút bằng cách thay đổi giá trị của EdgeInsets
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 16,
-                                ),
                               ),
-                            )
-                          ],
-                        ),
-                      ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
-
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: listEducation.length,
-                itemBuilder: (context, index) {
-                  final education = listEducation[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  education['schoolName'] ?? '',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    InkWell(
-                                      borderRadius: BorderRadius.circular(50),
-                                      onTap: () {
-                                        _updateEducationModal(index);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
-                                              spreadRadius: 2,
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        padding: const EdgeInsets.all(6),
-                                        child: const Icon(
-                                          Icons.edit,
-                                          size: 16,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                    InkWell(
-                                      borderRadius: BorderRadius.circular(50),
-                                      onTap: () {
-                                        _removeEducation(index);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
-                                              spreadRadius: 2,
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        padding: const EdgeInsets.all(6),
-                                        child: const Icon(
-                                          Icons.delete,
-                                          size: 16,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 2.0),
-                            Text(
-                              '${education['startYear']} - ${education['endYear']}',
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
+        bottomNavigationBar: !isLoading
+            ? Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
-          decoration: BoxDecoration(
-            color: Colors.white, // Màu nền của bottomNavigationBar
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-                blurRadius: 4, // Độ mờ của đổ bóng
-                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
-              ),
-            ],
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              created
-                  ? Navigator.pushNamed(context, AppRouterName.profileS2)
-                  : null;
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(10),
-              backgroundColor: Colors.blue, // Màu nền của nút
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
-              ),
-            ),
-            child:
-                const Text('Continue', style: TextStyle(color: Colors.white)),
-          ),
-        ));
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    created
+                        ? Navigator.pushNamed(context, AppRouterName.profileS2)
+                        : null;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: const Text('Continue',
+                      style: TextStyle(color: Colors.white)),
+                ),
+              )
+            : const SizedBox());
   }
 }

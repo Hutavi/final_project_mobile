@@ -35,7 +35,7 @@ class AddProjectScreenState extends State<AddProjectScreen> {
   final List<String> _dropdownSkillSetOptions = [];
   List<Map<String, dynamic>> dropdownSkillSetOptionsData = [];
   List<dynamic> dropdownSkillSetOptionsDataRemove = [];
-  // List<int> skillsetTagsID = [];
+  var notify = '';
 
   @override
   void initState() {
@@ -105,6 +105,15 @@ class AddProjectScreenState extends State<AddProjectScreen> {
       initialDate: _startDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.blue,
+            colorScheme: const ColorScheme.light(primary: Colors.blue),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _startDate) {
       setState(() {
@@ -119,6 +128,15 @@ class AddProjectScreenState extends State<AddProjectScreen> {
       initialDate: _endDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.red,
+            colorScheme: const ColorScheme.light(primary: Colors.red),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _endDate) {
       setState(() {
@@ -154,6 +172,63 @@ class AddProjectScreenState extends State<AddProjectScreen> {
       dropdownSkillSetOptionsDataRemove
           .removeWhere((element) => element['name'] == skill);
     });
+  }
+
+  void _showError() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+            child: Text(
+              'Thất bại',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.red, // Màu của tiêu đề
+              ),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                notify,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    child: Text(
+                      'Cancle',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -227,6 +302,12 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                     flex: 5,
                     child: TextButton(
                       onPressed: () => _selectStartDate(context),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.blue)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                      ),
                       child: Text(
                         'Start Date: ${_startDate.month}/${_startDate.year}',
                         style: const TextStyle(color: Colors.blue),
@@ -238,9 +319,15 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                     flex: 5,
                     child: TextButton(
                       onPressed: () => _selectEndDate(context),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.red)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                      ),
                       child: Text(
                         'End Date: ${_endDate.month}/${_endDate.year}',
-                        style: const TextStyle(color: Colors.blue),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   ),
@@ -352,22 +439,11 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                 if (_endDate.isBefore(_startDate) ||
                     _startDate.isAfter(DateTime.now()) ||
                     _endDate.isAfter(DateTime.now())) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Lỗi'),
-                      content: const Text(
-                          'EndDate không thể có trước startDate or không thể chọn ngày quá thời gian hiện tại được.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
+                  setState(() {
+                    notify =
+                        'EndDate không thể có trước startDate or không thể chọn ngày quá thời gian hiện tại được.';
+                    _showError();
+                  });
                   return;
                 }
 
@@ -386,21 +462,10 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                   },
                 );
               } else {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Lỗi'),
-                    content: const Text('Hãy nhập dữ liệu cho đủ các trường'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
+                setState(() {
+                  notify = 'Hãy nhập dữ liệu cho đủ các trường';
+                  _showError();
+                });
               }
             },
             style: ElevatedButton.styleFrom(
