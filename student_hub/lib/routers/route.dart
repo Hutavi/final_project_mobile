@@ -121,24 +121,27 @@ class AppRoute {
           },
         );
 
+      // case AppRouterName.login:
+      //   return PageRouteBuilder(
+      //     pageBuilder: (context, animation, secondaryAnimation) =>
+      //         const LoginScreen(),
+      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      //       const begin = Offset(1.0, 0.0);
+      //       const end = Offset.zero;
+      //       const curve = Curves.ease;
+
+      //       var tween =
+      //           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      //       return SlideTransition(
+      //         position: animation.drive(tween),
+      //         child: child,
+      //       );
+      //     },
+      //   );
+
       case AppRouterName.login:
-        return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.ease;
-
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
 
       case AppRouterName.register:
         return PageRouteBuilder(
@@ -333,7 +336,7 @@ class AppRoute {
       case AppRouterName.projectSaved:
         return MaterialPageRoute(builder: (_) => const SavedProject());
       case AppRouterName.navigation:
-        return MaterialPageRoute(builder: (_) => NavigationMenu());
+        return MaterialPageRoute(builder: (_) => const NavigationMenu());
 
       case AppRouterName.projectSearch:
         final args = settings.arguments as String;
@@ -452,10 +455,12 @@ class AppRoute {
         );
 
       case AppRouterName.submitProposal:
-      final args = settings.arguments as ProjectForListModel;
+        final args = settings.arguments as ProjectForListModel;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              SubmitProposal(projectId: args,),
+              SubmitProposal(
+            projectId: args,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
