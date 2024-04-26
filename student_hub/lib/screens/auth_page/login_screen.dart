@@ -26,6 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
   bool userNotFound = false;
   bool passwordWrong = false;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void sendRequestLogin() async {
     if (_formKey.currentState!.validate()) {
       var data = json.encode({

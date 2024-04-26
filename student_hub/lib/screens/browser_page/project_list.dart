@@ -8,6 +8,7 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
+import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectListScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
   List<ProjectModel> projectLists = allProject;
   List<ProjectForListModel> listProject = [];
+  var isLoading = true;
 
   @override
   void initState() {
@@ -50,6 +52,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
         setState(() {
           listProject = projects;
+          isLoading = false;
         });
       }
     } catch (e) {
@@ -126,8 +129,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                     fecthData();
                                   })
                                 });
-                        // Navigator.pushNamed(context, AppRouterName.projectSaved)
-                        //     .then((val) => {_getRequests()});
                       },
                       child: const Icon(
                         Icons.favorite,
@@ -136,24 +137,30 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                     )
                   ],
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: listProject.length,
-                    itemBuilder: (context, index) {
-                      final project = listProject[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, AppRouterName.projectDetail,
-                              arguments: project);
-                        },
-                        child: ProjectItem(
-                          projectForListModel: listProject[index],
+                isLoading
+                    ? const Expanded(
+                        child: Center(
+                          child: LoadingWidget(),
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: listProject.length,
+                          itemBuilder: (context, index) {
+                            final project = listProject[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AppRouterName.projectDetail,
+                                    arguments: project);
+                              },
+                              child: ProjectItem(
+                                projectForListModel: listProject[index],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
               ],
             ),
           ),

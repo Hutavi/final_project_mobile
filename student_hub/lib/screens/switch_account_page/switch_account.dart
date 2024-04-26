@@ -57,8 +57,13 @@ class _SwitchAccountState extends State<SwitchAccount> {
       if (response.statusCode == 201) {
         // Xóa token từ local storage
         await TokenManager.removeTokenFromLocal();
-        String? token = await TokenManager.getTokenFromLocal();
-        print(token);
+        // String? token = await TokenManager.getTokenFromLocal();
+        // print(token);
+        // ignore: use_build_context_synchronously
+        // Navigator.pushReplacementNamed(context, AppRouterName.login);
+        // ignore: use_build_context_synchronously
+        // Navigator.pushNamed(context, AppRouterName.login);
+
         // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, AppRouterName.login);
       }
@@ -79,6 +84,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     return Scaffold(
       appBar: const AppBarCustom(
         title: 'Student Hub',
+        showBackButton: true,
       ),
       body: Column(
         children: <Widget>[
