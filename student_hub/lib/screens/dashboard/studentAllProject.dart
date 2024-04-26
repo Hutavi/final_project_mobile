@@ -173,40 +173,76 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
 
   Widget _activeProposal() {
-    return Card(
-      color: Colors.grey[200],
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Active Proposal (${activeProposal.length})",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
+    if(activeProposal.length == 0){
+      return Card(
+        color: Colors.grey[200],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Active Proposal (${activeProposal.length})",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                  ],
                   ),
-                ],
-                ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: activeProposal.length,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return _buildActivityProposalItem(index);
-                },
               ),
-            ),
-          ]
+              const SizedBox(height: 8.0),
+              const Text(
+                'No active proposal',
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              ),
+            ]
+          ),
         ),
-      ),
-    );
+      );
+    }
+    else {
+      return Card(
+        color: Colors.grey[200],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Active Proposal (${activeProposal.length})",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                  ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: activeProposal.length,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return _buildActivityProposalItem(index);
+                  },
+                ),
+              ),
+            ]
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildActivityProposalItem(int index){

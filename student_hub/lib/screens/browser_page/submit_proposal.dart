@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/routers/route_name.dart';

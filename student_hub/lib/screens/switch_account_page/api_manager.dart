@@ -27,6 +27,7 @@ class ApiManager {
         User? user = User.fromMapUser(userData['result']);
         // Kiểm tra dữ liệu người dùng hợp lệ
         if (user.id != null) {
+          // print('1');
           return user;
         } else {
           // Xử lý dữ liệu người dùng không hợp lệ
@@ -35,13 +36,44 @@ class ApiManager {
         }
       } else {
         // Xử lý lỗi từ API
-        print('Failed to load user info: ${response.statusCode}');
+        print('user Failed to load user info: ${response.statusCode}');
         return null;
       }
     } catch (e) {
       // Xử lý lỗi khi gọi API
-      print('Error fetching user info: $e');
+      print('user: Error fetching user info: $e');
       return null;
+    }
+  }
+
+  static Future<String> getFullname(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://34.16.137.128/api/auth/me'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body); 
+        final String fullname = userData['result']['fullname'];
+        // Kiểm tra dữ liệu người dùng hợp lệ
+        if (userData['result']['id'] != null) {
+          return fullname;
+        } else {
+          // Xử lý dữ liệu người dùng không hợp lệ
+          print('Invalid user data');
+          return 'null';
+        }
+      } else {
+        // Xử lý lỗi từ API
+        print('fullname Failed to load user info: ${response.statusCode}');
+        return 'null';
+      }
+    } catch (e) {
+      // Xử lý lỗi khi gọi API
+      print('Error fetching user info: $e');
+      return 'Error';
     }
   }
 }

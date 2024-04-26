@@ -6,7 +6,7 @@ class User {
   final String? email;
   final String? password;
   final String? fullname;
-  final List<dynamic>? role;
+  final List<dynamic>? roles;
   StudentUser? studentUser;
   CompanyUser? companyUser;
 
@@ -15,7 +15,7 @@ class User {
     this.email,
     this.password,
     this.fullname,
-    this.role,
+    this.roles,
     this.studentUser,
     this.companyUser,
   });
@@ -25,7 +25,7 @@ class User {
     'email': email,
     'password': password,
     'fullname': fullname,
-    'role': role?.last,
+    'role': roles?.last,
     'student': studentUser?.toMapStudentUser(),
     'company': companyUser?.toMapCompanyUser(),
   };
@@ -35,7 +35,7 @@ class User {
     email: map['email'],
     password: map['password'],
     fullname: map['fullname'],
-    role: map['roles'],
+    roles: map['roles'],
     studentUser: map['student'] == null
         ? null
         : StudentUser.fromMapStudentUser(map['student']),
@@ -44,7 +44,7 @@ class User {
         : CompanyUser.fromMapCompanyUser(map['company']));
 
   String printAll(){
-    return 'User(id: $id, email: $email, password: $password, fullname: $fullname, role: $role, studentUser: $studentUser, companyUser: $companyUser)';
+    return 'User(id: $id, email: $email, password: $password, fullname: $fullname, role: $roles, studentUser: $studentUser, companyUser: $companyUser)';
   }
 }
 
