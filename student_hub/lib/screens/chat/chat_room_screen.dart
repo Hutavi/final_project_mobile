@@ -7,7 +7,6 @@ import 'package:student_hub/screens/schedule_interview/schedule_interview.dart';
 import 'package:student_hub/widgets/message_chat_bubble.dart';
 import 'package:student_hub/widgets/schedule_invite.dart';
 import 'package:student_hub/widgets/avatar.dart';
-import 'package:student_hub/widgets/create_meeting.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
@@ -193,6 +192,16 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Row(
           children: [
             Avatar(
@@ -205,103 +214,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ],
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
-            offset: const Offset(0, 45),
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            onSelected: (String value) {
-              setState(() {
-                // _selectedMenu = value;
-              });
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'Schedule an interview',
-                height: 60,
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    builder: (BuildContext context) {
-                      return ScheduleInterview(onSendMessage: (newMessage) {
-                        // Thêm tin nhắn mới vào List<Message> tại đây
-                        setState(() {
-                          sampleMessages.add(newMessage);
-                        });
-                      });
-                    },
-                  );
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_month,
-                      color: Theme.of(context).colorScheme.primary.withOpacity(
-                          Theme.of(context).brightness == Brightness.dark
-                              ? 1
-                              : .7),
-                    ),
-                    const Gap(16),
-                    Text(
-                      'Schedule an interview',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              PopupMenuItem<String>(
-                value: 'Cancel', // Giá trị cho mục "Cancel"
-                height: 60,
-                onTap: () {
-                  // Xử lý khi chọn "Cancel"
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.cancel,
-                      color: Theme.of(context).colorScheme.primary.withOpacity(
-                          Theme.of(context).brightness == Brightness.dark
-                              ? 1
-                              : .7),
-                    ),
-                    const Gap(16),
-                    Text(
-                      'Cancel',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const Gap(16),
-        ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 8.0,
-            bottom: (viewInsets.bottom > 0) ? 8.0 : 0.0,
-          ),
-          child: Column(
-            children: [
-              Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 child: ListView.builder(
                   controller: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -315,7 +239,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
                     return Column(
                       children: [
-                        const Gap(6),
+                        const Gap(12),
+                        Row(
+                          mainAxisAlignment: (message.senderUserId != 'userId1')
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${DateFormat("MMM d").format(message.createdAt)}, ${message.createdAt.hour}:${message.createdAt.minute.toString().padLeft(2, '0')}',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: (message.senderUserId != 'userId1')
                               ? MainAxisAlignment.end
@@ -361,24 +296,25 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                               ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: (message.senderUserId != 'userId1')
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${DateFormat("MMM d").format(message.createdAt)}, ${message.createdAt.hour}:${message.createdAt.minute.toString().padLeft(2, '0')}',
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                          ],
-                        ),
                       ],
                     );
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   children: [
                     IconButton(
@@ -401,27 +337,39 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           },
                         );
                       },
-                      icon: const Icon(Icons.calendar_month),
+                      icon: const Icon(
+                        Icons.calendar_month,
+                        color: Colors.black,
+                      ),
                     ),
                     Expanded(
-                      child: TextFormField(
-                        controller: messageController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(100),
-                          hintText: 'Type a message',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              _sendMessage();
-                            },
-                            icon: const Icon(Icons.send),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextFormField(
+                          controller: messageController,
+                          maxLines: null,
+                          minLines: 1,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.lightBlue[50],
+                            hintText: 'Type a message',
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                _sendMessage();
+                              },
+                              hoverColor: Colors.transparent,
+                              icon: const Icon(
+                                Icons.send,
+                                color: Colors.black,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -429,8 +377,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

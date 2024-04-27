@@ -21,9 +21,7 @@ class MessageChatBubble extends StatelessWidget {
         ? Alignment.centerRight
         : Alignment.centerLeft;
 
-    final color = (message.senderUserId == userId1)
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.secondary;
+    final color = (message.senderUserId == userId1) ? Colors.blue : Colors.grey;
 
     final textColor = (message.senderUserId == userId1)
         ? Theme.of(context).colorScheme.onPrimary
