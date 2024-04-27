@@ -34,12 +34,10 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   Future<void> getUserInfoFromToken() async {
     // Lấy token từ local storage
     String? token = await TokenManager.getTokenFromLocal();
-    print(token);
     if (token != null) {
       // Gọi API để lấy thông tin user
       User? userInfo = await ApiManager.getUserInfo(token);
       setState(() {
-        print(userInfo);
         // Cập nhật userCurr với thông tin user được trả về từ API
         userCurr = userInfo;
         _companyNameController.text = userCurr?.companyUser?.companyName ?? '';

@@ -60,6 +60,7 @@ dependencies:
   file_picker: 6.2.1
   path: ^1.8.0
   socket_io_client: ^2.0.3+1
+  lottie: ^3.1.0
 
 dev_dependencies:
   flutter_test:

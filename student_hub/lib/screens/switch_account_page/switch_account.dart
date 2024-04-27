@@ -3,13 +3,16 @@ import "package:flutter/material.dart";
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/switch_account_page/account_list.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/add_account.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
+import 'package:student_hub/models/account_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -20,28 +23,37 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
+  
+  List<AccountModel> accountList = []; //danh sách tất cả tài khoản đã từng đăng nhập
+  List<AccountModel> inactiveAccountList = []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập 
 
-  @override
+  // Lấy danh sách tài khoản từ SharedPreferences khi widget được tạo
   void initState() {
     super.initState();
-    // Gọi phương thức để lấy thông tin user từ token khi widget được tạo
-    getUserInfoFromToken();
-  }
 
+    getUserInfoFromToken();
+    getAccounts();
+  }
+  void dispose() {
+    super.dispose();
+  }
   // Phương thức để lấy thông tin user từ token
   Future<void> getUserInfoFromToken() async {
-    // Lấy token từ local storage
     String? token = await TokenManager.getTokenFromLocal();
-    print(token);
-    if (token != null) {
-      // Gọi API để lấy thông tin user
-      User? userInfo = await ApiManager.getUserInfo(token);
-      setState(() {
-        print(userInfo);
-        // Cập nhật userCurr với thông tin user được trả về từ API
-        userCurr = userInfo;
-      });
+
+    User? userInfo = await ApiManager.getUserInfo(token);
+    setState(() {
+      userCurr = userInfo;
+    });
     }
+
+  void getAccounts() async {
+    List<AccountModel> inactiveAccounts = await AccountManager.getInactiveAccounts();
+    List<AccountModel> accounts = await AccountManager.getAccounts();  
+    setState(() {
+      accountList = accounts;
+      inactiveAccountList = inactiveAccounts;
+    });
   }
 
   void logout() async {
@@ -68,87 +80,75 @@ class _SwitchAccountState extends State<SwitchAccount> {
         Navigator.pushReplacementNamed(context, AppRouterName.login);
       }
     } catch (e) {
-      print(e);
+      // print(e);
     }
   }
 
   void reloadScreen() {
-    //reload account
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const SwitchAccount()));
+    accountList = [];
+    Navigator.pushReplacementNamed(context, AppRouterName.switchAccount);
   }
 
-  AccountManager accountManager = AccountManager();
+  AccountController accountManager = AccountController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarCustom(
         title: 'Student Hub',
-        showBackButton: true,
+        showBackButton: false,
       ),
       body: Column(
         children: <Widget>[
           accountList.isEmpty
               ? const AddAccount()
-              : ExpansionTile(
-                  title: Row(
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset('lib/assets/images/avatar.png'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        // accountList
-                        //     .where((element) => element.isLogin == true)
-                        //     .first
-                        //     .getFullName(),
-                        userCurr?.fullname ?? '',
-
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+              : 
+              ExpansionTile(
+                title: Row(
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Image.asset('lib/assets/images/avatar.png'),
                         ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      accountList
+                          .where((element) => element.isLogin == true)
+                          .first
+                          .getName,
+                      // userCurr?.fullname ?? ''
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-
-                  //khi mở rộng
-                  onExpansionChanged: (bool expanded) {
-                    if (expanded) {
-                      // showAccountList(context);
-                    }
-                  },
-
-                  children: accountList
-                      .where((account) => account.signedIn && !account.isLogin)
-                      .map((account) {
-                    return GestureDetector(
-                      onTap: () {
-                        for (var i = 0; i < accountList.length; i++) {
-                          accountList[i].isLogin = false;
-                          if (accountList[i].userId == account.userId) {
-                            accountList[i].isLogin = true;
-                          }
-                        }
-                        reloadScreen();
-                      },
-                      child: AccountTile(
-                        account: account,
-                        accountManager: accountManager,
-                      ),
-                    );
-                  }).toList(),
+                    ),
+                  ],
                 ),
+
+                //khi mở rộng
+                onExpansionChanged: (bool expanded) {
+                  if (expanded) {
+                  }
+                },
+                children: inactiveAccountList.map((inactiveAccount) {
+                  return GestureDetector(
+                    onTap: () {},
+                    child: AccountTile(
+                      accountModel: inactiveAccount,
+                      accountManager: accountManager,
+                    ),
+                  );
+                }).toList(),
+              ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Divider(
@@ -162,13 +162,40 @@ class _SwitchAccountState extends State<SwitchAccount> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () {
-                    print(userCurr?.printAll());
-                    print(userCurr?.companyUser?.printAll());
-                    if (userCurr?.role?[0] == 1 &&
+                    Navigator.pushReplacementNamed(context, AppRouterName.navigation);
+                  },
+                  icon:
+                      const Icon(Icons.home, color: Colors.black, size: 28.0),
+                  label: const Text('Home',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.normal)),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
+                    child: const Divider(
+                      color: Colors.black,
+                      thickness: 0.34,
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () {
+                    // print(userCurr?.companyUser?.printAll());
+                    if (userCurr?.roles?[0] == 1 &&
                         userCurr?.companyUser == null) {
                       print('chưa có profile company');
                       Navigator.pushNamed(context, AppRouterName.profileInput);
-                    } else if (userCurr?.role?[0] == 1 &&
+                    } else if (userCurr?.roles?[0] == 1 &&
                         userCurr?.companyUser != null) {
                       print("(đã có) edit profile company");
                       Navigator.pushNamed(
@@ -265,79 +292,127 @@ class _SwitchAccountState extends State<SwitchAccount> {
   }
 }
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text(
-        'Student Hub',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const AddAccount()),
-            // );
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class AccountManager {
-  String currentAccountName = '';
-
-  void updateAccountName(String name) {
-    currentAccountName = name;
-  }
-
+class AccountController { 
   void reloadScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const SwitchAccount()),
+      MaterialPageRoute(builder: (context) => SwitchAccount()),
     );
   }
 }
 
 class AccountTile extends StatelessWidget {
-  final CompanyUser account;
-  final AccountManager accountManager;
+  AccountModel accountModel;
+  AccountController accountManager;
 
-  const AccountTile({
+  AccountTile({
     Key? key,
-    required this.account,
+    required this.accountModel,
     required this.accountManager,
   }) : super(key: key);
+
+  Future<void> sendRequestToLogIn(String username, String password) async{
+    try {
+      final dio = DioClientWithoutToken();
+      final response = await dio.request(
+        '/auth/sign-in',
+        data: jsonEncode({
+          "email": username,
+          "password": password,
+        }),
+        options: Options(
+          method: 'POST',
+        ),
+      );
+      if (response.statusCode == 201) {
+        final token = response.data['result']['token'];
+
+        print('Login success: $token');
+        
+        await saveTokenToLocal(token);
+        
+        String fullname = await ApiManager.getFullname(token);
+        print('fullname');
+        print(fullname);
+
+        await AccountManager.saveAccountToLocal(username, password, fullname);
+        List<AccountModel> ss = await AccountManager.getAccounts();
+        for(var i = 0; i<ss.length; i++){
+          if(ss[i].getIsLogin==true){
+            print('sendRequestToLogIn:');
+            print(ss[i].getName);
+          }
+        }
+      } else {
+        print("Login failed: ${response.data}");
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        if (e.response!.data['errorDetails'] == 'Not found user') {
+          print('User not found');
+        } else if (e.response!.data['errorDetails'] == 'Incorrect password') {
+          print('Incorrect password');
+        }
+      }
+    }
+  }
+
+  Future<void> saveTokenToLocal(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accessToken', token);
+  }
+
+  void logout() async {
+    //getToken
+
+    // Gọi API để logout
+    try {
+      final dio = DioClient();
+      final response = await dio.request('/auth/logout',
+          options: Options(
+            method: 'POST',
+          ));
+      if (response.statusCode == 201) {
+        // Xóa token từ local storage
+        await TokenManager.removeTokenFromLocal();
+        String? token = await TokenManager.getTokenFromLocal();
+        if(token == ''){
+          print('Logout success');
+        }
+        else{
+          print(token);
+          print('Logout failed');
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<AccountModel> accountList = []; //danh sách tất cả tài khoản đã từng đăng nhập
+  List<AccountModel> inactiveAccountList = []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập 
+  
+  void getAccounts() async {
+    List<AccountModel> inactiveAccounts = await AccountManager.getInactiveAccounts();
+    List<AccountModel> accounts = await AccountManager.getAccounts();  
+  
+    accountList = accounts;
+    inactiveAccountList = inactiveAccounts;
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const CircleAvatar(
         // backgroundImage: AssetImage('lib/assets/images/avatar_${account.userId}.png'),
-        backgroundImage: const AssetImage('lib/assets/images/avatar.png'),
+        backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
-      title: Text(account.getFullName()),
+      title: Text(accountModel.getName),
       onTap: () {
-        for (var i = 0; i < accountList.length; i++) {
-          accountList[i].isLogin = false;
-        }
-        account.isLogin = true;
-        accountManager.updateAccountName(account.getFullName());
-        accountManager.reloadScreen(context);
+        logout();
+        sendRequestToLogIn(accountModel.getEmail, accountModel.getPassword).then((_) {
+          accountManager.reloadScreen(context);}
+        );
       },
     );
   }
