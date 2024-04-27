@@ -52,6 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               title: "Success",
               description: "New password has been sent to your email.",
               buttonText: 'Confirm',
+              // buttonTextCancel: "Cancel",
               statusDialog: 1,
               onConfirmPressed: () {
                 Navigator.pushReplacementNamed(context, AppRouterName.login);

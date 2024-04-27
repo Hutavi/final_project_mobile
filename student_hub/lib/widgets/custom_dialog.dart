@@ -5,6 +5,7 @@ import 'package:student_hub/constants/image_assets.dart';
 
 class DialogCustom extends StatelessWidget {
   final String title, description, buttonText;
+  final String? buttonTextCancel;
   final int? statusDialog;
   final VoidCallback? onConfirmPressed;
   const DialogCustom(
@@ -13,6 +14,7 @@ class DialogCustom extends StatelessWidget {
       required this.description,
       required this.buttonText,
       this.statusDialog,
+      this.buttonTextCancel,
       this.onConfirmPressed});
 
   @override
@@ -33,7 +35,7 @@ class DialogCustom extends StatelessWidget {
         Container(
           padding: const EdgeInsets.only(
             top: 60,
-            bottom: 1,
+            bottom: 5,
             left: 16,
             right: 16,
           ),
@@ -72,23 +74,52 @@ class DialogCustom extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    if (onConfirmPressed != null) {
-                      onConfirmPressed!();
-                    }
-                  },
-                  child: Text(
-                    buttonText,
-                    style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w700,
-                        color: kBlue700),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  if (buttonTextCancel != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: kRedBlur,
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          buttonTextCancel!,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w500,
+                            color: kRed,
+                          ),
+                        ),
+                      ),
+                    ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: kBlue50,
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        if (onConfirmPressed != null) {
+                          onConfirmPressed!();
+                        }
+                      },
+                      child: Text(
+                        buttonText,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: kBlue600,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -111,7 +142,33 @@ class DialogCustom extends StatelessWidget {
                     child: Lottie.asset(ImageManagent.imgDialogError,
                         width: 110, height: 110),
                   )
-                : Container(),
+                : statusDialog == 3
+                    ? Positioned(
+                        top: 20,
+                        left: 16,
+                        right: 16,
+                        child: Lottie.asset(ImageManagent.imgDialogInfo,
+                            width: 110, height: 110),
+                      )
+                    : statusDialog == 4
+                        ? Positioned(
+                            top: 20,
+                            left: 16,
+                            right: 16,
+                            child: Lottie.asset(ImageManagent.imgDialogQuestion,
+                                width: 110, height: 110),
+                          )
+                        : statusDialog == 5
+                            ? Positioned(
+                                top: 20,
+                                left: 16,
+                                right: 16,
+                                child: Lottie.asset(
+                                    ImageManagent.imgDialogNotification,
+                                    width: 110,
+                                    height: 110),
+                              )
+                            : Container(),
       ],
     );
   }
