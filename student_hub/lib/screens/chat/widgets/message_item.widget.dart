@@ -6,7 +6,8 @@ import 'package:student_hub/utils/utils.dart';
 import 'package:student_hub/widgets/display_text.dart';
 
 class MessageItem extends StatelessWidget {
-  const MessageItem({super.key});
+  final dynamic data;
+  const MessageItem({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +41,11 @@ class MessageItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(1000),
-                            ),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                  color: Colors.green.withOpacity(0.2)),
-                              child: DisplayText(
-                                text: '12p',
-                                style:
-                                    textTheme.labelLarge!.copyWith(fontSize: 8),
-                              ),
-                            )),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(1000),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -64,14 +54,14 @@ class MessageItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DisplayText(
-                        text: 'User 2',
+                        text: data.toString(),
                         style: textTheme.labelMedium!,
                       ),
                       DisplayText(
                           text: 'Senior frontend developer (Fintech)',
                           style: textTheme.labelSmall!.copyWith(
                             fontSize: 10,
-                            color: colorScheme.onSurface,
+                            color: Colors.green,
                           )),
                       const Gap(5),
                       Row(

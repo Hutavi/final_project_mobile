@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/screens/chat/widgets/chat.widgets.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/search_field.dart';
 
 class MessageListScreen extends StatefulWidget {
@@ -12,10 +11,17 @@ class MessageListScreen extends StatefulWidget {
 
 class _MessageListScreenState extends State<MessageListScreen> {
   TextEditingController _searchController = TextEditingController();
+  List<String> originalList = [
+    "Item 1",
+    "Item 2",
+    "Item 3",
+  ];
+  List<String> displayedList = [];
 
   @override
   void initState() {
     _searchController = TextEditingController();
+    displayedList = originalList;
     super.initState();
   }
 
@@ -25,24 +31,43 @@ class _MessageListScreenState extends State<MessageListScreen> {
     super.dispose();
   }
 
+  void updateSearchResults(String query) {
+    setState(() {
+      if (query.isNotEmpty) {
+        displayedList = originalList
+            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      } else {
+        displayedList = originalList;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: null,
-        body: Column(children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: SearchBox(controller: _searchController),
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: 10,
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SearchBox(
+                  controller: _searchController,
+                  handleSearch: updateSearchResults),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: displayedList.length,
                 itemBuilder: (ctx, index) {
-                  return const MessageItem();
-                }),
-          )
-        ]),
+                  return MessageItem(
+                    data: displayedList[index],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

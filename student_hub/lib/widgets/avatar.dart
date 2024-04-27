@@ -14,7 +14,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius.toDouble() + 2,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.blue,
       child: CircleAvatar(
         radius: radius.toDouble(),
         backgroundImage: AssetImage(imageUrl),
