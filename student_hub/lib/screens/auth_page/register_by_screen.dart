@@ -119,9 +119,9 @@ class _LoginByScreenState extends State<RegisterByScreen> {
           content: const Text("Hãy thực hiện xác nhận email"),
           actions: <Widget>[
             TextButton(
-              child: Text("Đóng"),
+              child: const Text("Đóng"),
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, AppRouterName.login);
               },
             ),
@@ -149,7 +149,11 @@ class _LoginByScreenState extends State<RegisterByScreen> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              Navigator.pushNamed(context, AppRouterName.switchAccount);
+              // Navigator.pushNamed(context, AppRouterName.switchAccount);
+              // Navigator.pushNamedAndRemoveUntil(
+              //     context, AppRouterName.login, (route) => true);
+              Navigator.popUntil(
+                  context, ModalRoute.withName(AppRouterName.login));
             },
           ),
         ],
