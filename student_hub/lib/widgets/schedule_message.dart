@@ -10,18 +10,7 @@ import 'package:student_hub/widgets/build_text_field.dart';
 class ScheduleMessageItem extends StatefulWidget {
   const ScheduleMessageItem({
     super.key,
-    // required this.message,
-    // required this.userId1,
-    // required this.userId2,
-    // this.onCancelMeeting,
   });
-
-  // final String userId1;
-  // final String userId2;
-
-  // final Message message;
-
-  // final VoidCallback? onCancelMeeting;
 
   @override
   State<ScheduleMessageItem> createState() => _ScheduleMessageItemState();
@@ -154,26 +143,59 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             Text(
               "Catch up meeting",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700),
             ),
             Text(
               "60 minutes",
+              style: TextStyle(fontSize: 13, color: Colors.white),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        const Row(
+          children: [
+            Text(
+              "Start time: ",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              "Thursday, 13/3/2024 15:00",
               style: TextStyle(color: Colors.white),
             ),
           ],
         ),
-        const Text(
-          "Start time: Thursday 13/3/2024 15:00",
-          style: TextStyle(color: Colors.white),
+        const Row(
+          children: [
+            Text(
+              "End time: ",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              "Thursday, 13/3/2024 16:00",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
         ),
-        const Text(
-          "Start time: Thursday 13/3/2024 16:00",
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          "Code room: $conferencesID",
-          style:
-              const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+        Row(
+          children: [
+            const Text(
+              "Code room: ",
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
+            ),
+            Text(
+              conferencesID,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600, color: Colors.red),
+            ),
+          ],
         ),
         const SizedBox(
           height: 10,
@@ -193,14 +215,13 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         backgroundColor: kWhiteColor,
                         minimumSize: Size.zero,
                         foregroundColor: kBlue700),
                     child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                       child: Text('Join'),
                     ),
                   ),

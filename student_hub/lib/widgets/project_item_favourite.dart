@@ -10,7 +10,10 @@ import 'package:student_hub/widgets/describe_item.dart';
 
 class ProjectItemFavourite extends StatefulWidget {
   final ProjectFavourite projectForListModel;
-  const ProjectItemFavourite({super.key, required this.projectForListModel});
+  final bool? isEven;
+
+  const ProjectItemFavourite(
+      {super.key, required this.projectForListModel, this.isEven});
 
   @override
   State<ProjectItemFavourite> createState() => _ProjectItemFavouriteState();
@@ -19,6 +22,7 @@ class ProjectItemFavourite extends StatefulWidget {
 class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
   bool disableFlag = false;
   int? idStudent;
+
   @override
   void initState() {
     super.initState();
@@ -99,17 +103,16 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
   Widget build(BuildContext context) {
     String timeAgo = calculateTimeAgo(widget.projectForListModel.createdAt);
     return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: const BoxDecoration(
-        color: kWhiteColor,
-        border: Border(
-          top: BorderSide(
-            color: kBlueGray200,
-            width: 1.0,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: widget.isEven == true ? kWhiteColor : kBlueGray50,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: const [
+            BoxShadow(
+              color: kGrey2,
+              blurRadius: 5.0,
+            ),
+          ]),
       child: Row(
         children: [
           Expanded(

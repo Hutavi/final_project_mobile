@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-// import 'package:student_hub/constants/theme.dart';
 
 class SearchBox extends StatefulWidget {
   final TextEditingController controller;
+  final void Function(String query) handleSearch; // Thêm tham số handleSearch
 
-  const SearchBox({super.key, required this.controller});
+  const SearchBox({
+    Key? key,
+    required this.controller,
+    required this.handleSearch, // Thêm tham số handleSearch vào constructor
+  }) : super(key: key);
 
   @override
   State<SearchBox> createState() => _SearchBoxState();
@@ -42,9 +46,7 @@ class _SearchBoxState extends State<SearchBox> {
                   color: Colors.grey,
                 ),
               ),
-              onChanged: (value) {
-                // Add your logic here if needed
-              },
+              onChanged: widget.handleSearch,
             ),
           ),
         ],
