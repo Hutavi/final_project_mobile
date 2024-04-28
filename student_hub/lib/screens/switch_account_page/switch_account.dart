@@ -2,9 +2,8 @@ import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/screens/switch_account_page/add_account.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -75,7 +74,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
         Navigator.pushReplacementNamed(context, AppRouterName.login);
       }
     } catch (e) {
-      // print(e);
+      print(e);
     }
   }
 
@@ -96,7 +95,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
       body: Column(
         children: <Widget>[
           accountList.isEmpty
-              ? const AddAccount()
+              ? const SizedBox()
               : 
               ExpansionTile(
                 title: Row(
@@ -119,7 +118,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           .where((element) => element.isLogin == true)
                           .first
                           .getName,
-                      // userCurr?.fullname ?? ''
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -166,6 +164,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           color: Colors.black,
                           fontSize: 20.0,
                           fontWeight: FontWeight.normal)),
+                  style: TextButton.styleFrom(
+                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                    minimumSize: Size(double.infinity, 0),
+                    disabledBackgroundColor: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -208,6 +211,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           color: Colors.black,
                           fontSize: 20.0,
                           fontWeight: FontWeight.normal)),
+                  style: TextButton.styleFrom(
+                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                    minimumSize: Size(double.infinity, 0),
+                    disabledBackgroundColor: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -236,6 +244,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           color: Colors.black,
                           fontSize: 20.0,
                           fontWeight: FontWeight.normal)),
+                  style: TextButton.styleFrom(
+                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                    minimumSize: Size(double.infinity, 0),
+                    disabledBackgroundColor: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -264,6 +277,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           color: Colors.black,
                           fontSize: 20.0,
                           fontWeight: FontWeight.normal)),
+                  style: TextButton.styleFrom(
+                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                    minimumSize: Size(double.infinity, 0),
+                    disabledBackgroundColor: Colors.white,
+                  ),
                 ),
               ),
               Row(
@@ -327,17 +345,17 @@ class AccountTile extends StatelessWidget {
         await saveTokenToLocal(token);
         
         String fullname = await ApiManager.getFullname(token);
-        print('fullname');
-        print(fullname);
+        // print('fullname');
+        // print(fullname);
 
         await AccountManager.saveAccountToLocal(username, password, fullname);
-        List<AccountModel> ss = await AccountManager.getAccounts();
-        for(var i = 0; i<ss.length; i++){
-          if(ss[i].getIsLogin==true){
-            print('sendRequestToLogIn:');
-            print(ss[i].getName);
-          }
-        }
+        // List<AccountModel> ss = await AccountManager.getAccounts();
+        // for(var i = 0; i<ss.length; i++){
+        //   if(ss[i].getIsLogin==true){
+        //     print('sendRequestToLogIn:');
+        //     print(ss[i].getName);
+        //   }
+        // }
       } else {
         print("Login failed: ${response.data}");
       }

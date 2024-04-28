@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:student_hub/constants/colors.dart';
 
 class SubmitProposal extends StatefulWidget {
   final ProjectForListModel projectId;
-  // const SubmitProposal({super.key});
   const SubmitProposal({super.key, required this.projectId});
 
   @override
@@ -164,9 +162,7 @@ class SubmitProposalState extends State<SubmitProposal> {
                       getStudentId().then((_) {
                         // Sau khi getStudentId() hoàn thành, gọi submitProposal()
                         submitProposal();
-                      });
-                        // print(widget.projectId.id);
-                        // print(idStudent);
+                      }); 
                       Navigator.pushNamed(context, AppRouterName.navigation);
                     },
                     style: ElevatedButton.styleFrom(

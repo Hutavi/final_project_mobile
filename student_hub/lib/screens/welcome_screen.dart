@@ -95,7 +95,7 @@ class _Content extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           // button get started
 
           ElevatedButton(
@@ -103,8 +103,7 @@ class _Content extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NavigationMenu(
-                        )),
+                    builder: (context) => NavigationMenu()),
               );
             },
             style: ElevatedButton.styleFrom(
