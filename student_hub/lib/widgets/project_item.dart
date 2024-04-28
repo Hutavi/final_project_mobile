@@ -20,6 +20,7 @@ class ProjectItem extends StatefulWidget {
 class _ProjectItemState extends State<ProjectItem> {
   late bool isFavoriteUpdate = false;
   int? idStudent;
+  int? idCompany;
   @override
   void initState() {
     isFavoriteUpdate = widget.projectForListModel.isFavorite ?? false;
@@ -33,14 +34,41 @@ class _ProjectItemState extends State<ProjectItem> {
     super.dispose();
   }
 
+  // void fecthMe() async {
+  //   try {
+  //     final dioClient = DioClient();
+  //     final response =
+  //         await dioClient.request('/auth/me', options: Options(method: 'GET'));
+  //     if (response.statusCode == 200) {
+  //       if (response.data['result']['role'] != 1) {
+  //         idStudent = response.data['result']['student']['id'];
+  //       } else {}
+
+  //       // print(response.data['result']['student']['id']);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   void fecthMe() async {
     try {
       final dioClient = DioClient();
       final response =
           await dioClient.request('/auth/me', options: Options(method: 'GET'));
       if (response.statusCode == 200) {
-        idStudent = response.data['result']['student']['id'];
-        // print(response.data['result']['student']['id']);
+        final result = response.data['result'];
+        final roles = result['roles'];
+        final student = result['student'];
+        final company = result['company'];
+
+        if (roles.contains(0)) {
+          idStudent = student != null ? student['id'] : null;
+          idCompany = null;
+        } else {
+          idStudent = null;
+          idCompany = company != null ? company['id'] : null;
+        }
       }
     } catch (e) {
       print(e);
@@ -161,7 +189,7 @@ class _ProjectItemState extends State<ProjectItem> {
             ),
           ),
           GestureDetector(
-            onTap: toggleTypeFlag,
+            onTap: idStudent != null ? toggleTypeFlag : null,
             child: isFavoriteUpdate == true
                 ? const Icon(
                     Icons.favorite_rounded,

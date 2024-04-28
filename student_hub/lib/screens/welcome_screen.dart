@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/company_user.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -103,16 +104,16 @@ class _Content extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NavigationMenu()),
+                    builder: (context) => NavigationMenu(
+                        )),
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: kBlue400, // Đặt màu nền của nút thành màu xanh
+              backgroundColor: kBlue400,
             ),
             child: const Text(
               'Get Started',
               style: TextStyle(color: kWhiteColor),
-              
             ),
           ),
         ]);

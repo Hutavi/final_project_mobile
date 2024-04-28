@@ -68,12 +68,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
       if (response.statusCode == 201) {
         // Xóa token từ local storage
         await TokenManager.removeTokenFromLocal();
-        // String? token = await TokenManager.getTokenFromLocal();
-        // print(token);
-        // ignore: use_build_context_synchronously
-        // Navigator.pushReplacementNamed(context, AppRouterName.login);
-        // ignore: use_build_context_synchronously
-        // Navigator.pushNamed(context, AppRouterName.login);
 
         // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, AppRouterName.login);
@@ -97,214 +91,217 @@ class _SwitchAccountState extends State<SwitchAccount> {
         title: 'Student Hub',
         showBackButton: false,
       ),
-      body: Column(
-        children: <Widget>[
-          accountList.isEmpty
-              ? const SizedBox()
-              : 
-              ExpansionTile(
-                title: Row(
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Image.asset('lib/assets/images/avatar.png'),
+      body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: <Widget>[
+            accountList.isEmpty
+                ? const SizedBox()
+                : 
+                ExpansionTile(
+                  title: Row(
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset('lib/assets/images/avatar.png'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        accountList
+                            .where((element) => element.isLogin == true)
+                            .first
+                            .getName,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+        
+                  //khi mở rộng
+                  onExpansionChanged: (bool expanded) {
+                    if (expanded) {
+                    }
+                  },
+                  children: inactiveAccountList.map((inactiveAccount) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: AccountTile(
+                        accountModel: inactiveAccount,
+                        accountManager: accountManager,
+                      ),
+                    );
+                  }).toList(),
+                ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(
+                color: Colors.black,
+                thickness: 0.34,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, AppRouterName.navigation);
+                    },
+                    icon:
+                        const Icon(Icons.home, color: kBlue400, size: 28.0),
+                    label: const Text('Home',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                      minimumSize: Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      accountList
-                          .where((element) => element.isLogin == true)
-                          .first
-                          .getName,
-                      style: const TextStyle(
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
+                      child: const Divider(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        thickness: 0.34,
                       ),
                     ),
                   ],
                 ),
-
-                //khi mở rộng
-                onExpansionChanged: (bool expanded) {
-                  if (expanded) {
-                  }
-                },
-                children: inactiveAccountList.map((inactiveAccount) {
-                  return GestureDetector(
-                    onTap: () {},
-                    child: AccountTile(
-                      accountModel: inactiveAccount,
-                      accountManager: accountManager,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      // print(userCurr?.companyUser?.printAll());
+                      if (userCurr?.roles?[0] == 1 &&
+                          userCurr?.companyUser == null) {
+                        print('chưa có profile company');
+                        Navigator.pushNamed(context, AppRouterName.profileInput);
+                      } else if (userCurr?.roles?[0] == 1 &&
+                          userCurr?.companyUser != null) {
+                        print("(đã có) edit profile company");
+                        Navigator.pushNamed(
+                            context, AppRouterName.editProfileCompany,
+                            arguments: userCurr?.companyUser);
+                      } else {
+                        print('student');
+                        Navigator.pushNamed(context, AppRouterName.profileS1);
+                      }
+                    },
+                    icon:
+                        const Icon(Icons.person, color: kBlue400, size: 28.0),
+                    label: const Text('Profiles',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                      minimumSize: Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
                     ),
-                  );
-                }).toList(),
-              ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Divider(
-              color: Colors.black,
-              thickness: 0.34,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
+                      child: const Divider(
+                        color: Colors.black,
+                        thickness: 0.34,
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      // Settings button pressed
+                    },
+                    icon: const Icon(Icons.settings,
+                        color: kBlue400, size: 28.0),
+                    label: const Text('Settings',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                      minimumSize: Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
+                      child: const Divider(
+                        color: Colors.black,
+                        thickness: 0.34,
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      logout();
+                    },
+                    icon:
+                        const Icon(Icons.logout, color: kBlue400, size: 28.0),
+                    label: const Text('Log out',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
+                      minimumSize: Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width *
+                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
+                      child: const Divider(
+                        color: Colors.black,
+                        thickness: 0.34,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, AppRouterName.navigation);
-                  },
-                  icon:
-                      const Icon(Icons.home, color: Colors.black, size: 28.0),
-                  label: const Text('Home',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                  style: TextButton.styleFrom(
-                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                    minimumSize: Size(double.infinity, 0),
-                    disabledBackgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    // print(userCurr?.companyUser?.printAll());
-                    if (userCurr?.roles?[0] == 1 &&
-                        userCurr?.companyUser == null) {
-                      print('chưa có profile company');
-                      Navigator.pushNamed(context, AppRouterName.profileInput);
-                    } else if (userCurr?.roles?[0] == 1 &&
-                        userCurr?.companyUser != null) {
-                      print("(đã có) edit profile company");
-                      Navigator.pushNamed(
-                          context, AppRouterName.editProfileCompany,
-                          arguments: userCurr?.companyUser);
-                    } else {
-                      print('student');
-                      Navigator.pushNamed(context, AppRouterName.profileS1);
-                    }
-                  },
-                  icon:
-                      const Icon(Icons.person, color: Colors.black, size: 28.0),
-                  label: const Text('Profiles',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                  style: TextButton.styleFrom(
-                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                    minimumSize: Size(double.infinity, 0),
-                    disabledBackgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    // Settings button pressed
-                  },
-                  icon: const Icon(Icons.settings,
-                      color: Colors.black, size: 28.0),
-                  label: const Text('Settings',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                  style: TextButton.styleFrom(
-                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                    minimumSize: Size(double.infinity, 0),
-                    disabledBackgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    logout();
-                  },
-                  icon:
-                      const Icon(Icons.logout, color: Colors.black, size: 28.0),
-                  label: const Text('Log out',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                  style: TextButton.styleFrom(
-                    alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                    minimumSize: Size(double.infinity, 0),
-                    disabledBackgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -36,6 +36,13 @@ class _NavigationMenuState extends State<NavigationMenu> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    screens.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // final dark = THelperFunctions.isDarkMode(context);
 
