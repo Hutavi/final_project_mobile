@@ -11,12 +11,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class NavigationMenu extends StatefulWidget {
-  final CompanyUser? companyUser;
-  final StudentUser? studentUser;
   const NavigationMenu({
-    Key? key,
-    this.companyUser,
-    this.studentUser,
+    Key? key, 
   }) : super(key: key);
 
   @override
@@ -37,6 +33,13 @@ class _NavigationMenuState extends State<NavigationMenu> {
       const MessageListScreen(),
       const NotificationPage(),
     ];
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    screens.clear();
+    super.dispose();
   }
 
   @override
@@ -107,10 +110,4 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: NavigationMenu(),
-  ));
 }

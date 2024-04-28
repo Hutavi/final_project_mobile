@@ -9,7 +9,9 @@ import 'package:student_hub/widgets/describe_item.dart';
 
 class ProjectItem extends StatefulWidget {
   final ProjectForListModel projectForListModel;
-  const ProjectItem({super.key, required this.projectForListModel});
+  final bool? isEven;
+  const ProjectItem(
+      {super.key, required this.projectForListModel, this.isEven});
 
   @override
   State<ProjectItem> createState() => _ProjectItemState();
@@ -18,6 +20,7 @@ class ProjectItem extends StatefulWidget {
 class _ProjectItemState extends State<ProjectItem> {
   late bool isFavoriteUpdate = false;
   int? idStudent;
+  int? idCompany;
   @override
   void initState() {
     isFavoriteUpdate = widget.projectForListModel.isFavorite ?? false;
@@ -31,14 +34,41 @@ class _ProjectItemState extends State<ProjectItem> {
     super.dispose();
   }
 
+  // void fecthMe() async {
+  //   try {
+  //     final dioClient = DioClient();
+  //     final response =
+  //         await dioClient.request('/auth/me', options: Options(method: 'GET'));
+  //     if (response.statusCode == 200) {
+  //       if (response.data['result']['role'] != 1) {
+  //         idStudent = response.data['result']['student']['id'];
+  //       } else {}
+
+  //       // print(response.data['result']['student']['id']);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   void fecthMe() async {
     try {
       final dioClient = DioClient();
       final response =
           await dioClient.request('/auth/me', options: Options(method: 'GET'));
       if (response.statusCode == 200) {
-        idStudent = response.data['result']['student']['id'];
-        // print(response.data['result']['student']['id']);
+        final result = response.data['result'];
+        final roles = result['roles'];
+        final student = result['student'];
+        final company = result['company'];
+
+        if (roles.contains(0)) {
+          idStudent = student != null ? student['id'] : null;
+          idCompany = null;
+        } else {
+          idStudent = null;
+          idCompany = company != null ? company['id'] : null;
+        }
       }
     } catch (e) {
       print(e);
@@ -100,17 +130,16 @@ class _ProjectItemState extends State<ProjectItem> {
   Widget build(BuildContext context) {
     String timeAgo = calculateTimeAgo(widget.projectForListModel.createdAt);
     return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: const BoxDecoration(
-        color: kWhiteColor,
-        border: Border(
-          top: BorderSide(
-            color: kBlueGray200,
-            width: 1.0,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: widget.isEven == true ? kWhiteColor : kBlueGray50,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: const [
+            BoxShadow(
+              color: kGrey2,
+              blurRadius: 5.0,
+            ),
+          ]),
       child: Row(
         children: [
           Expanded(
@@ -160,7 +189,7 @@ class _ProjectItemState extends State<ProjectItem> {
             ),
           ),
           GestureDetector(
-            onTap: toggleTypeFlag,
+            onTap: idStudent != null ? toggleTypeFlag : null,
             child: isFavoriteUpdate == true
                 ? const Icon(
                     Icons.favorite_rounded,

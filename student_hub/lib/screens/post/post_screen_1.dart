@@ -1,13 +1,9 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
-
-// final countProvider = StateProvider<int>((ref) => 0);
 
 class PostScreen1 extends ConsumerStatefulWidget {
   const PostScreen1({Key? key}) : super(key: key);
@@ -30,6 +26,7 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
         child: Scaffold(
         appBar: AppBarCustom(
           title: 'Student Hub'
+
           ),
         body: Container(
           child: Padding(
@@ -127,33 +124,4 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
         ),
       ));
     }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

@@ -30,7 +30,6 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
     super.dispose();
   }
 
-
   // change value of project-duration when selecting another duration
   void onSelectedDuration(ProjectDuration? duration) {
     if(duration?.index == 0){
@@ -190,33 +189,4 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

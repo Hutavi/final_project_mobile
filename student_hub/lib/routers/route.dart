@@ -6,6 +6,7 @@ import 'package:student_hub/models/user.dart' as USER;
 import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/auth_page/forgot_password_screen.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
 import 'package:student_hub/screens/auth_page/register_role_screen.dart';
@@ -121,27 +122,11 @@ class AppRoute {
           },
         );
 
-      // case AppRouterName.login:
-      //   return PageRouteBuilder(
-      //     pageBuilder: (context, animation, secondaryAnimation) =>
-      //         const LoginScreen(),
-      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      //       const begin = Offset(1.0, 0.0);
-      //       const end = Offset.zero;
-      //       const curve = Curves.ease;
-
-      //       var tween =
-      //           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      //       return SlideTransition(
-      //         position: animation.drive(tween),
-      //         child: child,
-      //       );
-      //     },
-      //   );
-
       case AppRouterName.login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+
+      case AppRouterName.forgotPassword:
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
 
       case AppRouterName.register:
         return PageRouteBuilder(
@@ -499,7 +484,7 @@ class AppRoute {
         // final args = settings.arguments as CompanyUser;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              WelcomeScreen(
+              const WelcomeScreen(
                   // companyInfo: args,
                   ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

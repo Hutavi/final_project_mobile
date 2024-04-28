@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -165,17 +166,27 @@ class _ProjectSearchState extends State<ProjectSearch> {
               child: listProject.isEmpty
                   ? const Center(child: Text('Not found project'))
                   : ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       itemCount: listProject.length,
                       itemBuilder: (context, index) {
                         final project = listProject[index];
+                        final backgroundColor = index % 2 == 0 ? true : false;
                         return GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(
                                 context, AppRouterName.projectDetail,
                                 arguments: project);
                           },
-                          child: ProjectItem(
-                            projectForListModel: project,
+                          child: Column(
+                            children: [
+                              ProjectItem(
+                                isEven: backgroundColor,
+                                projectForListModel: project,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
                           ),
                         );
                       },

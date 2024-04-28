@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:student_hub/services/dio_client.dart';
-
+import 'package:student_hub/constants/colors.dart';
 class StudentAllProject extends StatefulWidget {
   const StudentAllProject({super.key});
 
@@ -175,7 +175,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
   Widget _activeProposal() {
     if(activeProposal.length == 0){
       return Card(
-        color: Colors.grey[200],
+        color: const Color.fromRGBO(247, 242, 249, 1),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -209,7 +209,8 @@ class _StudentAllProjectState extends State<StudentAllProject>
     }
     else {
       return Card(
-        color: Colors.grey[200],
+        // color: Colors.grey[200],
+        color: const Color.fromRGBO(247, 242, 249, 1),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -312,7 +313,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
   Widget _submittedProposal() {
     return Card(
-        color: Colors.grey[200],
+        color: const Color.fromRGBO(247, 242, 249, 1),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
           child: Column(

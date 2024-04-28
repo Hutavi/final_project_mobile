@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/screens/switch_account_page/account_manager.dart';
-import 'package:student_hub/models/account_models.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -56,12 +51,13 @@ class _LoginScreenState extends State<LoginScreen> {
           await saveTokenToLocal(token);
           // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, AppRouterName.navigation);
-          
+
           // await AccountManager.clearSharedPreferences();
-          
+
           String fullname = await ApiManager.getFullname(token);
           print(fullname);
-          await AccountManager.saveAccountToLocal(userNameController.text, passwordController.text, fullname);
+          await AccountManager.saveAccountToLocal(
+              userNameController.text, passwordController.text, fullname);
         } else {
           print("Login failed: ${response.data}");
         }
@@ -191,6 +187,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if (passwordWrong)
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(
+                            context, AppRouterName.forgotPassword),
+                        child: const Center(
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Forgot password? ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Click here to reset it.',
+                                  style: TextStyle(
+                                    color: kRed,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 Column(

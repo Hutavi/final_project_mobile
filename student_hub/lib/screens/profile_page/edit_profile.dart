@@ -17,7 +17,6 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> with SingleTickerProviderStateMixin {
   int activeIndex = 0;
-  // String getCompanyData = '';//lưu trữ dữ liệu lấy từ API
   String postCompanyData = '';//lưu trữ dữ liệu post lên API
   
   late AnimationController _animationController;
@@ -35,10 +34,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     // Lấy token từ local storage
     String? token = await TokenManager.getTokenFromLocal();
     if (token != null) {
-      // Gọi API để lấy thông tin user
       User? userInfo = await ApiManager.getUserInfo(token);
       setState(() {
-        // Cập nhật userCurr với thông tin user được trả về từ API
         userCurr = userInfo;
         _companyNameController.text = userCurr?.companyUser?.companyName ?? '';
         _websiteController.text = userCurr?.companyUser?.website ?? '';
@@ -111,7 +108,6 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     print(requestData);
 
     try {
-      // Gửi yêu cầu PUT lên API
       // ignore: unused_local_variable
       final response = await DioClient().request(
         '/profile/company/${widget.companyInfo.id}',

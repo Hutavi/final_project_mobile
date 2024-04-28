@@ -25,7 +25,6 @@ class ApiManager {
 
         // Tạo đối tượng User từ dữ liệu
         User? user = User.fromMapUser(userData['result']);
-        // Kiểm tra dữ liệu người dùng hợp lệ
         if (user.id != null) {
           // print('1');
           return user;

@@ -273,8 +273,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
-                  foregroundColor: _titlePost ? null : kWhiteColor,
-
+                  foregroundColor: _titlePost ? null : kWhiteColor, 
                 ),
                 child: const Text('Edit project'),
               ),

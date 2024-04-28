@@ -418,7 +418,7 @@ class _StundentProfileS3TranscriptState
                       context,
                       MaterialPageRoute(
                         builder: (context) => NavigationMenu(
-                          companyUser: accountList[0],
+                          // companyUser: accountList[0],
                         ),
                       ),
                     );

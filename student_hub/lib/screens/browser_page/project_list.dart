@@ -6,7 +6,6 @@ import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item.dart';
@@ -20,7 +19,6 @@ class ProjectListScreen extends StatefulWidget {
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
-  List<ProjectModel> projectLists = allProject;
   List<ProjectForListModel> listProject = [];
   var isLoading = true;
 
@@ -42,7 +40,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       final response =
           await dioPulic.request('/project', options: Options(method: 'GET'));
-      if (response.statusCode == 200) {
+      if(response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
             parsed.map<ProjectForListModel>((item) {
@@ -145,19 +143,32 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                       )
                     : Expanded(
                         child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           itemCount: listProject.length,
                           itemBuilder: (context, index) {
                             final project = listProject[index];
+                            // Chuyển đổi màu nền xen kẽ
+                            final backgroundColor =
+                                index % 2 == 0 ? true : false;
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRouterName.projectDetail,
-                                    arguments: project);
-                              },
-                              child: ProjectItem(
-                                projectForListModel: listProject[index],
-                              ),
-                            );
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRouterName.projectDetail,
+                                    arguments: project,
+                                  );
+                                },
+                                child: Column(
+                                  children: [
+                                    ProjectItem(
+                                      isEven: backgroundColor,
+                                      projectForListModel: listProject[index],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ));
                           },
                         ),
                       ),
@@ -167,16 +178,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ),
       ),
     );
-  }
-
-  void searchProject(String query) {
-    final suggestions = allProject.where((project) {
-      final projectTitle = project.title!.toLowerCase();
-      final input = query.toLowerCase();
-
-      return projectTitle.contains(input);
-    }).toList();
-    setState(() => projectLists = suggestions);
   }
 
   void _showSearchBottomSheet(BuildContext context) {
