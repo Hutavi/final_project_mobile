@@ -46,27 +46,32 @@ class _MessageListScreenState extends State<MessageListScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: null,
-        body: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: SearchBox(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: null,
+          body: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SearchBox(
                   controller: _searchController,
-                  handleSearch: updateSearchResults),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: displayedList.length,
-                itemBuilder: (ctx, index) {
-                  return MessageItem(
-                    data: displayedList[index],
-                  );
-                },
+                  handleSearch: updateSearchResults,
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: ListView.builder(
+                  itemCount: displayedList.length,
+                  itemBuilder: (ctx, index) {
+                    return MessageItem(
+                      data: displayedList[index],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

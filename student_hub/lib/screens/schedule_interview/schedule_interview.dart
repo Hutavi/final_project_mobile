@@ -299,22 +299,18 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                         child: ElevatedButton(
                           onPressed: () {
                             Message newMessage = Message(
-                              id: const Uuid().v4(),
-                              chatRoomId: 'chatRoomId1',
-                              senderUserId: 'userId2',
-                              receiverUserId: 'userId1',
-                              title: titleSchedule.text,
-                              createdAt: DateTime.now()
-                                  .add(const Duration(minutes: 60)),
-                              startTime: DateTime.now(),
-                              endTime: DateTime.now()
-                                  .add(const Duration(minutes: 15)),
-                              meeting: true,
-                            );
-                            print(newMessage);
-                            // Gọi hàm callback để gửi tin nhắn mới
+                                id: const Uuid().v4(),
+                                projectID: 560,
+                                senderUserId: 5,
+                                receiverUserId: 6,
+                                title: titleSchedule.text,
+                                createdAt: DateTime.now()
+                                    .add(const Duration(minutes: 60)),
+                                startTime: parseDateTime(startDateTime!),
+                                endTime: parseDateTime(endDateTime!),
+                                meeting: 1,
+                                duration: calculateDurationInMinutes());
                             widget.onSendMessage(newMessage);
-                            // Đóng modal
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(

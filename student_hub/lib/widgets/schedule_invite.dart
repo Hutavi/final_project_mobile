@@ -10,8 +10,8 @@ class ScheduleInviteTicket extends StatelessWidget {
     required this.userId2,
     this.onCancelMeeting,
   });
-  final String userId1;
-  final String userId2;
+  final int userId1;
+  final int userId2;
 
   final Message message;
 
@@ -39,7 +39,7 @@ class ScheduleInviteTicket extends StatelessWidget {
             8.0,
           ),
         ),
-        child: const ScheduleMessageItem(),
+        child: ScheduleMessageItem(message: message),
       ),
     );
   }

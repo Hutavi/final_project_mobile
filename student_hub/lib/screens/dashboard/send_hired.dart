@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/services/socket.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -475,7 +476,14 @@ class SendHiredState extends State<SendHired>
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // Xử lý khi nhấn nút Message
+                      // SocketManager.initializeSocket();
+                      // SocketManager.sendMessage(
+                      //   "Hello, world!",
+                      //   560,
+                      //   5,
+                      //   6,
+                      //   0,
+                      // );
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(

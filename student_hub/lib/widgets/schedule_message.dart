@@ -1,15 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/chat/message.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 
 class ScheduleMessageItem extends StatefulWidget {
+  final Message message;
   const ScheduleMessageItem({
     super.key,
+    required this.message,
   });
 
   @override
@@ -133,51 +135,57 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
     );
   }
 
+  String formatDateTime(DateTime dateTime) {
+    final dateFormat = DateFormat('EEEE, d/M/yyyy HH:mm');
+
+    return dateFormat.format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Catch up meeting",
-              style: TextStyle(
+              widget.message.title!,
+              style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              "60 minutes",
-              style: TextStyle(fontSize: 13, color: Colors.white),
+              '${widget.message.duration!} minutes',
+              style: const TextStyle(fontSize: 13, color: Colors.white),
             ),
           ],
         ),
         const SizedBox(height: 6),
-        const Row(
+        Row(
           children: [
-            Text(
+            const Text(
               "Start time: ",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             Text(
-              "Thursday, 13/3/2024 15:00",
-              style: TextStyle(color: Colors.white),
+              formatDateTime(widget.message.startTime!),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
-        const Row(
+        Row(
           children: [
-            Text(
+            const Text(
               "End time: ",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             Text(
-              "Thursday, 13/3/2024 16:00",
-              style: TextStyle(color: Colors.white),
+              formatDateTime(widget.message.endTime!),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
