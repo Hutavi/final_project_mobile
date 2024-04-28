@@ -84,17 +84,27 @@ class _SavedProjectState extends State<SavedProject> {
           children: [
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 itemCount: favoriteProjects.length,
                 itemBuilder: (context, index) {
                   final project = favoriteProjects[index];
+                  final backgroundColor = index % 2 == 0 ? true : false;
                   return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(
                           context, AppRouterName.projectDetailFavorite,
                           arguments: project);
                     },
-                    child: ProjectItemFavourite(
-                      projectForListModel: project,
+                    child: Column(
+                      children: [
+                        ProjectItemFavourite(
+                          isEven: backgroundColor,
+                          projectForListModel: project,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
                     ),
                   );
                 },

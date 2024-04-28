@@ -145,19 +145,32 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                       )
                     : Expanded(
                         child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           itemCount: listProject.length,
                           itemBuilder: (context, index) {
                             final project = listProject[index];
+                            // Chuyển đổi màu nền xen kẽ
+                            final backgroundColor =
+                                index % 2 == 0 ? true : false;
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRouterName.projectDetail,
-                                    arguments: project);
-                              },
-                              child: ProjectItem(
-                                projectForListModel: listProject[index],
-                              ),
-                            );
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRouterName.projectDetail,
+                                    arguments: project,
+                                  );
+                                },
+                                child: Column(
+                                  children: [
+                                    ProjectItem(
+                                      isEven: backgroundColor,
+                                      projectForListModel: listProject[index],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ));
                           },
                         ),
                       ),
