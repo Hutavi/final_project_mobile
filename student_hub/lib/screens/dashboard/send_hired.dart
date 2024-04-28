@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/socket.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 import 'package:student_hub/widgets/loading.dart';
