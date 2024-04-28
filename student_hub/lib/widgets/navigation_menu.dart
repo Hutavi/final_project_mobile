@@ -40,6 +40,13 @@ class _NavigationMenuState extends State<NavigationMenu> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    screens.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // final dark = THelperFunctions.isDarkMode(context);
 
@@ -109,8 +116,8 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 }
 
-void main() {
-  runApp(const MaterialApp(
-    home: NavigationMenu(),
-  ));
-}
+// void main() {
+//   runApp(const MaterialApp(
+//     home: NavigationMenu(),
+//   ));
+// }

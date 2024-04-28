@@ -364,7 +364,7 @@ class DashboardState extends State<Dashboard>
   Widget _buildProjectListAllProject() {
     return isLoading
         ? const LoadingWidget()
-        : Expanded(
+        : Container(
             child: projects.isNotEmpty
                 ? ListView.builder(
                     itemCount: projects.length,
@@ -382,7 +382,7 @@ class DashboardState extends State<Dashboard>
   Widget _buildProjectListProjectWorking() {
     return isLoading
         ? const LoadingWidget()
-        : Expanded(
+        : Container(
             child: projectsWorking.isNotEmpty
                 ? ListView.builder(
                     itemCount: projectsWorking.length,
@@ -400,7 +400,7 @@ class DashboardState extends State<Dashboard>
   Widget _buildProjectListProjectArchieved() {
     return isLoading
         ? const LoadingWidget()
-        : Expanded(
+        : Container(
             child: projectsArchieved.isNotEmpty
                 ? ListView.builder(
                     itemCount: projectsArchieved.length,

@@ -6,7 +6,6 @@ import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item.dart';
@@ -20,7 +19,6 @@ class ProjectListScreen extends StatefulWidget {
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
-  List<ProjectModel> projectLists = allProject;
   List<ProjectForListModel> listProject = [];
   var isLoading = true;
 
@@ -180,16 +178,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ),
       ),
     );
-  }
-
-  void searchProject(String query) {
-    final suggestions = allProject.where((project) {
-      final projectTitle = project.title!.toLowerCase();
-      final input = query.toLowerCase();
-
-      return projectTitle.contains(input);
-    }).toList();
-    setState(() => projectLists = suggestions);
   }
 
   void _showSearchBottomSheet(BuildContext context) {
