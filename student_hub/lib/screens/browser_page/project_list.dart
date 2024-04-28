@@ -42,7 +42,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       final response =
           await dioPulic.request('/project', options: Options(method: 'GET'));
-      if (response.statusCode == 200) {
+      if(response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
             parsed.map<ProjectForListModel>((item) {
