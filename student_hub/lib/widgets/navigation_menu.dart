@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/data/student_user.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/notification/notification.dart';
@@ -12,7 +10,7 @@ import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({
-    Key? key, 
+    Key? key,
   }) : super(key: key);
 
   @override

@@ -123,7 +123,7 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                   style: const TextStyle(
                       color: kBlueGray800, fontWeight: FontWeight.w600),
                 ),
-                Text(widget.projectForListModel.title ?? '',
+                Text(widget.projectForListModel.title,
                     style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -145,7 +145,7 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                   children: [
                     DescribeItem(
                       itemDescribe:
-                          widget.projectForListModel.description ?? '',
+                          widget.projectForListModel.description,
                     ),
                   ],
                 ),
