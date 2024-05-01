@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/chat/message.dart';
-import 'package:student_hub/widgets/build_text_field.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,16 +27,27 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
   String? endDateTime;
   DateTime now = DateTime.now();
   late String currentTime;
+  late String conferencesID;
 
   @override
   void initState() {
     currentTime = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+    conferencesID = generateRandomNumber();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  String generateRandomNumber() {
+    // Tạo một số nguyên ngẫu nhiên từ 1000 đến 9999
+    var random = Random();
+    int randomNumber = random.nextInt(9000) + 1000;
+
+    // Chuyển số nguyên ngẫu nhiên thành chuỗi và trả về
+    return randomNumber.toString();
   }
 
   String formatDateTimeString(String inputString) {
@@ -59,6 +74,65 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
     } else {
       // Trả về 0 nếu một trong hai thời điểm không được chọn
       return 0;
+    }
+  }
+
+  void createInvite() async {
+    // setState(() {
+    //   // disableFlag = !disableFlag;
+    // });
+
+    // Chuyển đổi thời gian thành chuỗi định dạng ISO 8601
+    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        .format(parseDateTime(startDateTime!));
+    String endTimeISO =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
+
+    var data = json.encode({
+      "title": titleSchedule.text,
+      "startTime": startTimeISO,
+      "endTime": endTimeISO,
+      "projectId": 1,
+      "senderId": 1,
+      "receiverId": 1,
+      "meeting_room_code": conferencesID,
+      "meeting_room_id": conferencesID,
+      "expired_at": endTimeISO
+    });
+    print(data);
+
+    try {
+      final dio = DioClient();
+      final response = await dio.request(
+        '/interview',
+        data: data,
+        options: Options(
+          method: 'POST',
+        ),
+      );
+      if (response.statusCode == 201) {
+        Message newMessage = Message(
+            id: const Uuid().v4(),
+            projectID: 560,
+            senderUserId: 5,
+            receiverUserId: 6,
+            title: titleSchedule.text,
+            createdAt: DateTime.now().add(const Duration(minutes: 60)),
+            startTime: parseDateTime(startDateTime!),
+            endTime: parseDateTime(endDateTime!),
+            meetingRoomId: conferencesID,
+            meeting: 1,
+            duration: calculateDurationInMinutes());
+        widget.onSendMessage(newMessage);
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print('Have Error 1: ${e.response!.data}');
+      } else {
+        print('Have Error 2: $e');
+      }
     }
   }
 
@@ -117,6 +191,10 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Enter title',
+                    hintStyle: const TextStyle(
+                        color: kGrey1,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 6.0, horizontal: 10.0),
                     border: OutlineInputBorder(
@@ -298,20 +376,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            Message newMessage = Message(
-                                id: const Uuid().v4(),
-                                projectID: 560,
-                                senderUserId: 5,
-                                receiverUserId: 6,
-                                title: titleSchedule.text,
-                                createdAt: DateTime.now()
-                                    .add(const Duration(minutes: 60)),
-                                startTime: parseDateTime(startDateTime!),
-                                endTime: parseDateTime(endDateTime!),
-                                meeting: 1,
-                                duration: calculateDurationInMinutes());
-                            widget.onSendMessage(newMessage);
-                            Navigator.pop(context);
+                            createInvite();
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

@@ -20,13 +20,11 @@ class ScheduleMessageItem extends StatefulWidget {
 
 class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
   bool isMeetingCancelled = false;
-  late String conferencesID;
   final TextEditingController titleSchedule = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    conferencesID = generateRandomNumber();
   }
 
   @override
@@ -113,7 +111,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, AppRouterName.meetingRoom,
-                        arguments: conferencesID);
+                        arguments: widget.message.meetingRoomId);
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -199,7 +197,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                   color: Colors.white),
             ),
             Text(
-              conferencesID,
+              widget.message.meetingRoomId!,
               style: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.red),
             ),

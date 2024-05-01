@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -40,7 +38,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
       final response =
           await dioPulic.request('/project', options: Options(method: 'GET'));
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
             parsed.map<ProjectForListModel>((item) {
