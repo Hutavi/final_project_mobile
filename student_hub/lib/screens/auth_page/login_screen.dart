@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
@@ -114,7 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Login with StudentHub',
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: kBlackColor),
                       ),
                     ),
                     const SizedBox(
@@ -219,8 +221,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Center(
-                      child: Text("Don't have an Student Hub account?"),
-                    ),
+                        child: Text(
+                      "Don't have an Student Hub account?",
+                      style: TextStyle(
+                        color: kBlackColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )),
                     Column(
                       children: [
                         OutlinedButton(

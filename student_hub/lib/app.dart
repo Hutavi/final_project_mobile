@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
+import 'package:student_hub/utils/theme/theme.dart';
 // import 'package:student_hub/screens/browser_page/project_list.dart';
 // import 'package:student_hub/screens/chat/chat.dart';
 // import 'package:student_hub/screens/dashboard/dashboard.dart';
@@ -23,28 +25,25 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Management App',
+    return MaterialApp(
+      title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       // theme: AppThemes.lightTheme,
-      // initialRoute: '/navigation',
-      // home: SwitchAccount(),
-      home: LoginScreen(),
-      // home: ProjectListScreen(),
-      // home: NotificationPage(),
-      // home: Dashboard(),
-      // initialRoute: '/homePage',
-      // darkTheme: AppThemes.darkTheme,
-      // home: PostScreen1(),
-      // home: ScheduleInviteTicket(),
-      // home: ProjectListScreen(),
-      // home: ChatRoomScreen(),
+      home: const LoginScreen(),
       // home: HomePage(),
-      // home: MainPage(),
-      // home: WelcomeScreen(),
-      // home: HomePage(),
-
-      // home: NavigationMenu(),
+      theme: TAppTheme.lightTheme,
+      darkTheme: TAppTheme.darkTheme,
+      // theme: ThemeData(
+      //   brightness: Brightness.light,
+      //   primaryColor: Colors.blue,
+      //   scaffoldBackgroundColor: Colors.white,
+      // ),
+      // darkTheme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   primaryColor: kBlackTheme,
+      //   scaffoldBackgroundColor: kGrey1,
+      // ),
+      themeMode: ThemeMode.system,
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
   }
