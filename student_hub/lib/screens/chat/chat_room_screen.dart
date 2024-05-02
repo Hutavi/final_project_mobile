@@ -205,7 +205,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 100,
+        _scrollController.position.maxScrollExtent + 200,
         duration: const Duration(milliseconds: 1),
         curve: Curves.easeOut,
       );
@@ -255,167 +255,177 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: ListView.builder(
-                    controller: _scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
+        child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              // Tắt bàn phím khi chạm ra bên ngoài
+              FocusScope.of(context).unfocus();
+            },
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: ListView.builder(
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final message = messages[index];
 
-                      final showImage = index + 1 == messages.length ||
-                          (index + 1 < messages.length &&
-                              messages[index + 1].senderUserId !=
-                                  message.senderUserId);
+                          final showImage = index + 1 == messages.length ||
+                              (index + 1 < messages.length &&
+                                  messages[index + 1].senderUserId !=
+                                      message.senderUserId);
 
-                      return Column(
-                        children: [
-                          const Gap(12),
-                          Row(
-                            mainAxisAlignment: (message.senderUserId != 5)
-                                ? MainAxisAlignment.center
-                                : MainAxisAlignment.center,
+                          return Column(
                             children: [
-                              Text(
-                                '${DateFormat("MMM d").format(message.createdAt)}, ${message.createdAt.hour}:${message.createdAt.minute.toString().padLeft(2, '0')}',
-                                style: Theme.of(context).textTheme.labelMedium,
+                              const Gap(12),
+                              Row(
+                                mainAxisAlignment: (message.senderUserId != 5)
+                                    ? MainAxisAlignment.center
+                                    : MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${DateFormat("MMM d").format(message.createdAt)}, ${message.createdAt.hour}:${message.createdAt.minute.toString().padLeft(2, '0')}',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: (message.senderUserId != 5)
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
+                                children: [
+                                  if (showImage && message.senderUserId == 5)
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Avatar(
+                                          imageUrl: ImageManagent.imgAvatar,
+                                          radius: 15,
+                                        ),
+                                      ],
+                                    ),
+                                  if (message.meeting == 1)
+                                    ScheduleInviteTicket(
+                                      userId1: 5,
+                                      userId2: 6,
+                                      message: message,
+                                      onCancelMeeting: () {
+                                        setState(() {
+                                          // Cập nhật trạng thái của cuộc họp
+                                          message.canceled = true;
+                                        });
+                                      },
+                                    )
+                                  else
+                                    MessageChatBubble(
+                                      userId1: 5,
+                                      userId2: 6,
+                                      message: message,
+                                    ),
+                                  if (showImage && message.senderUserId != 5)
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Avatar(
+                                          imageUrl: ImageManagent.imgAvatar,
+                                          radius: 15,
+                                        ),
+                                      ],
+                                    ),
+                                ],
                               ),
                             ],
-                          ),
-                          Row(
-                            mainAxisAlignment: (message.senderUserId != 5)
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            children: [
-                              if (showImage && message.senderUserId == 5)
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Avatar(
-                                      imageUrl: ImageManagent.imgAvatar,
-                                      radius: 15,
-                                    ),
-                                  ],
-                                ),
-                              if (message.meeting == 1)
-                                ScheduleInviteTicket(
-                                  userId1: 5,
-                                  userId2: 6,
-                                  message: message,
-                                  onCancelMeeting: () {
-                                    setState(() {
-                                      // Cập nhật trạng thái của cuộc họp
-                                      message.canceled = true;
-                                    });
-                                  },
-                                )
-                              else
-                                MessageChatBubble(
-                                  userId1: 5,
-                                  userId2: 6,
-                                  message: message,
-                                ),
-                              if (showImage && message.senderUserId != 5)
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Avatar(
-                                      imageUrl: ImageManagent.imgAvatar,
-                                      radius: 15,
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ],
-                      );
-                    }),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 4,
+                          );
+                        }),
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
-                          ),
-                          builder: (BuildContext context) {
-                            return ScheduleInterview(
-                                onSendMessage: (newMessage) {
-                              // Thêm tin nhắn mới vào List<Message> tại đây
-                              setState(() {
-                                sampleMessages.add(newMessage);
-                              });
-                            });
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.calendar_month,
-                        color: Colors.black,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 4,
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextFormField(
-                          focusNode: _messageFocusNode,
-                          controller: messageController,
-                          maxLines: null,
-                          minLines: 1,
-                          keyboardType: TextInputType.multiline,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.lightBlue[50],
-                            hintText: 'Message',
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(24.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                _sendMessage();
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                              builder: (BuildContext context) {
+                                return ScheduleInterview(
+                                    onSendMessage: (newMessage) {
+                                  // Thêm tin nhắn mới vào List<Message> tại đây
+                                  setState(() {
+                                    sampleMessages.add(newMessage);
+                                    _scrollToBottom();
+                                  });
+                                });
                               },
-                              hoverColor: Colors.transparent,
-                              icon: const Icon(
-                                Icons.send,
-                                color: Colors.black,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFormField(
+                              focusNode: _messageFocusNode,
+                              controller: messageController,
+                              maxLines: null,
+                              minLines: 1,
+                              keyboardType: TextInputType.multiline,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.lightBlue[50],
+                                hintText: 'Message',
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    _sendMessage();
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  hoverColor: Colors.transparent,
+                                  icon: const Icon(
+                                    Icons.send,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              ],
+            )),
       ),
     );
   }
