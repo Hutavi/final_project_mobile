@@ -422,7 +422,7 @@ class DashboardState extends State<Dashboard>
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 2.2,
           child: Column(
             children: <Widget>[
               Expanded(
