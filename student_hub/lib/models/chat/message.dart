@@ -13,6 +13,8 @@ class Message extends Equatable {
   final String? title;
   final int meeting;
   final int? duration;
+  final String? meetingRoomId;
+  final String? meetingRoomCode;
   bool canceled;
 
   Message({
@@ -28,6 +30,8 @@ class Message extends Equatable {
     this.meeting = -1,
     this.duration = 0,
     this.canceled = false,
+    this.meetingRoomId,
+    this.meetingRoomCode,
   });
 
   Message copyWith({
@@ -43,6 +47,8 @@ class Message extends Equatable {
     int? meeting,
     int? duration,
     bool? canceled,
+    String? meetingRoomId,
+    String? meetingRoomCode,
   }) {
     return Message(
       id: id ?? this.id,
@@ -57,6 +63,8 @@ class Message extends Equatable {
       meeting: meeting ?? this.meeting,
       duration: duration ?? this.duration,
       canceled: canceled ?? this.canceled,
+      meetingRoomId: meetingRoomId ?? this.meetingRoomId,
+      meetingRoomCode: meetingRoomCode ?? this.meetingRoomCode,
     );
   }
 
@@ -77,6 +85,8 @@ class Message extends Equatable {
       meeting: json['meeting'] ?? -1,
       duration: json['duration'] ?? 0,
       canceled: json['canceled'] ?? false,
+      meetingRoomId: json['meeting_room_id'],
+      meetingRoomCode: json['meeting_room_code'],
     );
   }
 
@@ -93,6 +103,8 @@ class Message extends Equatable {
       'meeting': meeting,
       'duration': duration,
       'canceled': canceled,
+      'meeting_room_id': meetingRoomId,
+      'meeting_room_code': meetingRoomCode,
     };
   }
 
@@ -110,5 +122,7 @@ class Message extends Equatable {
         meeting,
         duration,
         canceled,
+        meetingRoomId,
+        meetingRoomCode,
       ];
 }

@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/chat/message.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/services/dio_client_not_api.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class ScheduleMessageItem extends StatefulWidget {
   final Message message;
@@ -19,19 +23,68 @@ class ScheduleMessageItem extends StatefulWidget {
 }
 
 class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
+  bool isMeetingValid = false;
   bool isMeetingCancelled = false;
-  late String conferencesID;
-  final TextEditingController titleSchedule = TextEditingController();
+  final TextEditingController codeRoom = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    conferencesID = generateRandomNumber();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void checkValidateRoom() async {
+    try {
+      final dio = DioClientNotAPI();
+      final response = await dio.request(
+        '/meeting-room/check-availability',
+        queryParameters: {
+          "meeting_room_code": codeRoom.text,
+          "meeting_room_id": widget.message.meetingRoomId,
+        },
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      print(codeRoom.text);
+      print(widget.message.meetingRoomId);
+
+      if (response.statusCode == 200) {
+        if (response.data['result'] == true) {
+          print(response.data['result']);
+          // Chuyển đến trang họp nếu phòng họp hợp lệ
+          Navigator.pushNamed(context, AppRouterName.meetingRoom,
+              arguments: widget.message.meetingRoomCode);
+        } else {
+          print(response.data['result']);
+          setState(() {
+            isMeetingValid = false;
+          });
+
+          showDialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            builder: (context) => DialogCustom(
+              title: "Warning",
+              description: "Code room not exits.",
+              buttonText: 'OK',
+              statusDialog: 4,
+              onConfirmPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Nếu có lỗi xảy ra trong quá trình gọi API, in ra lỗi để debug
+      print('Error checking room availability: $e');
+    }
   }
 
   String generateRandomNumber() {
@@ -101,7 +154,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 BuildTextField(
-                  controller: titleSchedule,
+                  controller: codeRoom,
                   inputType: TextInputType.text,
                   onChange: () {},
                   fillColor: kWhiteColor,
@@ -112,8 +165,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRouterName.meetingRoom,
-                        arguments: conferencesID);
+                    checkValidateRoom();
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -137,7 +189,6 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
 
   String formatDateTime(DateTime dateTime) {
     final dateFormat = DateFormat('EEEE, d/M/yyyy HH:mm');
-
     return dateFormat.format(dateTime);
   }
 
@@ -199,7 +250,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                   color: Colors.white),
             ),
             Text(
-              conferencesID,
+              widget.message.meetingRoomCode!,
               style: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.red),
             ),

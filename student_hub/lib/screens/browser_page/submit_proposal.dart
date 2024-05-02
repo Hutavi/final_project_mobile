@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:dio/dio.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -45,6 +44,7 @@ class SubmitProposalState extends State<SubmitProposal> {
       }
     }
   }
+
   void submitProposal() async {
     try {
       print('bắt đầu chạy hàm submitProposal()');
@@ -55,16 +55,15 @@ class SubmitProposalState extends State<SubmitProposal> {
           'projectId': widget.projectId.id,
           'studentId': idStudent,
           'coverLetter': (coverLetterController.text),
-          'statusFlag': 0, // {0: waiting -> submitted}, {1: offer(chat with company) -> activity}, {2: hired (accept offer from company) -> working flow}
-          'disableFlag': 1, // {0: disable}, {1: enable} ||| 
+          'statusFlag':
+              0, // {0: waiting -> submitted}, {1: offer(chat with company) -> activity}, {2: hired (accept offer from company) -> working flow}
+          'disableFlag': 1, // {0: disable}, {1: enable} |||
         }),
-        options: Options(
-          method: 'POST'
-          ),
+        options: Options(method: 'POST'),
       );
       print(response.data['result']);
 
-      if(response.statusCode == 201) {
+      if (response.statusCode == 201) {
         print('Proposal submitted');
       }
     } catch (e) {
@@ -129,10 +128,8 @@ class SubmitProposalState extends State<SubmitProposal> {
                       borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
                           top: Radius.circular(10.0),
-                          bottom: Radius.circular(10.0))
-                  )
-              ),
-              onChanged: (value){
+                          bottom: Radius.circular(10.0)))),
+              onChanged: (value) {
                 coverLetterController.text;
               },
             ),
@@ -162,7 +159,7 @@ class SubmitProposalState extends State<SubmitProposal> {
                       getStudentId().then((_) {
                         // Sau khi getStudentId() hoàn thành, gọi submitProposal()
                         submitProposal();
-                      }); 
+                      });
                       Navigator.pushNamed(context, AppRouterName.navigation);
                     },
                     style: ElevatedButton.styleFrom(
