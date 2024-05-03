@@ -94,7 +94,7 @@ class _ProjectSearchState extends State<ProjectSearch> {
     // print(numberOfStudents);
     // print(proposalsLessThan);
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Project Search',
       ),

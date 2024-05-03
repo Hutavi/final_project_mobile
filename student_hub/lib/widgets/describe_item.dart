@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_hub/constants/colors.dart';
 
 class DescribeItem extends StatefulWidget {
   final String? itemDescribe;
@@ -17,11 +18,15 @@ class _DescribeItemState extends State<DescribeItem> {
         const SizedBox(
           width: 10,
         ),
-        const Text('• '),
+        const Text(
+          '• ',
+          style: TextStyle(color: kBlueGray900),
+        ),
         Expanded(
           child: Text(
             widget.itemDescribe!,
-            style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+            style: const TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 14, color: kBlueGray900),
             overflow: TextOverflow.clip,
           ),
         ),

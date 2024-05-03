@@ -134,17 +134,15 @@ class _LoginByScreenState extends State<RegisterByScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Student Hub',
           style: TextStyle(
-            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.grey[200],
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.person),
@@ -176,8 +174,10 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                     widget.isStudent == false
                         ? 'Sign up as Company'
                         : 'Sign up as Student',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 16),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
                 const SizedBox(
@@ -250,7 +250,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   height: 20,
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     InkWell(
                       onTap: () {
@@ -265,22 +265,36 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                           checkColor: Colors.white,
                           activeColor: Colors.green,
                           value: isChecked,
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Colors.green;
+                              }
+                              return Colors.transparent;
+                            },
+                          ),
                           onChanged: (value) {
                             setState(() {
                               isChecked = value ?? false;
                             });
                           },
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Yes, I understand and agree to StudentHub')
+                          Text('Yes, I understand and agree to StudentHub',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              )),
                         ],
                       ),
                     )
@@ -305,9 +319,9 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   child: const Text(
                     'Create account',
                     style: TextStyle(
-                      color: kGrey0,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        color: kGrey0,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15),
                   ),
                 ),
               ],

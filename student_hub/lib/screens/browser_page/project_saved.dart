@@ -76,7 +76,7 @@ class _SavedProjectState extends State<SavedProject> {
       appBar: const AppBarCustom(
         title: 'Saved projects',
       ),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(

@@ -17,7 +17,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
@@ -45,9 +45,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               Text(
                 widget.projectItem.title as String,
                 style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: kBlackColor),
+                    fontSize: 18, fontWeight: FontWeight.w600, color: kBlue600),
               ),
               const SizedBox(
                 height: 20,
@@ -78,12 +76,6 @@ class _ProjectDetailState extends State<ProjectDetail> {
                         DescribeItem(
                           itemDescribe: widget.projectItem.description,
                         ),
-                        // DescribeItem(
-                        //   itemDescribe: 'The skills required for your project',
-                        // ),
-                        // DescribeItem(
-                        //   itemDescribe: 'Detail about your project',
-                        // ),
                       ],
                     ),
                   ],
@@ -94,7 +86,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               ),
               Row(
                 children: [
-                  const Icon(Icons.alarm),
+                  Icon(Icons.alarm, color: Theme.of(context).primaryColor),
                   const SizedBox(
                     width: 15,
                   ),
@@ -104,13 +96,17 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       const Text(
                         'Project scope',
                         style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: kBlueGray900),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
                         '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 14),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: kBlueGray900),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -122,7 +118,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               ),
               Row(
                 children: [
-                  const Icon(Icons.people),
+                  Icon(Icons.people, color: Theme.of(context).primaryColor),
                   const SizedBox(
                     width: 15,
                   ),
@@ -132,13 +128,17 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       const Text(
                         'Project scope',
                         style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: kBlueGray900),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
                         '• ' '${widget.projectItem.numberOfStudents} students',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 14),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: kBlueGray900),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -157,7 +157,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.submitProposal, arguments: widget.projectItem);
+                  Navigator.pushNamed(context, AppRouterName.submitProposal,
+                      arguments: widget.projectItem);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -173,11 +174,12 @@ class _ProjectDetailState extends State<ProjectDetail> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    backgroundColor: kWhiteColor,
-                    foregroundColor: Colors.green,),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  backgroundColor: kWhiteColor,
+                  foregroundColor: Colors.green,
+                ),
                 child: const Text('Saved'),
               ),
             ),

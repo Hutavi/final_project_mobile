@@ -17,7 +17,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),

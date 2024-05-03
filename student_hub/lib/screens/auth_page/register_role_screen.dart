@@ -46,7 +46,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
@@ -61,10 +61,13 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               const SizedBox(
                 height: 30,
               ),
-              const Center(
+              Center(
                 child: Text(
-                  'Join as company or Student',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  'Join as Company or Student',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor),
                 ),
               ),
               const SizedBox(
@@ -75,16 +78,24 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
+                  color: kWhiteColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.person_2_rounded),
-                        Text('I am a student, find jobs for me')
+                        Icon(
+                          Icons.person_2_rounded,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        Text(
+                          'I am a student, find jobs for me',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        )
                       ],
                     ),
                     Column(
@@ -93,6 +104,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: true,
                           groupValue: isStudent,
+                          activeColor: Theme.of(context).primaryColor,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -107,15 +119,23 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
+                  color: kWhiteColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.person_2_rounded),
-                        Text('I am a company, find engineer for project')
+                        Icon(
+                          Icons.person_2_rounded,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        Text(
+                          'I am a company, find engineer for project',
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                        )
                       ],
                     ),
                     Column(
@@ -124,6 +144,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: false,
                           groupValue: isStudent,
+                          activeColor: Theme.of(context).primaryColor,
                           onChanged: handleRadioValueChanged,
                         )
                       ],

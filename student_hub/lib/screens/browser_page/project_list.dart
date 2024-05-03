@@ -58,9 +58,11 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final Brightness brightness = Theme.of(context).brightness;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        // backgroundColor: Theme.of(context).colorScheme.background,
         appBar: null,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -80,10 +82,18 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         controller: projectSearchController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          // fillColor: Theme.of(context).colorScheme.surface,
+                          fillColor: kWhiteColor,
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: kGrey0,
+                          ),
                           hintText: "Search for project",
-                          hintStyle:
-                              const TextStyle(fontWeight: FontWeight.normal),
+                          hintStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: kGrey0,
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 0.0, horizontal: 10),
                           border: OutlineInputBorder(
@@ -156,16 +166,20 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                     arguments: project,
                                   );
                                 },
-                                child: Column(
-                                  children: [
-                                    ProjectItem(
-                                      isEven: backgroundColor,
-                                      projectForListModel: listProject[index],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Column(
+                                    children: [
+                                      ProjectItem(
+                                        isEven: backgroundColor,
+                                        projectForListModel: listProject[index],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  ),
                                 ));
                           },
                         ),
@@ -181,7 +195,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   void _showSearchBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: false,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

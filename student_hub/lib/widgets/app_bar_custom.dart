@@ -27,7 +27,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).bottomAppBarTheme.color,
       automaticallyImplyLeading: false,
       leading: showBackButton
           ? IconButton(

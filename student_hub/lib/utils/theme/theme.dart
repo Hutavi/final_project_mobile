@@ -17,7 +17,12 @@ class TAppTheme {
     textTheme: TTextTheme.lightTextTheme,
     elevatedButtonTheme: TElevatedCustomTheme.lightElevatedButtonTheme,
     appBarTheme: TAppBarTheme.lightAppBarTheme,
-    bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
+    // bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: kWhiteColor,
+      selectedItemColor: kBlue600,
+      unselectedItemColor: kGrey1,
+    ),
   );
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
@@ -29,5 +34,10 @@ class TAppTheme {
     elevatedButtonTheme: TElevatedCustomTheme.darkElevatedButtonTheme,
     appBarTheme: TAppBarTheme.darkAppBarTheme,
     bottomSheetTheme: TBottomSheetTheme.darkBottomSheetTheme,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: kGrey0,
+      selectedItemColor: kBlue600,
+      unselectedItemColor: kGrey1,
+    ),
   );
 }
