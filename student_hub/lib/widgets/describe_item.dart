@@ -20,13 +20,11 @@ class _DescribeItemState extends State<DescribeItem> {
         ),
         const Text(
           '• ',
-          style: TextStyle(color: kBlueGray900),
         ),
         Expanded(
           child: Text(
             widget.itemDescribe!,
-            style: const TextStyle(
-                fontWeight: FontWeight.w400, fontSize: 14, color: kBlueGray900),
+            style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
             overflow: TextOverflow.clip,
           ),
         ),

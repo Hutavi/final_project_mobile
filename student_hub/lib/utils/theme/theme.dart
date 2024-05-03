@@ -29,7 +29,7 @@ class TAppTheme {
     fontFamily: 'Roboto',
     brightness: Brightness.dark,
     primaryColor: kGrey0,
-    scaffoldBackgroundColor: kGrey2,
+    scaffoldBackgroundColor: kGrey0,
     textTheme: TTextTheme.darkTextTheme,
     elevatedButtonTheme: TElevatedCustomTheme.darkElevatedButtonTheme,
     appBarTheme: TAppBarTheme.darkAppBarTheme,

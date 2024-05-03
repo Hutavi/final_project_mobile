@@ -35,19 +35,17 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
               const Text(
                 'Project detail',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kBlueGray900),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(
                 height: 5,
               ),
               Text(
-                widget.projectItem.title as String,
+                widget.projectItem.title,
                 style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: kBlackColor),
+                    fontSize: 18, fontWeight: FontWeight.w600, color: kBlue600),
               ),
               const SizedBox(
                 height: 20,
@@ -68,7 +66,6 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: kBlackColor,
                       ),
                     ),
                     ListView(
@@ -78,12 +75,6 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                         DescribeItem(
                           itemDescribe: widget.projectItem.description,
                         ),
-                        // DescribeItem(
-                        //   itemDescribe: 'The skills required for your project',
-                        // ),
-                        // DescribeItem(
-                        //   itemDescribe: 'Detail about your project',
-                        // ),
                       ],
                     ),
                   ],

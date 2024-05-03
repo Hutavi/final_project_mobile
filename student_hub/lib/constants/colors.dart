@@ -6,7 +6,7 @@ const Color kWhiteColor = Color(0xffffffff);
 const Color kBlackColor = Color(0xff000000);
 const Color kBlackTheme = Color.fromARGB(255, 32, 32, 32);
 const Color kRedBlur = Color.fromARGB(255, 250, 232, 232); //cancel btn
-const Color kRed = Color.fromARGB(255, 211, 0, 0); //cancel btn
+const Color kRed = Color.fromARGB(255, 252, 130, 130); //cancel btn
 const Color kGreyColorText = Color(0xff45474B);
 
 const Color kGrey0 = Color(0xff555555);

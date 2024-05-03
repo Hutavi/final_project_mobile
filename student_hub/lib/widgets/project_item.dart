@@ -125,7 +125,6 @@ class _ProjectItemState extends State<ProjectItem> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          // color: widget.isEven == true ? kWhiteColor : kBlueGray50,
           color: backgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: const [

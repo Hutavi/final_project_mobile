@@ -61,13 +61,13 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               const SizedBox(
                 height: 30,
               ),
-              Center(
+              const Center(
                 child: Text(
                   'Join as Company or Student',
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -84,17 +84,16 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.person_2_rounded,
-                          color: Theme.of(context).primaryColor,
+                          color: kGrey0,
                         ),
                         Text(
                           'I am a student, find jobs for me',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -104,7 +103,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: true,
                           groupValue: isStudent,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: kGrey0,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -124,17 +123,16 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.person_2_rounded,
-                          color: Theme.of(context).primaryColor,
+                          color: kGrey0,
                         ),
                         Text(
                           'I am a company, find engineer for project',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -171,7 +169,8 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                   'Create account',
                   style: TextStyle(
                     color: kGrey0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
