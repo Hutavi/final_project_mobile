@@ -35,7 +35,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   void dispose() {
-    controller.dispose();
+    // controller.dispose();
     screens.clear();
     super.dispose();
   }

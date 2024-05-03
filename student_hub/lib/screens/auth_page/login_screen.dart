@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
@@ -96,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
-        showAction: true,
+        showAction: false,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -115,10 +117,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Center(
+                      Center(
                         child: Text(
-                          'Login with StudentHub',
-                          style: TextStyle(
+                          LocaleData.loginTitle.getString(context),
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
@@ -127,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text("Email",
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      Text(LocaleData.email.getString(context),
+                          style: const TextStyle(fontWeight: FontWeight.w500)),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       BuildTextField(
                         controller: userNameController,
@@ -140,12 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           userNotFound = false;
                           // validateFields();
                         },
-                        hint: 'Enter email',
+                        hint: LocaleData.emailPlaholder.getString(context),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Username or email is required';
+                            return LocaleData.userRequiered.getString(context);
                           } else if (userNotFound) {
-                            return 'User not found';
+                            return LocaleData.userNotFound.getString(context);
                           }
                           return null;
                         },
@@ -153,10 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text("Password",
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      Text(LocaleData.password.getString(context),
+                          style: const TextStyle(fontWeight: FontWeight.w500)),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       BuildTextField(
                         controller: passwordController,
@@ -167,12 +169,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           // validateFields();
                           passwordWrong = false;
                         },
-                        hint: 'Enter password',
+                        hint: LocaleData.passwordPlaceholder.getString(context),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Password is required';
+                            return LocaleData.passwordRequiered
+                                .getString(context);
                           } else if (passwordWrong) {
-                            return 'Password is wrong';
+                            return LocaleData.passwordWrong.getString(context);
                           }
                           return null;
                         },
@@ -194,9 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               backgroundColor: kGrey3,
                               elevation: 0.5,
                             ),
-                            child: const Text(
-                              'Sign In',
-                              style: TextStyle(
+                            child: Text(
+                              LocaleData.loginButton.getString(context),
+                              style: const TextStyle(
                                 color: kGrey0,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -211,17 +214,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         GestureDetector(
                           onTap: () => Navigator.pushNamed(
                               context, AppRouterName.forgotPassword),
-                          child: const Center(
+                          child: Center(
                             child: Text.rich(
                               TextSpan(
-                                text: 'Forgot password? ',
-                                style: TextStyle(
+                                text: LocaleData.forgotPassword
+                                    .getString(context),
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: 'Click here to reset it.',
-                                    style: TextStyle(
+                                    text:
+                                        LocaleData.clickHere.getString(context),
+                                    style: const TextStyle(
                                       color: kRed,
                                     ),
                                   ),
@@ -238,10 +243,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Center(
+                      Center(
                           child: Text(
-                        "Don't have an Student Hub account?",
-                        style: TextStyle(
+                        LocaleData.dontHaveAccount.getString(context),
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                         ),
                       )),
@@ -260,9 +265,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               backgroundColor: kGrey3,
                               elevation: 0.5,
                             ),
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
+                            child: Text(
+                              LocaleData.registerButton.getString(context),
+                              style: const TextStyle(
                                 color: kGrey0,
                                 fontWeight: FontWeight.w600,
                               ),
