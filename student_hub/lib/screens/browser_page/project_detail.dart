@@ -35,9 +35,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const Text(
                 'Project detail',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kBlueGray900),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -66,7 +66,6 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: kBlackColor,
                       ),
                     ),
                     ListView(
@@ -86,7 +85,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               ),
               Row(
                 children: [
-                  Icon(Icons.alarm, color: Theme.of(context).primaryColor),
+                  const Icon(Icons.alarm),
                   const SizedBox(
                     width: 15,
                   ),
@@ -96,17 +95,17 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       const Text(
                         'Project scope',
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: kBlueGray900),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
                         '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: kBlueGray900),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -118,7 +117,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               ),
               Row(
                 children: [
-                  Icon(Icons.people, color: Theme.of(context).primaryColor),
+                  const Icon(Icons.people),
                   const SizedBox(
                     width: 15,
                   ),
@@ -128,17 +127,17 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       const Text(
                         'Project scope',
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: kBlueGray900),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
                         '• ' '${widget.projectItem.numberOfStudents} students',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: kBlueGray900),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       )
                     ],

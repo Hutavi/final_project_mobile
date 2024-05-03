@@ -117,6 +117,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           const SizedBox(
                             height: 20,
                           ),
+                          const Text(
+                            "Enter your email to reset password",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           BuildTextField(
                             controller: userNameController,
                             inputType: TextInputType.text,
@@ -125,7 +132,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               userNotFound = false;
                               // validateFields();
                             },
-                            labelText: 'Email',
+                            hint: 'Email',
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Email is required';
@@ -161,7 +168,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     'Reset Password',
                                     style: TextStyle(
                                       color: kGrey0,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),

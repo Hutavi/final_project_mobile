@@ -77,6 +77,8 @@ class _SavedProjectState extends State<SavedProject> {
         title: 'Saved projects',
       ),
       // backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
@@ -94,16 +96,19 @@ class _SavedProjectState extends State<SavedProject> {
                           context, AppRouterName.projectDetailFavorite,
                           arguments: project);
                     },
-                    child: Column(
-                      children: [
-                        ProjectItemFavourite(
-                          isEven: backgroundColor,
-                          projectForListModel: project,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          ProjectItemFavourite(
+                            isEven: backgroundColor,
+                            projectForListModel: project,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

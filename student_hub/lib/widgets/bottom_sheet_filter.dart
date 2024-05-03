@@ -39,9 +39,9 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    print(ref.watch(filterProvider).projectScopeFlag);
-    print(ref.watch(filterProvider).numberOfStudents);
-    print(ref.watch(filterProvider).proposalsLessThan);
+    // print(ref.watch(filterProvider).projectScopeFlag);
+    // print(ref.watch(filterProvider).numberOfStudents);
+    // print(ref.watch(filterProvider).proposalsLessThan);
 
     if (ref.watch(filterProvider).projectScopeFlag != null) {
       _selectedLength = ref.watch(filterProvider).projectScopeFlag!;
@@ -64,7 +64,6 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
         height: screenHeight * 0.8,
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: kWhiteColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -213,7 +212,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .setNumberOfStudents(amountStudentNeedController.text);
                   },
                   fillColor: kWhiteColor,
-                  labelText: 'Enter students needed',
+                  hint: 'Enter students needed',
                 )
               ],
             ),
@@ -240,7 +239,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .setProposalsLessThan(proposalsController.text);
                   },
                   fillColor: kWhiteColor,
-                  labelText: 'Enter proposals less than',
+                  hint: 'Enter proposals less than',
                 )
               ],
             ),

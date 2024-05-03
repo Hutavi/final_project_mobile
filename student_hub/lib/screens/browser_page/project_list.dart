@@ -62,7 +62,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
     return SafeArea(
       child: Scaffold(
-        // backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: null,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
