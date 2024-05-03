@@ -23,12 +23,14 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
     }
     
     return ProviderScope(
-        child: Scaffold(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarCustom(
           title: 'Student Hub'
 
           ),
         body: Container(
+          // color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.only(
                 left: 18.0, right: 18.0, top: 36.0, bottom: 0.0),
@@ -50,19 +52,28 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                 ),
                 TextField(
                   controller: titleController,
+                  style: const TextStyle(
+                    color: kGrey0,
+                  ),
                   decoration: const InputDecoration(
-                      hintText: "Write a title for your post",
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10.0),
-                          bottom: Radius.circular(10.0),
-                        ),
+                    filled: true,
+                    fillColor: kWhiteColor,
+                    hintText: "Write a title for your post",
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10.0),
+                        bottom: Radius.circular(10.0),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(10.0),
-                              bottom: Radius.circular(10.0)))),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(10.0),
+                            bottom: Radius.circular(10.0)))),
                   onChanged: (value) {
                     ref.read(postProjectProvider.notifier).setProjectTitle(value);
                     setState(() {
@@ -107,11 +118,13 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                               Navigator.pushNamed(
                                   context, AppRouterName.postScreen2);
                             },
-                            child: Text("Next Scope"),
                             style: ElevatedButton.styleFrom(
                               foregroundColor: _titlePost ? null : kWhiteColor,
-                              backgroundColor: kBlue400,
+                              // backgroundColor: kBlue400,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
                             ),
+                            child: const Text("Next Scope"),
                           ),
                         ),
                       ],

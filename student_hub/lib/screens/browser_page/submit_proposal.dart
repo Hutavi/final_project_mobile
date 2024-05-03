@@ -90,7 +90,8 @@ class SubmitProposalState extends State<SubmitProposal> {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                      // color: Colors.black
+                      ),
                 ),
               ],
             ),
@@ -105,7 +106,8 @@ class SubmitProposalState extends State<SubmitProposal> {
                   style: TextStyle(
                       fontSize: 13,
                       // fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                      // color: Colors.black
+                      ),
                 ),
               ],
             ),
@@ -115,8 +117,16 @@ class SubmitProposalState extends State<SubmitProposal> {
             TextField(
               controller: coverLetterController,
               maxLines: 6,
+              style: TextStyle(
+                color: kGrey0,
+              ),
               decoration: const InputDecoration(
+                  fillColor: kWhiteColor,
+                  filled: true,
                   hintText: '',
+                  hintStyle: TextStyle(
+                    color: kGrey1,
+                  ),
                   enabledBorder: OutlineInputBorder(
                     // borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.vertical(

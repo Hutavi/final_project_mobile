@@ -58,6 +58,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
       }
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background, 
       appBar: const AppBarCustom(title: 'Student Hub'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -119,7 +120,13 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
               TextFormField(
                 controller: _numberStudentsController,
                 decoration: const InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
                     hintText: 'Number of students',
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
@@ -146,6 +153,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                   });
                 },
                 style: TextStyle(
+                  color: kGrey0,
                   fontSize: MediaQuery.of(context).size.width < 300
                       ? 14 // Điều chỉnh kích thước chữ cho màn hình nhỏ hơn
                       : 16,

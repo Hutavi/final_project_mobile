@@ -61,7 +61,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
             selectedIndex: controller.selectedIndex.value,
             onDestinationSelected: (index) =>
                 controller.selectedIndex.value = index,
-            backgroundColor: kWhiteColor,
+            // backgroundColor: kWhiteColor,
             indicatorColor: Colors.black.withOpacity(0.2),
             destinations: const [
               NavigationDestination(

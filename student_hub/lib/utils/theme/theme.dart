@@ -9,6 +9,11 @@ class TAppTheme {
   TAppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    colorScheme: const ColorScheme.light(
+      primary: kBlue600,
+      secondary: Color.fromRGBO(247, 242, 249, 1),
+      error: kRed,
+    ),
     useMaterial3: true,
     fontFamily: 'Roboto',
     brightness: Brightness.light,
@@ -25,6 +30,11 @@ class TAppTheme {
     ),
   );
   static ThemeData darkTheme = ThemeData(
+    colorScheme: const ColorScheme.dark(
+      primary: kBlue600,
+      secondary: Color.fromRGBO(100, 100, 101, 1),
+      error: kRed,
+    ),
     useMaterial3: true,
     fontFamily: 'Roboto',
     brightness: Brightness.dark,

@@ -93,6 +93,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(
         title: 'Student Hub',
       ),
@@ -126,8 +127,17 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               TextField(
                 controller: titleController,
+                style: TextStyle(
+                  color: kGrey0,
+                ),
                 decoration: const InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
                     hintText: "Write a title for your post",
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
@@ -140,7 +150,6 @@ class _EditProjectState extends ConsumerState<EditProject> {
                             top: Radius.circular(10.0),
                             bottom: Radius.circular(10.0)))),
                 onChanged: (value) {
-                  
                   setState(() {
                     project.title = value;
                     _titlePost = value.isNotEmpty;
@@ -158,8 +167,17 @@ class _EditProjectState extends ConsumerState<EditProject> {
               TextField(
                   controller: descriptionController,
                   maxLines: 6,
+                  style: TextStyle(
+                    color: kGrey0,
+                  ),
                   decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: kWhiteColor,
                       hintText: 'Project Description',
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: kGrey0,
+                      ),
                       enabledBorder: OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
@@ -195,7 +213,13 @@ class _EditProjectState extends ConsumerState<EditProject> {
               TextFormField(
                 // controller: _numberStudentsController,
                 decoration: const InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
                     hintText: 'Number of students',
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
@@ -221,6 +245,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                   });
                 },
                 style: TextStyle(
+                  color: kGrey0,
                   fontSize: MediaQuery.of(context).size.width < 300
                       ? 14 // Điều chỉnh kích thước chữ cho màn hình nhỏ hơn
                       : 16,
@@ -274,6 +299,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
                   foregroundColor: _titlePost ? null : kWhiteColor, 
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 10.0,
+                  ),
                 ),
                 child: const Text('Edit project'),
               ),

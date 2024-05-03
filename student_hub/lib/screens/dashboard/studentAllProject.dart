@@ -78,8 +78,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
       });
     } catch (e) {
       if (e is DioException && e.response != null) {
+        // ignore: avoid_print
         print(e);
       } else {
+        // ignore: avoid_print
         print('Have Error: $e');
       }
     }
@@ -155,6 +157,16 @@ class _StudentAllProjectState extends State<StudentAllProject>
         Tab(text: 'Working'),
         Tab(text: 'Archieved'),
       ],
+      indicatorColor: Colors.blue,
+      labelColor: Colors.blue,
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.hovered) ||
+            states.contains(MaterialState.focused)) {
+          return Colors.blue.withOpacity(0.1);
+        }
+        return null;
+      }),
     );
   }
 
@@ -173,16 +185,17 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
 
   Widget _activeProposal() {
-    if(activeProposal.length == 0){
+    if(activeProposal.isEmpty){
       return Card(
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        // color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(0.0),
                 child: Row(
                   children: [
                     Text(
@@ -209,10 +222,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
     }
     else {
       return Card(
-        // color: Colors.grey[200],
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -248,8 +260,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildActivityProposalItem(int index){
     return Card(
+      color: Theme.of(context).colorScheme.secondary,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -313,19 +326,19 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
   Widget _submittedProposal() {
     return Card(
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
                     Text(
                       "Submitted Proposal (${submittedProposal.length})",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -350,6 +363,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildProjectItem(int index) {
     return Card(
+      color: Theme.of(context).colorScheme.secondary,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
