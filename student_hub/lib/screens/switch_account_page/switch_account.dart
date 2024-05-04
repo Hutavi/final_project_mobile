@@ -100,7 +100,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
@@ -134,7 +134,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               .first
                               .getName,
                           style: const TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -166,9 +166,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           context, AppRouterName.navigation);
                     },
                     icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
-                    label: const Text('Home',
+                    label: Text('Home',
                         style: TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -207,9 +208,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
-                    label: const Text('Profiles',
+                    label: Text('Profiles',
                         style: TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -234,9 +236,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     },
                     icon:
                         const Icon(Icons.settings, color: kBlue400, size: 25.0),
-                    label: const Text('Settings',
+                    label: Text('Settings',
                         style: TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -274,20 +277,31 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            // color: Colors.white,
+                            color: Theme.of(context).colorScheme.background,
+                            
                             borderRadius: BorderRadius.circular(10)),
                         child: DropdownButton(
                           elevation: 0,
                           isDense: true,
                           value: _currentLocale,
-                          items: const [
+                          borderRadius: BorderRadius.circular(10),
+                          items: [
                             DropdownMenuItem(
                               value: 'en',
-                              child: Text('English'),
+                              child: Text('English',
+                                  style: TextStyle(
+                                    // color: Theme.of(context).textTheme.bodyText1!.color
+                                    // color: Colors.black
+                                    color: Theme.of(context).colorScheme.onBackground,
+                                    )),
                             ),
                             DropdownMenuItem(
                               value: 'vi',
-                              child: Text('Vietnamese'),
+                              child: Text('Vietnamese',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onBackground,
+                                    ),),
                             ),
                           ],
                           onChanged: (String? newValue) {
@@ -309,9 +323,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       logout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
-                    label: const Text('Log out',
+                    label: Text('Log out',
                         style: TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
