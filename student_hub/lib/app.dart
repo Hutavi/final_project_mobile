@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
+import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/utils/theme/theme.dart';
 // import 'package:student_hub/screens/browser_page/project_list.dart';
 // import 'package:student_hub/screens/chat/chat.dart';
@@ -23,28 +26,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FlutterLocalization localization = FlutterLocalization.instance;
+
+  @override
+  void initState() {
+    configureLocalization();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       // theme: AppThemes.lightTheme,
-      home: const LoginScreen(),
-      // home: HomePage(),
+      // home: const LoginScreen(),
+      home: const HomePage(),
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
-      // theme: ThemeData(
-      //   brightness: Brightness.light,
-      //   primaryColor: Colors.blue,
-      //   scaffoldBackgroundColor: Colors.white,
-      // ),
-      // darkTheme: ThemeData(
-      //   brightness: Brightness.dark,
-      //   primaryColor: kBlackTheme,
-      //   scaffoldBackgroundColor: kGrey1,
-      // ),
       themeMode: ThemeMode.system,
+      supportedLocales: localization.supportedLocales,
+      localizationsDelegates: localization.localizationsDelegates,
       onGenerateRoute: AppRoute.onGenerateRoute,
     );
+  }
+
+  void configureLocalization() {
+    localization.init(mapLocales: LOCALES, initLanguageCode: "vi");
+    localization.onTranslatedLanguage = onTranslatedLanguage;
+  }
+
+  void onTranslatedLanguage(Locale? locale) {
+    setState(() {});
   }
 }

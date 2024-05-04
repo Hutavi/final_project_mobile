@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_localization/flutter_localization.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/models/user.dart';
@@ -22,20 +22,32 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
-  
-  List<AccountModel> accountList = []; //danh sách tất cả tài khoản đã từng đăng nhập
-  List<AccountModel> inactiveAccountList = []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập 
-
+  List<AccountModel> accountList =
+      []; //danh sách tất cả tài khoản đã từng đăng nhập
+  List<AccountModel> inactiveAccountList =
+      []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập
   // Lấy danh sách tài khoản từ SharedPreferences khi widget được tạo
+
+  late FlutterLocalization _flutterLocalization;
+  late String _currentLocale;
+
+  @override
   void initState() {
     super.initState();
-
+    _flutterLocalization = FlutterLocalization.instance;
+    _currentLocale = _flutterLocalization.currentLocale!.languageCode;
+    // print(_currentLocale);
     getUserInfoFromToken();
     getAccounts();
   }
+
+  @override
   void dispose() {
+    _currentLocale = _flutterLocalization.currentLocale!.languageCode;
+    _flutterLocalization.currentLocale!.languageCode;
     super.dispose();
   }
+
   // Phương thức để lấy thông tin user từ token
   Future<void> getUserInfoFromToken() async {
     String? token = await TokenManager.getTokenFromLocal();
@@ -44,11 +56,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
     setState(() {
       userCurr = userInfo;
     });
-    }
+  }
 
   void getAccounts() async {
-    List<AccountModel> inactiveAccounts = await AccountManager.getInactiveAccounts();
-    List<AccountModel> accounts = await AccountManager.getAccounts();  
+    List<AccountModel> inactiveAccounts =
+        await AccountManager.getInactiveAccounts();
+    List<AccountModel> accounts = await AccountManager.getAccounts();
     setState(() {
       accountList = accounts;
       inactiveAccountList = inactiveAccounts;
@@ -93,98 +106,84 @@ class _SwitchAccountState extends State<SwitchAccount> {
         showBackButton: false,
       ),
       body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: <Widget>[
             accountList.isEmpty
                 ? const SizedBox()
-                : 
-                ExpansionTile(
-                  title: Row(
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset('lib/assets/images/avatar.png'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        accountList
-                            .where((element) => element.isLogin == true)
-                            .first
-                            .getName,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                : ExpansionTile(
+                    title: Row(
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child:
+                                  Image.asset('lib/assets/images/avatar.png'),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          accountList
+                              .where((element) => element.isLogin == true)
+                              .first
+                              .getName,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    //khi mở rộng
+                    onExpansionChanged: (bool expanded) {
+                      if (expanded) {}
+                    },
+                    children: inactiveAccountList.map((inactiveAccount) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: AccountTile(
+                          accountModel: inactiveAccount,
+                          accountManager: accountManager,
+                        ),
+                      );
+                    }).toList(),
                   ),
-        
-                  //khi mở rộng
-                  onExpansionChanged: (bool expanded) {
-                    if (expanded) {
-                    }
-                  },
-                  children: inactiveAccountList.map((inactiveAccount) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: AccountTile(
-                        accountModel: inactiveAccount,
-                        accountManager: accountManager,
-                      ),
-                    );
-                  }).toList(),
-                ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Divider(
-                color: Colors.black,
-                thickness: 0.34,
-              ),
-            ),
             Column(
               children: <Widget>[
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, AppRouterName.navigation);
+                      Navigator.pushReplacementNamed(
+                          context, AppRouterName.navigation);
                     },
-                    icon:
-                        const Icon(Icons.home, color: kBlue400, size: 28.0),
+                    icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
                     label: const Text('Home',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
-                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                      minimumSize: Size(double.infinity, 0),
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
                       disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
-                      child: const Divider(
-                        color: Colors.black,
-                        thickness: 0.34,
-                      ),
-                    ),
-                  ],
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -194,7 +193,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       if (userCurr?.roles?[0] == 1 &&
                           userCurr?.companyUser == null) {
                         print('chưa có profile company');
-                        Navigator.pushNamed(context, AppRouterName.profileInput);
+                        Navigator.pushNamed(
+                            context, AppRouterName.profileInput);
                       } else if (userCurr?.roles?[0] == 1 &&
                           userCurr?.companyUser != null) {
                         print("(đã có) edit profile company");
@@ -206,32 +206,25 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         Navigator.pushNamed(context, AppRouterName.profileS1);
                       }
                     },
-                    icon:
-                        const Icon(Icons.person, color: kBlue400, size: 28.0),
+                    icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
                     label: const Text('Profiles',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
-                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                      minimumSize: Size(double.infinity, 0),
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
                       disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
-                      child: const Divider(
-                        color: Colors.black,
-                        thickness: 0.34,
-                      ),
-                    ),
-                  ],
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -239,32 +232,75 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     onPressed: () {
                       // Settings button pressed
                     },
-                    icon: const Icon(Icons.settings,
-                        color: kBlue400, size: 28.0),
+                    icon:
+                        const Icon(Icons.settings, color: kBlue400, size: 25.0),
                     label: const Text('Settings',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
-                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                      minimumSize: Size(double.infinity, 0),
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
                       disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
-                      child: const Divider(
-                        color: Colors.black,
-                        thickness: 0.34,
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.language, color: kBlue400, size: 25.0),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Language:",
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ],
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton(
+                          elevation: 0,
+                          isDense: true,
+                          value: _currentLocale,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'en',
+                              child: Text('English'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'vi',
+                              child: Text('Vietnamese'),
+                            ),
+                          ],
+                          onChanged: (String? newValue) {
+                            _setLocale(newValue);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -272,32 +308,25 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     onPressed: () {
                       logout();
                     },
-                    icon:
-                        const Icon(Icons.logout, color: kBlue400, size: 28.0),
+                    icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
                     label: const Text('Log out',
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
-                      alignment: Alignment.centerLeft, // Căn chỉnh nút về phía trái
-                      minimumSize: Size(double.infinity, 0),
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
                       disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.9, // Chiều rộng là 80% của chiều rộng màn hình
-                      child: const Divider(
-                        color: Colors.black,
-                        thickness: 0.34,
-                      ),
-                    ),
-                  ],
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
                 ),
               ],
             ),
@@ -306,17 +335,33 @@ class _SwitchAccountState extends State<SwitchAccount> {
       ),
     );
   }
+
+  void _setLocale(String? value) {
+    if (value == null) return;
+    if (value == 'en') {
+      _flutterLocalization.translate('en');
+    } else if (value == 'vi') {
+      _flutterLocalization.translate('vi');
+    } else {
+      return;
+    }
+
+    setState(() {
+      _currentLocale = value;
+    });
+  }
 }
 
-class AccountController { 
+class AccountController {
   void reloadScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SwitchAccount()),
+      MaterialPageRoute(builder: (context) => const SwitchAccount()),
     );
   }
 }
 
+// ignore: must_be_immutable
 class AccountTile extends StatelessWidget {
   AccountModel accountModel;
   AccountController accountManager;
@@ -327,7 +372,7 @@ class AccountTile extends StatelessWidget {
     required this.accountManager,
   }) : super(key: key);
 
-  Future<void> sendRequestToLogIn(String username, String password) async{
+  Future<void> sendRequestToLogIn(String username, String password) async {
     try {
       final dio = DioClientWithoutToken();
       final response = await dio.request(
@@ -344,9 +389,9 @@ class AccountTile extends StatelessWidget {
         final token = response.data['result']['token'];
 
         print('Login success: $token');
-        
+
         await saveTokenToLocal(token);
-        
+
         String fullname = await ApiManager.getFullname(token);
         // print('fullname');
         // print(fullname);
@@ -392,10 +437,9 @@ class AccountTile extends StatelessWidget {
         // Xóa token từ local storage
         await TokenManager.removeTokenFromLocal();
         String? token = await TokenManager.getTokenFromLocal();
-        if(token == ''){
+        if (token == '') {
           print('Logout success');
-        }
-        else{
+        } else {
           print(token);
           print('Logout failed');
         }
@@ -405,13 +449,16 @@ class AccountTile extends StatelessWidget {
     }
   }
 
-  List<AccountModel> accountList = []; //danh sách tất cả tài khoản đã từng đăng nhập
-  List<AccountModel> inactiveAccountList = []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập 
-  
+  List<AccountModel> accountList =
+      []; //danh sách tất cả tài khoản đã từng đăng nhập
+  List<AccountModel> inactiveAccountList =
+      []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập
+
   void getAccounts() async {
-    List<AccountModel> inactiveAccounts = await AccountManager.getInactiveAccounts();
-    List<AccountModel> accounts = await AccountManager.getAccounts();  
-  
+    List<AccountModel> inactiveAccounts =
+        await AccountManager.getInactiveAccounts();
+    List<AccountModel> accounts = await AccountManager.getAccounts();
+
     accountList = accounts;
     inactiveAccountList = inactiveAccounts;
   }
@@ -426,9 +473,10 @@ class AccountTile extends StatelessWidget {
       title: Text(accountModel.getName),
       onTap: () {
         logout();
-        sendRequestToLogIn(accountModel.getEmail, accountModel.getPassword).then((_) {
-          accountManager.reloadScreen(context);}
-        );
+        sendRequestToLogIn(accountModel.getEmail, accountModel.getPassword)
+            .then((_) {
+          accountManager.reloadScreen(context);
+        });
       },
     );
   }
