@@ -87,6 +87,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,

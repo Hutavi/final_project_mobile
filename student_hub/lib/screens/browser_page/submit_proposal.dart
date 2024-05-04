@@ -117,7 +117,7 @@ class SubmitProposalState extends State<SubmitProposal> {
             TextField(
               controller: coverLetterController,
               maxLines: 6,
-              style: TextStyle(
+              style: const TextStyle(
                 color: kGrey0,
               ),
               decoration: const InputDecoration(
