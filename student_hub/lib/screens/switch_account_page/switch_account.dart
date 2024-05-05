@@ -132,8 +132,9 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               .where((element) => element.isLogin == true)
                               .first
                               .getName,
-                          style: const TextStyle(
-                            color: Colors.black,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -165,9 +166,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           context, AppRouterName.navigation);
                     },
                     icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
-                    label: const Text('Home',
+                    label: Text('Home',
                         style: TextStyle(
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -206,9 +208,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
-                    label: const Text('Profiles',
+                    label: Text('Profiles',
                         style: TextStyle(
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -233,9 +236,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     },
                     icon:
                         const Icon(Icons.settings, color: kBlue400, size: 25.0),
-                    label: const Text('Settings',
+                    label: Text('Settings',
                         style: TextStyle(
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(
@@ -273,18 +277,22 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10)),
                         child: DropdownButton(
                           elevation: 0,
                           isDense: true,
                           value: _currentLocale,
-                          items: const [
+                          items: [
                             DropdownMenuItem(
                               value: 'en',
-                              child: Text('English'),
+                              child: Text('English',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .color)),
                             ),
-                            DropdownMenuItem(
+                            const DropdownMenuItem(
                               value: 'vi',
                               child: Text('Vietnamese'),
                             ),
@@ -308,9 +316,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       logout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
-                    label: const Text('Log out',
+                    label: Text('Log out',
                         style: TextStyle(
-                            color: Colors.black,
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal)),
                     style: TextButton.styleFrom(

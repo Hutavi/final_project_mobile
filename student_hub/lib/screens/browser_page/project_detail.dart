@@ -17,7 +17,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
