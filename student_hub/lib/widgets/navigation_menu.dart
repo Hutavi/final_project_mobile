@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
@@ -7,6 +8,7 @@ import 'package:student_hub/screens/chat/message_list.screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({
@@ -63,10 +65,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
                 controller.selectedIndex.value = index,
             // backgroundColor: kWhiteColor,
             indicatorColor: Colors.black.withOpacity(0.2),
-            destinations: const [
+            destinations:[
               NavigationDestination(
                 icon: Icon(Iconsax.document_text),
-                label: 'Projects',
+                label: LocaleData.project.getString(context),
                 selectedIcon: Icon(
                   Iconsax.document_text,
                   color: kBlue700,
@@ -74,7 +76,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
               ),
               NavigationDestination(
                 icon: Icon(Iconsax.folder_open),
-                label: 'Dashboard',
+                label: LocaleData.dashboard.getString(context),
                 selectedIcon: Icon(
                   Iconsax.folder_open,
                   color: kBlue700,
@@ -84,7 +86,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
                 icon: Icon(
                   Iconsax.message,
                 ),
-                label: 'Message',
+                label: LocaleData.message.getString(context),
                 selectedIcon: Icon(
                   Iconsax.message,
                   color: kBlue700,
@@ -92,7 +94,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
               ),
               NavigationDestination(
                 icon: Icon(Iconsax.notification),
-                label: 'Alerts',
+                label: LocaleData.alerts.getString(context),
                 selectedIcon: Icon(
                   Iconsax.notification,
                   color: kBlue700,

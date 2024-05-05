@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
-        showAction: false,
+        showAction: true,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
