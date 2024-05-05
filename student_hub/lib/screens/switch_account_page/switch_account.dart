@@ -100,6 +100,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
@@ -282,6 +283,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           elevation: 0,
                           isDense: true,
                           value: _currentLocale,
+                          borderRadius: BorderRadius.circular(10),
                           items: [
                             DropdownMenuItem(
                               value: 'en',
@@ -292,9 +294,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                                           .labelLarge!
                                           .color)),
                             ),
-                            const DropdownMenuItem(
+                            DropdownMenuItem(
                               value: 'vi',
-                              child: Text('Vietnamese'),
+                              child: Text('Vietnamese',
+                                  style: TextStyle(
+                                    // color: Theme.of(context).colorScheme.onBackground,
+                                    ),),
                             ),
                           ],
                           onChanged: (String? newValue) {

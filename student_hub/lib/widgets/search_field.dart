@@ -24,8 +24,16 @@ class _SearchBoxState extends State<SearchBox> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.background,
               borderRadius: BorderRadius.circular(1000),
+              //đổ bóng
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             child: TextField(
               controller: widget.controller,
@@ -33,7 +41,7 @@ class _SearchBoxState extends State<SearchBox> {
                 contentPadding: EdgeInsets.all(0),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.grey,
+                  // color: Colors.grey,
                   size: 20,
                 ),
                 prefixIconConstraints: BoxConstraints(
@@ -43,7 +51,7 @@ class _SearchBoxState extends State<SearchBox> {
                 border: InputBorder.none,
                 hintText: 'Search',
                 hintStyle: TextStyle(
-                  color: Colors.grey,
+                  // color: Colors.grey,
                 ),
               ),
               onChanged: widget.handleSearch,

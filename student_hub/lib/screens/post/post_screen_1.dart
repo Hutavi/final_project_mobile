@@ -25,9 +25,8 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
     return ProviderScope(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBarCustom(
+        appBar: const AppBarCustom(
           title: 'Student Hub'
-
           ),
         body: Container(
           // color: Theme.of(context).scaffoldBackgroundColor,
