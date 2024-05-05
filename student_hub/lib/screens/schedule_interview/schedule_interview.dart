@@ -24,6 +24,7 @@ class ScheduleInterview extends StatefulWidget {
 class _ScheduleInterviewState extends State<ScheduleInterview> {
   TextEditingController projectSearchController = TextEditingController();
   TextEditingController titleSchedule = TextEditingController();
+  TextEditingController contentSchedule = TextEditingController();
 
   String? startDateTime;
   String? endDateTime;
@@ -126,6 +127,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
       if (roomId != null) {
         var data = json.encode({
           "title": titleSchedule.text,
+          "content": contentSchedule.text,
           "startTime": startTimeISO,
           "endTime": endTimeISO,
           "projectId": 1,
@@ -204,7 +206,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height * 0.7,
         width: double.infinity,
         decoration: const BoxDecoration(
           color: kWhiteColor,
@@ -240,7 +242,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 TextField(
                   controller: titleSchedule,
@@ -273,11 +275,48 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
+                  "Content",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                TextField(
+                  controller: contentSchedule,
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    // Xử lý thay đổi trong TextField ở đây
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Enter content',
+                    hintStyle: const TextStyle(
+                        color: kGrey1,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 10.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(color: kBlue50),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
                   "Start time",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -331,7 +370,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,7 +380,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -406,9 +445,9 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                 Text(
                   '${calculateDurationInMinutes()} minutes',
                   style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.red),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),

@@ -51,9 +51,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             // ignore: use_build_context_synchronously
             context: context,
             builder: (context) => DialogCustom(
-              title: "Success",
-              description: "New password has been sent to your email.",
-              buttonText: 'Confirm',
+              title: LocaleData.success.getString(context),
+              description: LocaleData.forgotSuccess.getString(context),
+              buttonText: LocaleData.confirm.getString(context),
               // buttonTextCancel: "Cancel",
               statusDialog: 1,
               onConfirmPressed: () {
@@ -111,7 +111,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                           Center(
                             child: Text(
-                              LocaleData.forgotPassword.getString(context),
+                              LocaleData.forgotPassTitle.getString(context),
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 16),
                             ),
@@ -120,8 +120,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             height: 20,
                           ),
                           Text(
-                            LocaleData.enterEmailToResetPassword.getString(context),
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            LocaleData.forgotLabel.getString(context),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(
                             height: 5,
@@ -134,12 +134,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               userNotFound = false;
                               // validateFields();
                             },
-                            hint: 'Email',
+                            hint: LocaleData.email,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return LocaleData.emailRequired.getString(context);
+                                return LocaleData.emailRequired
+                                    .getString(context);
                               } else if (userNotFound) {
-                                return LocaleData.userNotFound.getString(context);
+                                return LocaleData.userNotFound
+                                    .getString(context);
                               }
                               return null;
                             },
@@ -166,8 +168,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     backgroundColor: kGrey3,
                                     elevation: 0.5,
                                   ),
-                                  child:Text(
-                                    LocaleData.resetPassword.getString(context),
+                                  child: Text(
+                                    LocaleData.forgotButton.getString(context),
                                     style: const TextStyle(
                                       color: kGrey0,
                                       fontSize: 15,

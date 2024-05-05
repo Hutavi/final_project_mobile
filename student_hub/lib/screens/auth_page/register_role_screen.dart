@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -61,10 +63,10 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               const SizedBox(
                 height: 30,
               ),
-              const Center(
+              Center(
                 child: Text(
-                  'Join as Company or Student',
-                  style: TextStyle(
+                  LocaleData.titleRegister.getString(context),
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
                   ),
@@ -84,16 +86,16 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.person_2_rounded,
                           color: kGrey0,
                         ),
                         Text(
-                          'I am a student, find jobs for me',
-                          style: TextStyle(color: kGrey0),
+                          LocaleData.studentRegister.getString(context),
+                          style: const TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -123,16 +125,16 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.person_2_rounded,
                           color: kGrey0,
                         ),
                         Text(
-                          'I am a company, find engineer for project',
-                          style: TextStyle(color: kGrey0),
+                          LocaleData.companyRegister.getString(context),
+                          style: const TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -165,9 +167,9 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                   backgroundColor: kGrey3,
                   elevation: 0.5,
                 ),
-                child: const Text(
-                  'Create account',
-                  style: TextStyle(
+                child: Text(
+                  LocaleData.registerAcc.getString(context),
+                  style: const TextStyle(
                     color: kGrey0,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

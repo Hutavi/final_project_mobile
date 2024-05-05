@@ -116,9 +116,9 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
       decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: kGrey2,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
               blurRadius: 5.0,
             ),
           ]),
