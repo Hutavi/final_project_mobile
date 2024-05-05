@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -132,11 +134,11 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 const SizedBox(
                   height: 0,
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome to Student Hub',
+                      LocaleData.edtProfileCompanyTitle.getString(context),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 17.0,
@@ -151,11 +153,11 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * 0.05),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Tell us about your company and you will be on',
+                        LocaleData.tellUsAboutYourCompany.getString(context),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.0,
@@ -163,7 +165,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         ),
                       ),
                       Text(
-                        'your way connect with high-skilled students',
+                        LocaleData.yourWayConnectWith.getString(context),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.0,
@@ -179,15 +181,15 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'How many people are in your company?',
+                    Text(
+                      LocaleData.howManyPeopleInYourCompany.getString(context),
                       style: TextStyle(fontSize: 17),
                     ),
                     const SizedBox(height: 10),
                     Column(
                       children: [
                         RadioListTile<int>(
-                          title: const Text('It\'s just me',
+                          title: Text(LocaleData.itJustMe.getString(context),
                               style: TextStyle(fontSize: 14)),
                           dense: true,
                           value: 0,
@@ -200,7 +202,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: const Text('2-9 employees',
+                          title: Text('2-9 ${LocaleData.employees.getString(context)}',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
                           value: 1,
@@ -213,7 +215,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: const Text('10-99 employees',
+                          title: Text('10-99 ${LocaleData.employees.getString(context)}',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
                           value: 2,
@@ -226,7 +228,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: const Text('100-1000 employees',
+                          title: Text('100-1000 ${LocaleData.employees.getString(context)}',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
                           value: 3,
@@ -239,7 +241,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: const Text('More than 1000 employees',
+                          title: Text('${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
                               style: TextStyle(fontSize: 14)),
                           dense: true,
                           value: 4,
@@ -257,10 +259,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 ),
                 Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          'Company Name',
+                          LocaleData.companyName.getString(context),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
@@ -308,10 +310,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 ),
                 Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          'Website',
+                          LocaleData.website.getString(context),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
@@ -357,10 +359,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                 const SizedBox(height: 20),
                 Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Text(
-                          'Description',
+                          LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Colors.black,
@@ -438,8 +440,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          child: const Text(
-                            "Continue",
+                          child: Text(
+                            LocaleData.continu.getString(context),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16.0),
                           ),

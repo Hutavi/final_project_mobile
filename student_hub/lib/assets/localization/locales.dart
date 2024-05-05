@@ -69,6 +69,11 @@ mixin LocaleData {
   static const String error = 'error';
   static const String warning = 'warning';
   static const String info = 'info';
+  static const String applyNow = 'apply_now';
+  static const String saved = 'saved';
+  static const String edit = 'edit';
+  static const String continu = 'continu';
+  static const String failed = 'failed';
 
   //navigation menu
   static const String project = 'project';
@@ -141,6 +146,105 @@ mixin LocaleData {
   static const String passwordTooWeak = 'password_too_weak';
   static const String passwordTooShort = 'password_too_short';
   static const String confirmPassword = 'confirm_password';
+  static const String homeScript = 'home_script';
+
+  //posting - page1
+  static const String postingTitle = 'posting_title';
+  static const String postingDescribeItem = 'posting_describe_item';
+  static const String postingPlaceholder = 'posting_placeholder';
+  static const String postingExampleTitle = 'posting_example_title';
+  static const String postingExample = 'posting_example';
+  static const String postingExample1 = 'posting_example1';
+  static const String nextScope = 'next_scope';
+  //posting - page2
+  static const String postingScopeTitle = 'posting_scope_title';
+  static const String postingScopeDescribeItem = 'posting_scope_describe_item';
+  static const String postingScopeHowLong = 'posting_scope_how_long';
+  static const String postingScopeHowManyStudents = 'posting_scope_how_many_students';
+  static const String numberOfStudents = 'number_of_students';
+  static const String nextDescription = 'next_description';
+  //posting - page3
+  static const String postingDescriptionTitle = 'posting_description_title';
+  static const String postingDescriptionDescribeItem = 'posting_description_describe_item';
+  static const String postingDescriptionLine1 = 'posting_description_line1';
+  static const String postingDescriptionLine2 = 'posting_description_line2';
+  static const String postingDescriptionLine3 = 'posting_description_line3';
+  static const String projectDescription = 'project_description';
+  static const String reviewYourPost = 'review_your_post';
+  //posting - page4
+  static const String reviewTitle = 'review_title';
+  static const String studentRequired = 'student_required';
+  static const String postJob = 'post_job';
+
+  //reviewPost
+  static const String projectDetail = 'project_detail';
+  static const String editProject = 'edit_project';
+
+  //edit projetc
+  static const String projectTitle = 'project_title';
+
+  //project save page
+  static const String savedProjects = 'saved_projects';
+
+  //projectItem favorite
+  static const String createdToday = 'created_today';
+  static const String createdYesterday = 'created_yesterday';
+  static const String created = 'created';
+  static const String time = 'time';
+
+  //project search
+  static const String searchForProject = 'search_for_project';
+  static const String notFoundProject = 'not_found_project';
+
+  //submit proposal
+  static const String submitProposal = 'submit_proposal';
+  static const String coverLetter = 'cover_letter';
+  static const String submitProposalScript = 'submit_proposal_script';
+
+  //switch account page
+  static const String home = 'home';
+  static const String profile = 'profile';
+  static const String settings = 'settings';
+  static const String language = 'language';
+  static const String logOut = 'log_out';
+
+  //editProfile Company
+  static const String edtProfileCompanyTitle = 'edt_profile_company_title';
+  static const String companyName = 'company_name';
+  static const String website = 'website';
+  static const String description = 'description';
+  static const String itJustMe = 'it_just_me';
+  static const String employees = 'employees';
+  static const String moreThan = 'more_than';
+  static const String howManyPeopleInYourCompany = 'how_many_people_in_your_company';
+
+  //create profile company
+  static const String tellUsAboutYourCompany = 'tell_us_about_your_company';
+  static const String yourWayConnectWith = 'your_way_connect_with';
+
+  //welcome screen
+  static const String welcomeLine1 = 'welcome_line1';
+  static const String getStarted = 'get_started';
+
+  //create profile student
+  static const String updateProfile = 'update_profile';
+  static const String createdProfile = 'created_profile';
+  static const String createdLanguage = 'created_language';
+  static const String updatedLanguage = 'updated_language';
+  static const String createdEducation = 'created_education';
+  static const String updatedEducation = 'updated_education';
+  static const String removeLanguage = 'remove_language';
+  static const String removeEducation = 'remove_education';
+  static const String welcomeLine2 = 'welcome_line2';
+  static const String techStack = 'tech_stack';
+  static const String selectTechStack = 'select_tech_stack';
+  static const String skillSet = 'skill_set';
+  static const String selectSkillSet = 'select_skill_set';
+  static const String save = 'save';
+  static const String create = 'create';
+  static const String education = 'education';
+
+
   
   static const Map<String, dynamic> EN = {
     //Home page
@@ -205,7 +309,12 @@ mixin LocaleData {
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
-  
+    applyNow: 'Apply now',
+    saved: 'Saved', 
+    edit: 'Edit',
+    continu: 'Continue',
+    failed: 'Failed',
+
     //forgot password
     forgotPasswordTitle: 'Forgot Password',
     enterEmailToResetPassword: 'Enter your email to reset password',
@@ -228,6 +337,7 @@ mixin LocaleData {
     passwordTooWeak: 'Password is too weak',
     passwordTooShort: 'Password is too short',
     confirmPassword: 'Confirm password',
+    homeScript: 'StudentHub is university market place to connect high-skilled student and company on a real-world project',
 
     //navigation menu
     project: 'Project',
@@ -283,6 +393,104 @@ mixin LocaleData {
     noActiveProposal: 'You have no active proposal',
     submitted: 'Submitted',
     submittedProposal: 'Submitted proposal',
+
+    //posting - page1
+    postingTitle: '1/4 - Let\'s start with a strong title',
+    postingDescribeItem:
+        'This helps your post stand out to the right students. It\'s the first thing they will see, so make it impressive',
+    postingPlaceholder: 'Write a title for your post',
+    postingExampleTitle: 'Example title',
+    postingExample: 'Build responsive WorldPress site with booking/paying functionality',
+    postingExample1: 'Facebook ad specialist need for product launch',
+    nextScope: 'Next Scope',
+    //posting - page2
+    postingScopeTitle: '2/4 - Next, estimate the scope of your job',
+    postingScopeDescribeItem: 'Consider the size of your project and the timeline',
+    postingScopeHowLong: 'How long will your project take?',
+    postingScopeHowManyStudents: 'How many students do you want for this project?',
+    numberOfStudents: 'Number of students',
+    nextDescription: 'Next: Description',
+    //posting - page3
+    postingDescriptionTitle: '3/4 - Next, provide project description',
+    postingDescriptionDescribeItem: 'Students are looking for:',
+    postingDescriptionLine1: 'Clear expectations about your project or deliverables',
+    postingDescriptionLine2: 'The skills required for your project',
+    postingDescriptionLine3: 'Details about your project',
+    projectDescription: 'Project Description',
+    reviewYourPost: 'Review your post',
+    //posting - page4
+    reviewTitle: '4/4-Project details',
+    studentRequired: 'Student required',
+    postJob: 'Post a job',
+
+    //reviewPost
+    projectDetail: 'Project details',
+    editProject: 'Edit project',
+
+    //edit projetc
+    projectTitle: 'Project title',
+
+    //project save page
+    savedProjects: 'Save projects',
+    //projectItem favorite
+    createdToday: 'Created today',
+    createdYesterday: 'Created yesterday',
+    created: 'Created',
+    time: 'Time',
+
+    //project_search
+    searchForProject: 'Search for project',
+    notFoundProject: 'Not found project',
+
+    //submit proposal
+    submitProposal: 'Submit proposal',
+    coverLetter: 'Cover letter',
+    submitProposalScript: 'Describe why do you fit to this project',
+
+    //switch account page
+    home: 'Home',
+    profile: 'Profile',
+    settings: 'Settings',
+    language: 'Language',
+    logOut: 'Log out',
+
+    //editProfile Company
+    edtProfileCompanyTitle: 'Welcome to Student Hub',
+    companyName: 'Company name',
+    website: 'Website',
+    description: 'Description',
+    itJustMe: 'It\'s just me',
+    employees: 'Employees',
+    moreThan: 'More than',
+    howManyPeopleInYourCompany: 'How many people are in your company?',
+    
+    //create profile company
+    tellUsAboutYourCompany: 'Tell us about your company and you will be on',
+    yourWayConnectWith: 'your way connect with high-skilled students',
+  
+    //welcome screen
+    welcomeLine1: 'Let\'s start with your first project post!',
+    getStarted: 'Get Started',  
+    
+    //create profile student
+    updateProfile: 'Update Profile',
+    createdProfile: 'Created Profile',
+    createdLanguage: 'Created Language',
+    updatedLanguage: 'Updated Language',
+    createdEducation: 'Created Education',
+    updatedEducation: 'Updated Education',
+    removeLanguage: 'Remove Language',
+    removeEducation: 'Remove Education',
+    welcomeLine2: 'Tell us about yourself and you will be on your way to connect with real-world projects',
+    techStack: 'Techstack',
+    selectTechStack: 'Select techstack',
+    skillSet: 'Skillset',
+    selectSkillSet: 'Select skillset',
+    save: 'Save',
+    create: 'Create',
+    education: 'Education',
+
+
   };
 
   static const Map<String, dynamic> VI = {
@@ -348,7 +556,12 @@ mixin LocaleData {
     error: 'Lỗi',
     warning: 'Cảnh báo',
     info: 'Thông báo',
-    
+    applyNow: 'Ứng tuyển ngay',
+    saved: 'Đã lưu',
+    edit: 'Chỉnh sửa',
+    continu: 'Tiếp tục',
+    failed: 'Thất bại',
+
     //forgot password
     forgotPasswordTitle: 'Quên mật khẩu',
     enterEmailToResetPassword: 'Nhập email của bạn để đặt lại mật khẩu',
@@ -371,6 +584,7 @@ mixin LocaleData {
     passwordTooWeak: 'Mật khẩu quá yếu',
     passwordTooShort: 'Mật khẩu quá ngắn',
     confirmPassword: 'Xác nhận mật khẩu',
+    homeScript: 'StudentHub là nơi kết nối sinh viên có kỹ năng cao và công ty trên dự án thực tế',
 
     //navigation menu
     project: 'Dự án',
@@ -424,5 +638,102 @@ mixin LocaleData {
     noActiveProposal: 'Bạn không có proposal nào',
     submitted: 'Đã gửi',
     submittedProposal: 'Proposal đã gửi',
-  };
+
+    //posting - page1
+    postingTitle: '1/4 - Hãy bắt đầu với một tiêu đề mạnh mẽ',
+    postingDescribeItem:
+        'Điều này giúp bài đăng của bạn nổi bật với sinh viên phù hợp. Đây là điều đầu tiên họ sẽ thấy, vì vậy hãy làm cho nó ấn tượng',
+    postingPlaceholder: 'Viết tiêu đề cho bài đăng của bạn',
+    postingExampleTitle: 'Tiêu đề minh họa',
+    postingExample: 'Xây dựng trang web WorldPress phản hồi với chức năng đặt phòng/thanh toán',
+    postingExample1: 'Chuyên gia quảng cáo Facebook cần cho ra mắt sản phẩm',
+    nextScope: 'Phạm vi tiếp theo',
+    //posting - page2
+    postingScopeTitle: '2/4 - Tiếp theo, ước lượng phạm vi công việc của bạn',
+    postingScopeDescribeItem: 'Xem xét kích thước dự án của bạn và thời gian',
+    postingScopeHowLong: 'Dự án của bạn sẽ mất bao lâu?',
+    postingScopeHowManyStudents: 'Bạn muốn bao nhiêu sinh viên tham gia dự án này?',
+    numberOfStudents: 'Số lượng sinh viên',
+    nextDescription: 'Tiếp theo: Mô tả',
+    //posting - page3
+    postingDescriptionTitle: '3/4 - Tiếp theo, cung cấp mô tả dự án',
+    postingDescriptionDescribeItem: 'Sinh viên đang tìm kiếm:',
+    postingDescriptionLine1: 'Kỳ vọng rõ ràng về dự án hoặc sản phẩm của bạn',
+    postingDescriptionLine2: 'Kỹ năng cần thiết cho dự án của bạn',
+    postingDescriptionLine3: 'Chi tiết về dự án của bạn',
+    projectDescription: 'Mô tả dự án',
+    reviewYourPost: 'Xem lại bài đăng của bạn',
+    //posting - page4
+    reviewTitle: '4/4-Chi tiết dự án',
+    studentRequired: 'Số lượng sinh viên',
+    postJob: 'Đăng bài',
+
+    //reviewPost
+    projectDetail: 'Chi tiết dự án',
+    editProject: 'Chỉnh sửa',
+    
+    //edit projetc
+    projectTitle: 'Tiêu đề dự án',
+
+    //project save page
+    savedProjects: 'Dự án đã lưu',
+    //projectItem favorite
+    createdToday: 'Đã tạo hôm nay',
+    createdYesterday: 'Đã tạo hôm qua',
+    created: 'Đã tạo',
+    time: 'Thời gian',
+
+    //project search
+    searchForProject: 'Tìm kiếm dự án',
+    notFoundProject: 'Không tìm thấy dự án',
+
+    //submit proposal
+    submitProposal: 'Gửi proposal',
+    coverLetter: 'Thư xin việc',
+    submitProposalScript: 'Mô tả lý do bạn phù hợp với dự án này',
+
+    //switch account page
+    home: 'Trang chủ',
+    profile: 'Hồ sơ',
+    settings: 'Cài đặt',
+    language: 'Ngôn ngữ',
+    logOut: 'Đăng xuất',
+
+    //editProfile Company
+    edtProfileCompanyTitle: 'Chào mừng đến với Student Hub',
+    companyName: 'Tên công ty',
+    website: 'Trang web',
+    description: 'Mô tả',
+    itJustMe: 'Chỉ có mình tôi',
+    employees: 'nhân viên',
+    moreThan: 'Hơn',
+    howManyPeopleInYourCompany: 'Có bao nhiêu người trong công ty của bạn?',
+
+    //create profile company
+    tellUsAboutYourCompany: 'Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ trên',
+    yourWayConnectWith: 'đường kết nối với sinh viên có kỹ năng cao',
+
+    //welcome screen
+    welcomeLine1: 'Hãy bắt đầu với bài đăng dự án đầu tiên của bạn!',
+    getStarted: 'Bắt đầu',
+
+    //create profile student
+    updateProfile: 'Cập nhật hồ sơ',
+    createdProfile: 'Tạo hồ sơ',
+    createdLanguage: 'Tạo ngôn ngữ',
+    updatedLanguage: 'Cập nhật ngôn ngữ',
+    createdEducation: 'Tạo học vấn',
+    updatedEducation: 'Cập nhật học vấn',
+    removeLanguage: 'Xóa ngôn ngữ',
+    removeEducation: 'Xóa học vấn',
+    welcomeLine2: 'Hãy cho chúng tôi biết về bạn và bạn sẽ trên đường kết nối với các dự án thực tế',
+    techStack: 'Công nghệ sử dụng',
+    selectTechStack: 'Chọn công nghệ sử dụng',
+    skillSet: 'Kỹ năng',
+    save: 'Lưu',
+    create: 'Tạo',
+    education: 'Học vấn',
+
+
+  };    
 }

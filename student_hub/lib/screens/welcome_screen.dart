@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -29,7 +31,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: const Text('Student Hub',
           style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+              fontSize: 20, fontWeight: FontWeight.bold)),
       backgroundColor: Colors.grey[200],
       actions: <Widget>[
         IconButton(
@@ -73,24 +75,24 @@ class _Content extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "Welcome to Student Hub!",
+              LocaleData.edtProfileCompanyTitle.getString(context),
               style: TextStyle(
-                color: Colors.black,
+                // color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           const SizedBox(height: 10),
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "Let's start with your first project post!",
+              LocaleData.welcomeLine1.getString(context),
               style: TextStyle(
-                color: Colors.black,
+                // color: Colors.black,
                 fontSize: 15,
               ),
               textAlign: TextAlign.center,
@@ -111,9 +113,10 @@ class _Content extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: kBlue400,
             ),
-            child: const Text(
-              'Get Started',
-              style: TextStyle(color: kWhiteColor),
+            child: Text(
+              LocaleData.getStarted.getString(context),
+              style: TextStyle(
+                color: kWhiteColor),
             ),
           ),
         ]);

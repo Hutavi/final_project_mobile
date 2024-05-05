@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -66,8 +68,8 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '2/4 - Next, estimate the scope of your job',
+              Text(
+                LocaleData.postingScopeTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -75,20 +77,20 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'Consider the size of your project and the timeline',
+              Text(
+                LocaleData.postingScopeDescribeItem.getString(context),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How long will your project take?',
+              Text(
+                LocaleData.postingScopeHowLong.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
-                title: const Text('1 to 3 months'),
+                title: Text(LocaleData.oneToThreeMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.oneToThreeMonths,
                   groupValue: _projectDuration,
@@ -96,7 +98,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                 ),
               ),
               ListTile(
-                title: const Text('3 to 6 months'),
+                title: Text(LocaleData.threeToSixMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.threeToSixMonths,
                   groupValue: _projectDuration,
@@ -108,8 +110,8 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How many students do you want for this project?',
+              Text(
+                LocaleData.postingScopeHowManyStudents.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -119,10 +121,10 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
               ),
               TextFormField(
                 controller: _numberStudentsController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     fillColor: kWhiteColor,
                     filled: true,
-                    hintText: 'Number of students',
+                    hintText: LocaleData.numberOfStudents.getString(context),
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
@@ -170,7 +172,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                   onPressed: () {
                     Navigator.pushNamed(context, AppRouterName.postScreen3);
                   },
-                  child: const Text('Next: Description'),
+                  child: Text(LocaleData.nextDescription.getString(context)),
                   style: ElevatedButton.styleFrom(
                     // Adjust minimum size based on screen size
                     minimumSize: MediaQuery.of(context).size.width < 300

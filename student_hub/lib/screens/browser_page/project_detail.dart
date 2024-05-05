@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -32,8 +34,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Project detail',
+              Text(
+                LocaleData.projectDetail.getString(context),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -61,9 +63,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Students are looking for',
-                      style: TextStyle(
+                    Text(
+                      LocaleData.studentsAreLookingFor.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -92,8 +94,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.projectScope.getString(context),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -101,7 +103,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
+                        '• ${widget.projectItem.projectScopeFlag == 0 
+                          ? LocaleData.oneToThreeMonths.getString(context) 
+                          : LocaleData.threeToSixMonths.getString(context)}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -124,8 +128,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.numberOfStudents.getString(context),
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -133,7 +137,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${widget.projectItem.numberOfStudents} students',
+                        '• ' '${widget.projectItem.numberOfStudents} ' '${LocaleData.student.getString(context)}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -165,7 +169,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                     ),
                     backgroundColor: kWhiteColor,
                     foregroundColor: kBlue700),
-                child: const Text('Apply Now'),
+                child: Text(LocaleData.applyNow.getString(context)),
               ),
             ),
             const SizedBox(width: 10),
@@ -179,7 +183,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   backgroundColor: kWhiteColor,
                   foregroundColor: Colors.green,
                 ),
-                child: const Text('Saved'),
+                child: Text(LocaleData.saved.getString(context)),
               ),
             ),
           ],

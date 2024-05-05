@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -36,15 +38,15 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  "1/4-Let's start with a strong title",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  LocaleData.postingTitle.getString(context),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 14 * 2,
                 ),
-                const Text(
-                  "This helps your post stand out to the right students. It's the first thing they will see, so make it impressive",
+                Text(
+                  LocaleData.postingDescribeItem.getString(context),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height < 600 ? 14 : 14 * 4,
@@ -54,21 +56,21 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                   style: const TextStyle(
                     color: kGrey0,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     filled: true,
                     fillColor: kWhiteColor,
-                    hintText: "Write a title for your post",
-                    hintStyle: TextStyle(
+                    hintText: LocaleData.postingPlaceholder.getString(context),
+                    hintStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
                         bottom: Radius.circular(10.0),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(10.0),
@@ -83,26 +85,26 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                 const SizedBox(
                   height: 14 * 4,
                 ),
-                const Text(
-                  "Example titles",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  LocaleData.postingExampleTitle.getString(context),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        const ListTile(
+                        ListTile(
                           title: Text(
-                            "• Build responsive WorldPress site with booking/paying functionality",
-                            style: TextStyle(
+                            "• ${LocaleData.postingExample.getString(context)}",
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
                         ),
-                        const ListTile(
+                        ListTile(
                           title: Text(
-                            "• Facebook ad specialist need for product launch",
-                            style: TextStyle(
+                            "• ${LocaleData.postingExample1.getString(context)}",
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           ),
@@ -123,7 +125,7 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 10),
                             ),
-                            child: const Text("Next Scope"),
+                            child: Text(LocaleData.nextScope.getString(context)),
                           ),
                         ),
                       ],

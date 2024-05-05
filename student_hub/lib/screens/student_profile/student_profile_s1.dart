@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:get/get.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_education_modal.dart';
 import 'package:student_hub/screens/student_profile/widget/add_language_modal.dart';
@@ -231,9 +234,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title: Center(
             child: Text(
-              'Thành công',
+              LocaleData.success.getString(context),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -288,9 +291,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title:Center(
             child: Text(
-              'Thất bại',
+              LocaleData.failed.getString(context),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -321,10 +324,10 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
                   ),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     child: Text(
-                      'Cancle',
+                      LocaleData.cancel.getString(context),
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.red,
@@ -355,14 +358,14 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
       if (responseLanguage.statusCode == 200) {
         setState(() {
-          notify = 'Cập nhật Profile thành công';
+          notify = '${LocaleData.updateProfile.getString(context)} ${LocaleData.success.getString(context)}';
           _showSuccess();
           isTechStackChanged = false;
           isSkillSetChanged = false;
         });
       } else {
         setState(() {
-          notify = 'Cập nhật Profile thất bại';
+          notify = '${LocaleData.updateProfile.getString(context)} ${LocaleData.failed.getString(context)}';
           _showError();
         });
       }
@@ -376,7 +379,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
       if (responseLanguage.statusCode == 201) {
         setState(() {
-          notify = 'Tạo Profile thành công';
+          notify = '${LocaleData.createdProfile.getString(context)} ${LocaleData.success.getString(context)}';
           getIDStudent();
           _showSuccess();
           isTechStackChanged = false;
@@ -384,7 +387,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         });
       } else {
         setState(() {
-          notify = 'Tạo Profile thất bại';
+          notify = '${LocaleData.createdProfile.getString(context)} ${LocaleData.failed.getString(context)}';
           _showError();
         });
       }
@@ -460,7 +463,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Tạo Language mới thành công';
+        notify = '${LocaleData.createdLanguage.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listLanguage.insert(0, {
           'languageName': languageName,
@@ -469,8 +472,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       });
     } else {
       setState(() {
-        notify = 'Tạo Language mới thất bại';
-
+        notify = '${LocaleData.createdLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -500,14 +502,15 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Cập nhật Language thành công';
+        notify = '${LocaleData.updatedLanguage.getString(context)} ${LocaleData.success.getString(context)}';
 
         _showSuccess();
         listLanguage[index] = updatedEducation;
       });
     } else {
       setState(() {
-        notify = 'Cập nhật Language mới thất bại';
+        notify = '${LocaleData.updatedLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
+
 
         _showError();
       });
@@ -568,8 +571,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseEducation.statusCode == 200) {
       setState(() {
-        notify = 'Tạo Education mới thành công';
-
+        notify = '${LocaleData.createdEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation.insert(0, {
           'schoolName': educationName,
@@ -579,8 +581,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       });
     } else {
       setState(() {
-        notify = 'Tạo Education mới thất bại';
-
+        notify = '${LocaleData.createdEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -625,15 +626,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseEducation.statusCode == 200) {
       setState(() {
-        notify = 'Cập nhật Education thành công';
-
+        notify = '${LocaleData.updatedEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation[index] = updatedEducation;
       });
     } else {
       setState(() {
-        notify = 'Cập nhật Education thất bại';
-
+        notify = '${LocaleData.updatedEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -675,15 +674,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Language thành công';
-
+        notify = '${LocaleData.removeLanguage.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listLanguage.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Language thất bại';
-
+        notify = '${LocaleData.removeLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -708,15 +705,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Education thành công';
-
+        notify = '${LocaleData.removeEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Education thất bại';
-
+        notify = '${LocaleData.removeEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -733,10 +728,10 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                 child: Column(
                   children: <Widget>[
                     // Welcome message
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(bottom: 12.0),
                       child: Text(
-                        'Welcome to Student Hub',
+                        LocaleData.edtProfileCompanyTitle.getString(context),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -746,19 +741,18 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                     ),
 
                     // Tell us about yourself
-                    const Text(
-                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
+                    Text(
+                      LocaleData.welcomeLine2.getString(context),
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                     ),
-
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                             child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'TechStack',
+                            LocaleData.techStack.getString(context),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -780,7 +774,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                           isExpanded: true,
                           menuMaxHeight: 200,
                           value: _selectedValueTech,
-                          hint: const Text('Select Techstack',
+                          hint: Text(
+                              LocaleData.selectTechStack.getString(context),
                               style:
                                   TextStyle(fontSize: 13, color: Colors.grey)),
                           items: dropdownTechStackOptions
@@ -800,15 +795,14 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         ),
                       ),
                     ),
-
                     // Skillset
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Text(
-                              'Skillset',
+                              LocaleData.skillSet.getString(context),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -829,7 +823,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         child: DropdownButton<String>(
                           isExpanded: true,
                           menuMaxHeight: 200,
-                          hint: const Text('Select Skillset',
+                          hint: Text(
+                              LocaleData.selectSkillSet.getString(context),
                               style:
                                   TextStyle(fontSize: 13, color: Colors.grey)),
                           value: _selectedValue,
@@ -875,7 +870,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                 const Size(100, 36)),
                           ),
                           child: Text(
-                            created ? 'Save' : 'Create',
+                            created ? LocaleData.save.getString(context) : LocaleData.create.getString(context),
                             style: TextStyle(
                               color: isTechStackChanged || isSkillSetChanged
                                   ? Colors.blue
@@ -898,8 +893,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Languages',
+                              Text(
+                                LocaleData.language.getString(context),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 14),
                               ),
@@ -1049,8 +1044,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                'Education',
+                              Text(
+                                LocaleData.education.getString(context),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 14),
                               ),
@@ -1235,7 +1230,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  child: const Text('Continue',
+                  child: Text(
+                      LocaleData.continu.getString(context),
                       style: TextStyle(color: Colors.white)),
                 ),
               )

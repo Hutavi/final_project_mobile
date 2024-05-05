@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +26,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
     }
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBarCustom(
+      appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
       body: Container(
@@ -36,13 +38,13 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('3/4    Next, provide project description',
+                Text(LocaleData.postingDescriptionTitle.getString(context),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(
                   height: 8.0,
                 ),
-                const Text(
-                  'Students are looking for:',
+                Text(
+                  LocaleData.postingDescriptionDescribeItem.getString(context)
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,9 +60,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Clear expectations about your project or deliverables',
+                              LocaleData.postingDescriptionLine1.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -80,9 +82,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'The skills required for your project',
+                              LocaleData.postingDescriptionLine2.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -102,9 +104,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Details about your project',
+                              LocaleData.postingDescriptionLine3.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -124,10 +126,10 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                   style: TextStyle(
                     color: kGrey0
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                       filled: true,
                       fillColor: kWhiteColor,
-                      hintText: 'Project Description',
+                      hintText: LocaleData.projectDescription.getString(context),
                       hintStyle: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: kGrey0,
@@ -182,7 +184,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                       backgroundColor: kBlue400,
                       foregroundColor: kWhiteColor,
                     ),
-                    child: const Text('Review your post'),
+                    child: Text(LocaleData.reviewYourPost.getString(context)),
                   ),
                 ),
               ],

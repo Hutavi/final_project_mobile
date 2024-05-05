@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -89,7 +91,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             Icons.search,
                             color: kGrey0,
                           ),
-                          hintText: "Search for project",
+                          hintText: LocaleData.searchForProject.getString(context),
                           hintStyle: const TextStyle(
                             fontWeight: FontWeight.normal,
                             color: kGrey0,

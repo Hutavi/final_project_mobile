@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'dart:convert';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -167,7 +168,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           context, AppRouterName.navigation);
                     },
                     icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
-                    label: Text('Home',
+                    label: Text(
+                        LocaleData.home.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -209,7 +211,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
-                    label: Text('Profiles',
+                    label: Text(
+                        LocaleData.profile.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -237,7 +240,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     },
                     icon:
                         const Icon(Icons.settings, color: kBlue400, size: 25.0),
-                    label: Text('Settings',
+                    label: Text(
+                        LocaleData.settings.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -262,14 +266,14 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Row(
+                      Row(
                         children: [
                           Icon(Icons.language, color: kBlue400, size: 25.0),
                           SizedBox(
                             width: 8,
                           ),
                           Text(
-                            "Language:",
+                            '${LocaleData.language.getString(context)}:',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -321,7 +325,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       logout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
-                    label: Text('Log out',
+                    label: Text(
+                        LocaleData.logOut.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -437,9 +442,6 @@ class AccountTile extends StatelessWidget {
   }
 
   void logout() async {
-    //getToken
-
-    // Gọi API để logout
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',

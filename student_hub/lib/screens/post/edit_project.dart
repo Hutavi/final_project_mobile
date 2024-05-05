@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
@@ -104,9 +106,9 @@ class _EditProjectState extends ConsumerState<EditProject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
+              Center(
                 child: Text(
-                  "Project details",
+                  LocaleData.projectDetail.getString(context),
                   style: TextStyle(fontWeight: FontWeight.bold,
                   fontSize: 20,),
                 ),
@@ -116,8 +118,8 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                "Project title",
+              Text(
+                LocaleData.projectTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -130,10 +132,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 style: TextStyle(
                   color: kGrey0,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     fillColor: kWhiteColor,
                     filled: true,
-                    hintText: "Write a title for your post",
+                    hintText: LocaleData.postingPlaceholder.getString(context),
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
@@ -157,8 +159,8 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 },
               ),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
@@ -170,10 +172,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
                   style: TextStyle(
                     color: kGrey0,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                       filled: true,
                       fillColor: kWhiteColor,
-                      hintText: 'Project Description',
+                      hintText: LocaleData.projectDescription.getString(context),
                       hintStyle: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: kGrey0,
@@ -201,8 +203,8 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 },
                 ),
               const Divider(),
-              const Text(
-                'How many students do you want for this project?',
+              Text(
+                LocaleData.postingScopeHowManyStudents.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -212,10 +214,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               TextFormField(
                 // controller: _numberStudentsController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     fillColor: kWhiteColor,
                     filled: true,
-                    hintText: 'Number of students',
+                    hintText: LocaleData.numberOfStudents.getString(context),
                     hintStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
@@ -257,12 +259,12 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How long will your project take?',
+              Text(
+                LocaleData.postingScopeHowLong.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
-                title: const Text('1 to 3 months'),
+                title: Text(LocaleData.oneToThreeMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.oneToThreeMonths,
                   groupValue: _projectDuration,
@@ -270,7 +272,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 ),
               ),
               ListTile(
-                title: const Text('3 to 6 months'),
+                title: Text(LocaleData.threeToSixMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.threeToSixMonths,
                   groupValue: _projectDuration,
@@ -304,7 +306,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     vertical: 10.0,
                   ),
                 ),
-                child: const Text('Edit project'),
+                child: Text(LocaleData.editProject.getString(context)),
               ),
             ],
           ),

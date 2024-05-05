@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_project.dart';
@@ -109,9 +111,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title: Center(
             child: Text(
-              'Thành công',
+              LocaleData.success.getString(context),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -166,9 +168,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title: Center(
             child: Text(
-              'Thất bại',
+              LocaleData.failed.getString(context),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -199,10 +201,10 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
                   ),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     child: Text(
-                      'Cancle',
+                      LocaleData.cancel.getString(context),
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.red,
