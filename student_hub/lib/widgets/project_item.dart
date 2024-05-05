@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -69,11 +71,13 @@ class _ProjectItemState extends State<ProjectItem> {
     int daysAgo = difference.inDays;
 
     if (daysAgo == 0) {
-      return 'Created today';
+      return LocaleData.createdToday.getString(context);
     } else if (daysAgo == 1) {
-      return 'Created yesterday';
+      return LocaleData.createdYesterday.getString(context);
     } else {
-      return 'Created $daysAgo days ago';
+      return LocaleData.createdDayAgo
+          .getString(context)
+          .replaceFirst('%a', daysAgo.toString());
     }
   }
 
@@ -141,7 +145,8 @@ class _ProjectItemState extends State<ProjectItem> {
               children: [
                 Text(
                   timeAgo,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 Text(widget.projectForListModel.title ?? '',
                     style: const TextStyle(

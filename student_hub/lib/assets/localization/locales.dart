@@ -69,6 +69,39 @@ mixin LocaleData {
   static const String warning = 'warning';
   static const String info = 'info';
 
+  //Project list
+  static const String searchProjectTitle = 'search_project_title';
+  static const String searchProject = 'search_project';
+  static const String filterByTitle = 'filter_by';
+  static const String projectLenght = 'project_lenght';
+  static const String lessThanOneMonth = 'less_than_one_month';
+  static const String oneToThreeMonth = 'one_to_three_month';
+  static const String threeToSixMonth = 'three_to_six_month';
+  static const String moreThanSixMonth = 'more_than_six_month';
+  static const String studentNeeded = 'student_needed';
+  static const String studentNeededPlaholder = 'student_needed_placeholder';
+  static const String proposalsLessThan = 'proposals_less_than';
+  static const String proposalLessThanPlaholder =
+      'proposal_less_than_placeholder';
+  static const String clearFilter = 'clear_filter';
+  static const String applyProject = 'apply_project';
+  static const String notFoundProject = 'not_found_project';
+
+  //Saved project
+  static const String savedProjectTitle = 'saved_project_title';
+  static const String applyNow = 'apply_now';
+  static const String save = 'save';
+
+  //Item project
+  static const String createdToday = 'created_today';
+  static const String createdYesterday = 'created_yesterday';
+  static const String createdDayAgo = 'created_day_ago';
+  static const String projectDetailTilte = 'project_detail_title';
+  static const String studentLookingFor = 'student_looking_for';
+  static const String proposals = 'proposals';
+  static const String time = 'time';
+  static const String projectScope = 'project_scope';
+
   //
 
   static const Map<String, dynamic> EN = {
@@ -125,6 +158,38 @@ mixin LocaleData {
     forgotLabel: 'Enter your email to reset password',
     forgotButton: 'Reset password',
     forgotSuccess: 'New password has been sent to your email.',
+
+    //Project list
+    searchProjectTitle: 'Search project',
+    searchProject: 'Search for project',
+    filterByTitle: 'Filter by',
+    projectLenght: 'Project lenght',
+    lessThanOneMonth: 'Less than 1 month',
+    oneToThreeMonth: '1 to 3 months',
+    threeToSixMonth: '3 to 6 months',
+    moreThanSixMonth: 'More than 6 months',
+    studentNeeded: 'Student needed',
+    studentNeededPlaholder: 'Enter students needed',
+    proposalsLessThan: 'Proposals less than',
+    proposalLessThanPlaholder: 'Enter proposals less than',
+    clearFilter: 'Clear filter',
+    applyProject: 'Apply',
+    notFoundProject: 'Not found project',
+
+    //Saved project
+    savedProjectTitle: 'Saved project',
+    applyNow: 'Apply now',
+    save: 'Save',
+
+    //Item project
+    createdToday: 'Created today',
+    createdYesterday: 'Created yesterday',
+    createdDayAgo: 'Created %a days ago',
+    projectDetailTilte: 'Project detail',
+    studentLookingFor: 'Student are looking for',
+    proposals: 'Proposals students',
+    time: 'Time',
+    projectScope: 'Project scope',
 
     //Modal
     cancel: 'Cancel',
@@ -192,6 +257,38 @@ mixin LocaleData {
     forgotLabel: 'Nhập email của bạn để đặt lại mật khẩu',
     forgotButton: 'Đặt lại mật khẩu',
     forgotSuccess: 'Mật khẩu mới đã được gửi đến email của bạn.',
+
+    //Project list
+    searchProjectTitle: 'Tìm kiếm dự án',
+    searchProject: 'Tìm kiếm dự án',
+    filterByTitle: 'Lọc theo',
+    projectLenght: 'Thời gian dự án',
+    lessThanOneMonth: 'Dưới 1 tháng',
+    oneToThreeMonth: '1 đến 3 tháng',
+    threeToSixMonth: '3 đến 6 tháng',
+    moreThanSixMonth: 'Hơn 6 tháng',
+    studentNeeded: 'Sinh viên cần',
+    studentNeededPlaholder: 'Nhập số sinh viên cần',
+    proposalsLessThan: 'Đề xuất ít hơn',
+    proposalLessThanPlaholder: 'Nhập số đề xuất ít hơn',
+    clearFilter: 'Xóa bộ lọc',
+    applyProject: 'Ứng tuyển',
+    notFoundProject: 'Không tìm thấy dự án',
+    projectScope: 'Phạm vi dự án',
+
+    //Saved project
+    savedProjectTitle: 'Dự án đã lưu',
+    applyNow: 'Ứng tuyển ngay',
+    save: 'Lưu',
+
+    //Item project
+    createdToday: 'Được tạo hôm nay',
+    createdYesterday: 'Được tạo hôm qua',
+    createdDayAgo: 'Được tạo %a ngày trước',
+    projectDetailTilte: 'Chi tiết dự án',
+    studentLookingFor: 'Sinh viên đang tìm kiếm',
+    proposals: 'Đề xuất sinh viên',
+    time: 'Thời gian',
 
     //Modal
     cancel: 'Hủy',

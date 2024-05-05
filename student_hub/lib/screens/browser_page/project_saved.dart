@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -73,8 +75,9 @@ class _SavedProjectState extends State<SavedProject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(
-        title: 'Saved projects',
+      appBar: AppBarCustom(
+        title: LocaleData.savedProjectTitle.getString(context),
+        showBackButton: true,
       ),
       // backgroundColor: Colors.white,
       backgroundColor: Theme.of(context).colorScheme.background,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -33,10 +35,10 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Project detail',
-                style: TextStyle(
-                  fontSize: 16,
+              Text(
+                LocaleData.projectDetailTilte.getString(context),
+                style: const TextStyle(
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -62,9 +64,9 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Students are looking for',
-                      style: TextStyle(
+                    Text(
+                      LocaleData.studentLookingFor.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -93,14 +95,14 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
-                        style: TextStyle(
+                      Text(
+                        LocaleData.projectScope.getString(context),
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
+                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonth.getString(context) : LocaleData.threeToSixMonth.getString(context)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -121,14 +123,15 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
-                        style: TextStyle(
+                      Text(
+                        LocaleData.studentNeeded.getString(context),
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${widget.projectItem.numberOfStudents} students',
+                        '• '
+                        '${widget.projectItem.numberOfStudents} ${LocaleData.student.getString(context)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -157,7 +160,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                     ),
                     backgroundColor: kWhiteColor,
                     foregroundColor: kBlue700),
-                child: const Text('Apply Now'),
+                child: Text(LocaleData.applyNow.getString(context)),
               ),
             ),
             const SizedBox(width: 10),
@@ -170,7 +173,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                     ),
                     backgroundColor: kWhiteColor,
                     foregroundColor: kBlueGray600),
-                child: const Text('Saved'),
+                child: Text(LocaleData.save.getString(context)),
               ),
             ),
           ],
