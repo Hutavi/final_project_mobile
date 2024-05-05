@@ -7,7 +7,16 @@ import 'package:student_hub/widgets/display_text.dart';
 
 class MessageItem extends StatelessWidget {
   final dynamic data;
-  const MessageItem({super.key, required this.data});
+  final int idUser;
+  const MessageItem({super.key, required this.data, required this.idUser});
+
+  String formatDate(String date) {
+    DateTime change = DateTime.parse(date);
+    String day = change.day.toString().padLeft(2, '0');
+    String month = change.month.toString().padLeft(2, '0');
+    String year = change.year.toString();
+    return '$day/$month/$year';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,18 @@ class MessageItem extends StatelessWidget {
     final deviceSize = context.deviceSize;
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRouterName.chatScreen);
+        Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
+          'idProject': data['project']['id'] as int,
+          'idThisUser': idUser == data['receiver']['id']
+              ? data['receiver']['id'] as int
+              : data['sender']['id'] as int,
+          'idAnyUser': idUser != data['receiver']['id']
+              ? data['receiver']['id'] as int
+              : data['sender']['id'] as int,
+          'name': idUser != data['receiver']['id']
+              ? data['receiver']['fullname'] as String
+              : data['sender']['fullname'] as String,
+        });
       },
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -54,7 +74,9 @@ class MessageItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DisplayText(
-                        text: data.toString(),
+                        text: idUser != data['receiver']['id']
+                            ? data['receiver']['fullname']
+                            : data['sender']['fullname'],
                         style: textTheme.labelMedium!,
                       ),
                       DisplayText(
@@ -69,8 +91,7 @@ class MessageItem extends StatelessWidget {
                           SizedBox(
                             width: deviceSize.width * 0.6,
                             child: DisplayText(
-                              text:
-                                  'Clear expectation about your project or deliverables',
+                              text: data['content'],
                               style: textTheme.labelSmall!
                                   .copyWith(color: colorScheme.onSurface),
                             ),
@@ -82,7 +103,7 @@ class MessageItem extends StatelessWidget {
                 ],
               ),
               DisplayText(
-                text: '6/6/2024',
+                text: formatDate(data['createdAt']),
                 style: textTheme.labelSmall!
                     .copyWith(color: colorScheme.onSurface),
               ),
