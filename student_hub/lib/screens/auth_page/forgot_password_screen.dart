@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_public.dart';
@@ -107,18 +109,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Center(
+                          Center(
                             child: Text(
-                              'Forgot Password',
-                              style: TextStyle(
+                              LocaleData.forgotPassword.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 16),
                             ),
                           ),
                           const SizedBox(
                             height: 20,
                           ),
-                          const Text(
-                            "Enter your email to reset password",
+                          Text(
+                            LocaleData.enterEmailToResetPassword.getString(context),
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(
@@ -135,9 +137,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             hint: 'Email',
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Email is required';
+                                return LocaleData.emailRequired.getString(context);
                               } else if (userNotFound) {
-                                return 'User not found';
+                                return LocaleData.userNotFound.getString(context);
                               }
                               return null;
                             },
@@ -164,9 +166,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     backgroundColor: kGrey3,
                                     elevation: 0.5,
                                   ),
-                                  child: const Text(
-                                    'Reset Password',
-                                    style: TextStyle(
+                                  child:Text(
+                                    LocaleData.resetPassword.getString(context),
+                                    style: const TextStyle(
                                       color: kGrey0,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,

@@ -85,7 +85,27 @@ mixin LocaleData {
   static const String noActiveProposal = 'no_active_proposal';
   static const String submitted = 'submitted';
   static const String submittedProposal = 'submitted_proposal';
-
+  static const String forgotPasswordTitle = 'forgot_password_title';
+  static const String enterEmailToResetPassword = 'enter_email_to_reset_password';
+  static const String emailRequired = 'email_required';
+  static const String resetPassword = 'reset_password';
+  static const String registerTitle = 'register_title';
+  static const String registerContent = 'register_content';
+  static const String closeBtn = 'close_btn';
+  static const String signUpAsCompany = 'sign_up_as_company';
+  static const String signUpAsStudent = 'sign_up_as_student';
+  static const String fullname = 'fullname';
+  static const String enterFullname = 'enter_fullname';
+  static const String fullnameRequired = 'fullname_required';
+  static const String enterWorkEmailAddr = 'enter_work_email_addr';
+  static const String workEmailAddrIsRequired = 'work_email_addr_is_required';
+  static const String emailIsInvalid = 'email_is_invalid';
+  static const String emailAlreadyExists = 'email_already_exists';
+  static const String passwordEightOrMoreCharacters = 'password_eight_or_more_characters';
+  static const String passwordTooWeak = 'password_too_weak';
+  static const String passwordTooShort = 'password_too_short';
+  static const String confirmPassword = 'confirm_password';
+  
   static const Map<String, dynamic> EN = {
     //Home page
     student: 'Student',
@@ -111,6 +131,30 @@ mixin LocaleData {
     passwordRequiered: 'Password is required',
     passwordWrong: 'Password is wrong',
     clickHere: 'Click here',
+
+    //forgot password
+    forgotPasswordTitle: 'Forgot Password',
+    enterEmailToResetPassword: 'Enter your email to reset password',
+    emailRequired: 'Email is required',
+    resetPassword: 'Reset Password',
+    
+    //register by screen
+    registerTitle: 'Register successfully',
+    registerContent: 'Please check your email to verify your account',
+    closeBtn: 'Close',
+    signUpAsCompany: 'Sign up as company',
+    signUpAsStudent: 'Sign up as student',
+    fullname: 'Fullname',
+    enterFullname: 'Enter your fullname',
+    fullnameRequired: 'Fullname is required',
+    enterWorkEmailAddr: 'Enter your work email address',
+    workEmailAddrIsRequired: 'Work email address is required',
+    emailIsInvalid: 'Email is invalid',
+    emailAlreadyExists: 'Email already exists',
+    passwordEightOrMoreCharacters: 'Password must be 8 or more characters',
+    passwordTooWeak: 'Password is too weak',
+    passwordTooShort: 'Password is too short',
+    confirmPassword: 'Confirm password',
 
     //navigation menu
     project: 'Project',
@@ -195,6 +239,30 @@ mixin LocaleData {
     clickHere: 'Nhấn vào đây',
     dontHaveAccount: 'Chưa có tài khoản Student Hub?',
     
+    //forgot password
+    forgotPasswordTitle: 'Quên mật khẩu',
+    enterEmailToResetPassword: 'Nhập email của bạn để đặt lại mật khẩu',
+    emailRequired: 'Email là bắt buộc',
+    resetPassword: 'Đặt lại mật khẩu',
+
+    //register by screen
+    registerTitle: 'Đăng ký thành công',
+    registerContent: 'Vui lòng kiểm tra email của bạn để xác minh tài khoản',
+    closeBtn: 'Đóng',
+    signUpAsCompany: 'Đăng ký với tư cách công ty',
+    signUpAsStudent: 'Đăng ký với tư cách sinh viên',
+    fullname: 'Họ và tên',
+    enterFullname: 'Nhập họ và tên của bạn',
+    fullnameRequired: 'Họ và tên là bắt buộc',
+    enterWorkEmailAddr: 'Nhập địa chỉ email công việc của bạn',
+    workEmailAddrIsRequired: 'Địa chỉ email công việc là bắt buộc',
+    emailIsInvalid: 'Email không hợp lệ',
+    emailAlreadyExists: 'Email đã tồn tại',
+    passwordEightOrMoreCharacters: 'Mật khẩu phải có 8 ký tự trở lên',
+    passwordTooWeak: 'Mật khẩu quá yếu',
+    passwordTooShort: 'Mật khẩu quá ngắn',
+    confirmPassword: 'Xác nhận mật khẩu',
+
     //navigation menu
     project: 'Dự án',
     dashboard: 'Bảng điều khiển',

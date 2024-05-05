@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_public.dart';
@@ -117,11 +119,11 @@ class _LoginByScreenState extends State<RegisterByScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Đăng ký thành công"),
-          content: const Text("Hãy thực hiện xác nhận email"),
+          title: Text(LocaleData.registerTitle.getString(context)),
+          content: Text(LocaleData.registerContent.getString(context)),
           actions: <Widget>[
             TextButton(
-              child: const Text("Đóng"),
+              child: Text(LocaleData.closeBtn.getString(context)),
               onPressed: () {
                 // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, AppRouterName.login);
@@ -172,8 +174,8 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   Center(
                     child: Text(
                       widget.isStudent == false
-                          ? 'Sign up as Company'
-                          : 'Sign up as Student',
+                          ? LocaleData.signUpAsCompany.getString(context)
+                          : LocaleData.signUpAsStudent.getString(context),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -183,8 +185,8 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const Text("Full name",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  Text(LocaleData.fullname.getString(context),
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                   const SizedBox(
                     height: 5,
                   ),
@@ -195,10 +197,10 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                     onChange: (value) {
                       // validateFields();
                     },
-                    hint: 'Enter full name',
+                    hint: LocaleData.enterFullname.getString(context),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Full name is required';
+                        return LocaleData.fullnameRequired.getString(context);
                       }
                       return null;
                     },
@@ -206,8 +208,8 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text("Email",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  Text(LocaleData.email.getString(context),
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                   const SizedBox(
                     height: 5,
                   ),
@@ -220,14 +222,14 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                       isEmail = false;
                       emailExist = false;
                     },
-                    hint: 'Enter work email address',
+                    hint: LocaleData.enterWorkEmailAddr.getString(context),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Work email address is required';
+                        return LocaleData.workEmailAddrIsRequired.getString(context);
                       } else if (isEmail) {
-                        return 'Email is invalid';
+                        return LocaleData.emailIsInvalid.getString(context);
                       } else if (emailExist) {
-                        return 'Email already exists';
+                        return LocaleData.emailAlreadyExists.getString(context);
                       }
                       return null;
                     },
@@ -235,8 +237,8 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text("Enter password",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  Text(LocaleData.passwordPlaceholder.getString(context),
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                   const SizedBox(
                     height: 5,
                   ),
@@ -249,14 +251,14 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                       passworkWeak = false;
                       passwordShort = false;
                     },
-                    hint: 'Password (8 or more characters)',
+                    hint: LocaleData.passwordEightOrMoreCharacters.getString(context),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Password is required';
+                        return LocaleData.passwordRequiered.getString(context);
                       } else if (passworkWeak) {
-                        return 'Password is too weak';
+                        return LocaleData.passwordTooWeak.getString(context);
                       } else if (passwordShort) {
-                        return 'Password is too short';
+                        return LocaleData.passwordTooShort.getString(context);
                       }
                       return null;
                     },
@@ -264,8 +266,8 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text("Confirm password",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  Text(LocaleData.confirmPassword.getString(context),
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                   const SizedBox(
                     height: 5,
                   ),
