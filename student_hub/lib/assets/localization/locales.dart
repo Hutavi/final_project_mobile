@@ -70,9 +70,6 @@ mixin LocaleData {
   static const String warning = 'warning';
   static const String info = 'info';
 
-  //
-
-
   //navigation menu
   static const String project = 'project';
   static const String dashboard = 'dashboard';
@@ -117,7 +114,6 @@ mixin LocaleData {
   static const String noHaveMessage = 'no_have_message';
   static const String hiredOffer = 'hired_offer';
   static const String confirmSendOffer = 'confirm_send_offer';
-  static const String cancel = 'cancel';
   static const String send = 'send';
   static const String projectScope = 'project_scope';
   static const String teamSize = 'team_size';
@@ -128,7 +124,6 @@ mixin LocaleData {
   static const String submittedProposal = 'submitted_proposal';
   static const String forgotPasswordTitle = 'forgot_password_title';
   static const String enterEmailToResetPassword = 'enter_email_to_reset_password';
-  static const String emailRequired = 'email_required';
   static const String resetPassword = 'reset_password';
   static const String registerTitle = 'register_title';
   static const String registerContent = 'register_content';
@@ -210,14 +205,10 @@ mixin LocaleData {
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
-  };
-
-  ///
-
+  
     //forgot password
     forgotPasswordTitle: 'Forgot Password',
     enterEmailToResetPassword: 'Enter your email to reset password',
-    emailRequired: 'Email is required',
     resetPassword: 'Reset Password',
     
     //register by screen
@@ -282,7 +273,6 @@ mixin LocaleData {
     hiredOffer: 'Hired offer',
     confirmSendOffer: 
         'Do you really want to send hired offer for student to do this project?',
-    cancel: 'Cancel',
     send: 'Send',
     projectScope: 'Project scope',
     teamSize: 'Team size',
@@ -362,7 +352,6 @@ mixin LocaleData {
     //forgot password
     forgotPasswordTitle: 'Quên mật khẩu',
     enterEmailToResetPassword: 'Nhập email của bạn để đặt lại mật khẩu',
-    emailRequired: 'Email là bắt buộc',
     resetPassword: 'Đặt lại mật khẩu',
 
     //register by screen
@@ -406,7 +395,6 @@ mixin LocaleData {
     startWorkingThisProject: 'Bắt đầu làm việc trên dự án này',
     studentsAreLookingFor: 'Sinh viên đang tìm kiếm',
     proposals: 'Proposals',
-    // message: 'Tin nhắn',
     hired: 'Đã thuê',
     dayAgo: 'ngày trước',
     minutesAgo: 'phút trước',
@@ -428,7 +416,6 @@ mixin LocaleData {
     hiredOffer: 'Đề nghị thuê',
     confirmSendOffer: 
         'Bạn có thực sự muốn gửi đề nghị thuê cho sinh viên thực hiện dự án này không?',
-    cancel: 'Hủy',
     send: 'Gửi',
     projectScope: 'Phạm vi dự án',
     teamSize: 'Kích thước nhóm',

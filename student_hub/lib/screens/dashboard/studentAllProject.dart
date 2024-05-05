@@ -237,7 +237,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                 child: Row(
                   children: [
                     Text(
-                      "${LocaleData.activeProposal} (${activeProposal.length})",
+                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
