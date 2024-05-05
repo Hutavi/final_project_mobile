@@ -91,14 +91,11 @@ class _ProjectSearchState extends State<ProjectSearch> {
 
   @override
   Widget build(BuildContext context) {
-    // print("Vinh test");
-    // print(projectScopeFlag);
-    // print(numberOfStudents);
-    // print(proposalsLessThan);
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: const AppBarCustom(
-        title: 'Project Search',
+      appBar: AppBarCustom(
+        title: LocaleData.searchProjectTitle.getString(context),
+        showBackButton: true,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -117,7 +114,7 @@ class _ProjectSearchState extends State<ProjectSearch> {
                     controller: projectSearchController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.search),
-                      hintText: LocaleData.searchForProject.getString(context),
+                      hintText: LocaleData.searchProject.getString(context),
                       hintStyle: const TextStyle(fontWeight: FontWeight.normal),
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 0.0, horizontal: 10),
@@ -165,7 +162,9 @@ class _ProjectSearchState extends State<ProjectSearch> {
             ),
             Expanded(
               child: listProject.isEmpty
-                  ? Center(child: Text(LocaleData.notFoundProject.getString(context)))
+                  ? Center(
+                      child:
+                          Text(LocaleData.notFoundProject.getString(context)))
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       itemCount: listProject.length,

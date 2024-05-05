@@ -1,5 +1,4 @@
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
 const List<MapLocale> LOCALES = [
   MapLocale('en', LocaleData.EN),
@@ -74,7 +73,40 @@ mixin LocaleData {
   static const String edit = 'edit';
   static const String continu = 'continu';
   static const String failed = 'failed';
+  
+  //Project list
+  static const String searchProjectTitle = 'search_project_title';
+  static const String searchProject = 'search_project';
+  static const String filterByTitle = 'filter_by';
+  static const String projectLenght = 'project_lenght';
+  static const String lessThanOneMonth = 'less_than_one_month';
+  static const String oneToThreeMonth = 'one_to_three_month';
+  static const String threeToSixMonth = 'three_to_six_month';
+  static const String moreThanSixMonth = 'more_than_six_month';
+  static const String studentNeeded = 'student_needed';
+  static const String studentNeededPlaholder = 'student_needed_placeholder';
+  static const String proposalsLessThan = 'proposals_less_than';
+  static const String proposalLessThanPlaholder =
+      'proposal_less_than_placeholder';
+  static const String clearFilter = 'clear_filter';
+  static const String applyProject = 'apply_project';
+  static const String notFoundProject = 'not_found_project';
 
+  //Saved project
+  static const String savedProjectTitle = 'saved_project_title';
+  static const String save = 'save';
+
+  //Item project
+  static const String createdToday = 'created_today';
+  static const String createdYesterday = 'created_yesterday';
+  static const String createdDayAgo = 'created_day_ago';
+  static const String projectDetailTilte = 'project_detail_title';
+  static const String studentLookingFor = 'student_looking_for';
+  static const String proposals = 'proposals';
+  static const String time = 'time';
+  static const String projectScope = 'project_scope';
+
+  //
   //navigation menu
   static const String project = 'project';
   static const String dashboard = 'dashboard';
@@ -96,16 +128,14 @@ mixin LocaleData {
   static const String editPosting = 'edit_posting';
   static const String removePosting = 'remove_posting';
   static const String startWorkingThisProject = 'start_working_this_project';
-  static const String studentsAreLookingFor = 'students_are_looking_for';
-  static const String proposals = 'proposals';
-  // static const String message = 'message';
+  static const String studentsAreLookingFor = 'students_are_looking_for'; 
   static const String hired = 'hired';
   static const String dayAgo = 'day_ago';
   static const String minutesAgo = 'minutes_ago';
   static const String hoursAgo = 'hours_ago';
 
   //dashboard->SendHired
-  static const String lessThanOneMonth = 'less_than_one_month';
+  // static const String lessThanOneMonth = 'less_than_one_month';
   static const String oneToThreeMonths = 'one_to_three_months';
   static const String threeToSixMonths = 'three_to_six_months';
   static const String moreThanSixMonths = 'more_than_six_months';
@@ -119,8 +149,7 @@ mixin LocaleData {
   static const String noHaveMessage = 'no_have_message';
   static const String hiredOffer = 'hired_offer';
   static const String confirmSendOffer = 'confirm_send_offer';
-  static const String send = 'send';
-  static const String projectScope = 'project_scope';
+  static const String send = 'send'; 
   static const String teamSize = 'team_size';
   static const String excellent = 'excellent';
   static const String activeProposal = 'active_proposal';
@@ -128,7 +157,8 @@ mixin LocaleData {
   static const String submitted = 'submitted';
   static const String submittedProposal = 'submitted_proposal';
   static const String forgotPasswordTitle = 'forgot_password_title';
-  static const String enterEmailToResetPassword = 'enter_email_to_reset_password';
+  static const String enterEmailToResetPassword =
+      'enter_email_to_reset_password';
   static const String resetPassword = 'reset_password';
   static const String registerTitle = 'register_title';
   static const String registerContent = 'register_content';
@@ -142,7 +172,8 @@ mixin LocaleData {
   static const String workEmailAddrIsRequired = 'work_email_addr_is_required';
   static const String emailIsInvalid = 'email_is_invalid';
   static const String emailAlreadyExists = 'email_already_exists';
-  static const String passwordEightOrMoreCharacters = 'password_eight_or_more_characters';
+  static const String passwordEightOrMoreCharacters =
+      'password_eight_or_more_characters';
   static const String passwordTooWeak = 'password_too_weak';
   static const String passwordTooShort = 'password_too_short';
   static const String confirmPassword = 'confirm_password';
@@ -187,14 +218,10 @@ mixin LocaleData {
   static const String savedProjects = 'saved_projects';
 
   //projectItem favorite
-  static const String createdToday = 'created_today';
-  static const String createdYesterday = 'created_yesterday';
   static const String created = 'created';
-  static const String time = 'time';
 
   //project search
-  static const String searchForProject = 'search_for_project';
-  static const String notFoundProject = 'not_found_project';
+  static const String searchForProject = 'search_for_project'; 
 
   //submit proposal
   static const String submitProposal = 'submit_proposal';
@@ -239,10 +266,10 @@ mixin LocaleData {
   static const String techStack = 'tech_stack';
   static const String selectTechStack = 'select_tech_stack';
   static const String skillSet = 'skill_set';
-  static const String selectSkillSet = 'select_skill_set';
-  static const String save = 'save';
+  static const String selectSkillSet = 'select_skill_set'; 
   static const String create = 'create';
   static const String education = 'education';
+
 
 
   
@@ -301,6 +328,38 @@ mixin LocaleData {
     forgotButton: 'Reset password',
     forgotSuccess: 'New password has been sent to your email.',
 
+    //Project list
+    searchProjectTitle: 'Search project',
+    searchProject: 'Search for project',
+    filterByTitle: 'Filter by',
+    projectLenght: 'Project lenght',
+    lessThanOneMonth: 'Less than 1 month',
+    oneToThreeMonth: '1 to 3 months',
+    threeToSixMonth: '3 to 6 months',
+    moreThanSixMonth: 'More than 6 months',
+    studentNeeded: 'Student needed',
+    studentNeededPlaholder: 'Enter students needed',
+    proposalsLessThan: 'Proposals less than',
+    proposalLessThanPlaholder: 'Enter proposals less than',
+    clearFilter: 'Clear filter',
+    applyProject: 'Apply',
+    notFoundProject: 'Not found project',
+
+    //Saved project
+    savedProjectTitle: 'Saved project',
+    applyNow: 'Apply now',
+    save: 'Save',
+
+    //Item project
+    createdToday: 'Created today',
+    createdYesterday: 'Created yesterday',
+    createdDayAgo: 'Created %a days ago',
+    projectDetailTilte: 'Project detail',
+    studentLookingFor: 'Student are looking for',
+    proposals: 'Proposals students',
+    time: 'Time',
+    projectScope: 'Project scope',
+
     //Modal
     cancel: 'Cancel',
     confirm: 'Confirm',
@@ -309,7 +368,6 @@ mixin LocaleData {
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
-    applyNow: 'Apply now',
     saved: 'Saved', 
     edit: 'Edit',
     continu: 'Continue',
@@ -319,7 +377,7 @@ mixin LocaleData {
     forgotPasswordTitle: 'Forgot Password',
     enterEmailToResetPassword: 'Enter your email to reset password',
     resetPassword: 'Reset Password',
-    
+
     //register by screen
     registerTitle: 'Register successfully',
     registerContent: 'Please check your email to verify your account',
@@ -355,20 +413,20 @@ mixin LocaleData {
     haveNotProjectArchieved: 'You have not archieved project yet',
     viewProposal: 'View proposal',
     viewMesseges: 'View messeges',
-    viewHired : 'View hired',
+    viewHired: 'View hired',
     archieveThisProject: 'Archieve this project',
     editPosting: 'Edit posting',
     removePosting: 'Remove posting',
     startWorkingThisProject: 'Start working this project',
     studentsAreLookingFor: 'Students are looking for',
-    proposals: 'Proposals',
+    // proposals: 'Proposals',
     hired: 'Hired',
     dayAgo: 'day ago',
     minutesAgo: 'minutes ago',
     hoursAgo: 'hours ago',
-    
+
     //dashboard->SendHired
-    lessThanOneMonth: 'Less than 1 month',
+    // lessThanOneMonth: 'Less than 1 month',
     oneToThreeMonths: '1-3 months',
     threeToSixMonths: '3-6 months',
     moreThanSixMonths: 'More than 6 months',
@@ -381,10 +439,10 @@ mixin LocaleData {
     noHaveProposal: 'You have not proposal yet',
     noHaveMessage: 'You have not message yet',
     hiredOffer: 'Hired offer',
-    confirmSendOffer: 
+    confirmSendOffer:
         'Do you really want to send hired offer for student to do this project?',
     send: 'Send',
-    projectScope: 'Project scope',
+    // projectScope: 'Project scope',
     teamSize: 'Team size',
     excellent: 'Excellent',
 
@@ -433,14 +491,10 @@ mixin LocaleData {
     //project save page
     savedProjects: 'Save projects',
     //projectItem favorite
-    createdToday: 'Created today',
-    createdYesterday: 'Created yesterday',
     created: 'Created',
-    time: 'Time',
 
     //project_search
     searchForProject: 'Search for project',
-    notFoundProject: 'Not found project',
 
     //submit proposal
     submitProposal: 'Submit proposal',
@@ -486,7 +540,6 @@ mixin LocaleData {
     selectTechStack: 'Select techstack',
     skillSet: 'Skillset',
     selectSkillSet: 'Select skillset',
-    save: 'Save',
     create: 'Create',
     education: 'Education',
 
@@ -548,6 +601,38 @@ mixin LocaleData {
     forgotButton: 'Đặt lại mật khẩu',
     forgotSuccess: 'Mật khẩu mới đã được gửi đến email của bạn.',
 
+    //Project list
+    searchProjectTitle: 'Tìm kiếm dự án',
+    searchProject: 'Tìm kiếm dự án',
+    filterByTitle: 'Lọc theo',
+    projectLenght: 'Thời gian dự án',
+    lessThanOneMonth: 'Dưới 1 tháng',
+    oneToThreeMonth: '1 đến 3 tháng',
+    threeToSixMonth: '3 đến 6 tháng',
+    moreThanSixMonth: 'Hơn 6 tháng',
+    studentNeeded: 'Sinh viên cần',
+    studentNeededPlaholder: 'Nhập số sinh viên cần',
+    proposalsLessThan: 'Đề xuất ít hơn',
+    proposalLessThanPlaholder: 'Nhập số đề xuất ít hơn',
+    clearFilter: 'Xóa bộ lọc',
+    applyProject: 'Ứng tuyển',
+    notFoundProject: 'Không tìm thấy dự án',
+    projectScope: 'Phạm vi dự án',
+
+    //Saved project
+    savedProjectTitle: 'Dự án đã lưu',
+    applyNow: 'Ứng tuyển ngay',
+    save: 'Lưu',
+
+    //Item project
+    createdToday: 'Được tạo hôm nay',
+    createdYesterday: 'Được tạo hôm qua',
+    createdDayAgo: 'Được tạo %a ngày trước',
+    projectDetailTilte: 'Chi tiết dự án',
+    studentLookingFor: 'Sinh viên đang tìm kiếm',
+    proposals: 'Đề xuất sinh viên',
+    time: 'Thời gian',
+
     //Modal
     cancel: 'Hủy',
     confirm: 'Xác nhận',
@@ -556,7 +641,6 @@ mixin LocaleData {
     error: 'Lỗi',
     warning: 'Cảnh báo',
     info: 'Thông báo',
-    applyNow: 'Ứng tuyển ngay',
     saved: 'Đã lưu',
     edit: 'Chỉnh sửa',
     continu: 'Tiếp tục',
@@ -602,36 +686,36 @@ mixin LocaleData {
     haveNotProjectArchieved: 'Bạn chưa có dự án nào đã lưu trữ',
     viewProposal: 'Xem proposal',
     viewMesseges: 'Xem tin nhắn',
-    viewHired : 'Xem đã thuê',
+    viewHired: 'Xem đã thuê',
     archieveThisProject: 'Lưu trữ dự án này',
     editPosting: 'Chỉnh sửa bài đăng',
     removePosting: 'Xóa bài đăng',
     startWorkingThisProject: 'Bắt đầu làm việc trên dự án này',
     studentsAreLookingFor: 'Sinh viên đang tìm kiếm',
-    proposals: 'Proposals',
+    // proposals: 'Proposals',
     hired: 'Đã thuê',
     dayAgo: 'ngày trước',
     minutesAgo: 'phút trước',
     hoursAgo: 'giờ trước',
 
     //dashboard->SendHired
-    lessThanOneMonth: 'Dưới 1 tháng',
+    // lessThanOneMonth: 'Dưới 1 tháng',
     oneToThreeMonths: '1-3 tháng',
     threeToSixMonths: '3-6 tháng',
     moreThanSixMonths: 'Hơn 6 tháng',
     fourthYearStudent: 'Sinh viên năm 4',
     thirdYearStudent: 'Sinh viên năm 3',
     secondYearStudent: 'Sinh viên năm 2',
-    firstYearStudent: 'Sinh viên năm 1',  
+    firstYearStudent: 'Sinh viên năm 1',
     noDataToProcess: 'Không có dữ liệu để xử lý',
     detail: 'Chi tiết',
     noHaveProposal: 'Bạn chưa có proposal nào',
     noHaveMessage: 'Bạn chưa có tin nhắn nào',
     hiredOffer: 'Đề nghị thuê',
-    confirmSendOffer: 
+    confirmSendOffer:
         'Bạn có thực sự muốn gửi đề nghị thuê cho sinh viên thực hiện dự án này không?',
     send: 'Gửi',
-    projectScope: 'Phạm vi dự án',
+    // projectScope: 'Phạm vi dự án',
     teamSize: 'Kích thước nhóm',
     excellent: 'Xuất sắc',
     activeProposal: 'Proposal đang hoạt động',
@@ -678,14 +762,10 @@ mixin LocaleData {
     //project save page
     savedProjects: 'Dự án đã lưu',
     //projectItem favorite
-    createdToday: 'Đã tạo hôm nay',
-    createdYesterday: 'Đã tạo hôm qua',
     created: 'Đã tạo',
-    time: 'Thời gian',
 
     //project search
     searchForProject: 'Tìm kiếm dự án',
-    notFoundProject: 'Không tìm thấy dự án',
 
     //submit proposal
     submitProposal: 'Gửi proposal',
@@ -730,10 +810,8 @@ mixin LocaleData {
     techStack: 'Công nghệ sử dụng',
     selectTechStack: 'Chọn công nghệ sử dụng',
     skillSet: 'Kỹ năng',
-    save: 'Lưu',
     create: 'Tạo',
     education: 'Học vấn',
-
 
   };    
 }

@@ -64,7 +64,9 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
     } else if (daysAgo == 1) {
       return LocaleData.createdYesterday.getString(context);
     } else {
-      return '${LocaleData.created.getString(context)} $daysAgo ${LocaleData.dayAgo.getString(context)}';
+      return LocaleData.createdDayAgo
+          .getString(context)
+          .replaceFirst('%a', daysAgo.toString());
     }
   }
 
@@ -132,7 +134,8 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
               children: [
                 Text(
                   timeAgo,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 Text(
                   widget.projectForListModel.title,

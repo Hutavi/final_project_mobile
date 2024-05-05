@@ -36,9 +36,9 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                 height: 20,
               ),
               Text(
-                LocaleData.projectDetail.getString(context),
-                style: TextStyle(
-                  fontSize: 16,
+                LocaleData.projectDetailTilte.getString(context),
+                style: const TextStyle(
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -65,8 +65,8 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      LocaleData.studentsAreLookingFor.getString(context),
-                      style: TextStyle(
+                      LocaleData.studentLookingFor.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -97,12 +97,12 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                     children: [
                       Text(
                         LocaleData.projectScope.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonths.getString(context) : LocaleData.threeToSixMonths.getString(context)}',
+                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonth.getString(context) : LocaleData.threeToSixMonth.getString(context)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -124,13 +124,14 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        LocaleData.numberOfStudents.getString(context),
+                        LocaleData.studentNeeded.getString(context),
                         style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${widget.projectItem.numberOfStudents} ' '${LocaleData.student.getString(context)}',
+                        '• '
+                        '${widget.projectItem.numberOfStudents} ${LocaleData.student.getString(context)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -172,7 +173,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                     ),
                     backgroundColor: kWhiteColor,
                     foregroundColor: kBlueGray600),
-                child: Text(LocaleData.saved.getString(context)),
+                child: Text(LocaleData.save.getString(context)),
               ),
             ),
           ],

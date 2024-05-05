@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/search_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -64,7 +66,7 @@ class _BottomSheetSearchState extends ConsumerState<BottomSheetSearch> {
                       cursorColor: kBlue700,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search),
-                        hintText: "Search for project",
+                        hintText: LocaleData.searchProject.getString(context),
                         hintStyle:
                             const TextStyle(fontWeight: FontWeight.normal),
                         contentPadding: const EdgeInsets.symmetric(

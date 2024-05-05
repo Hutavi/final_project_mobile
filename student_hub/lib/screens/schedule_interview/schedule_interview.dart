@@ -10,12 +10,14 @@ import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/services/dio_client_not_api.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
-import 'package:uuid/uuid.dart';
 
 class ScheduleInterview extends StatefulWidget {
-  final Function(Message) onSendMessage;
+  final Function(Map<String, String?>) onSendMessage;
 
-  const ScheduleInterview({super.key, required this.onSendMessage});
+  const ScheduleInterview({
+    super.key,
+    required this.onSendMessage,
+  });
 
   @override
   State<ScheduleInterview> createState() => _ScheduleInterviewState();
@@ -80,125 +82,6 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
     }
   }
 
-  Future<int?> createRoom() async {
-    // Đặt kiểu trả về là Future<int?>
-    // Chuyển đổi thời gian thành chuỗi định dạng ISO 8601
-    String endTimeISO =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
-
-    var createRoomData = json.encode({
-      "meeting_room_code": conferencesID,
-      "meeting_room_id": conferencesID,
-      "expired_at": endTimeISO
-    });
-
-    try {
-      final dio = DioClientNotAPI();
-      final response = await dio.request(
-        '/meeting-room/create-room',
-        data: createRoomData,
-        options: Options(
-          method: 'POST',
-        ),
-      );
-      if (response.statusCode == 201) {
-        // Trích xuất ID từ phản hồi và trả về
-        final id = response.data['result']['id'];
-        return id;
-      }
-    } catch (e) {
-      print('Error creating room: $e');
-    }
-    return null;
-  }
-
-  Future<void> createInvite() async {
-    // Đặt kiểu trả về là Future<void>
-    // Chuyển đổi thời gian thành chuỗi định dạng ISO 8601
-    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        .format(parseDateTime(startDateTime!));
-    String endTimeISO =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
-
-    try {
-      // Tạo phòng họp trước khi mời và lấy ID của phòng họp
-      final roomId = await createRoom();
-
-      if (roomId != null) {
-        var data = json.encode({
-          "title": titleSchedule.text,
-          "content": contentSchedule.text,
-          "startTime": startTimeISO,
-          "endTime": endTimeISO,
-          "projectId": 1,
-          "senderId": 1,
-          "receiverId": 1,
-          "meeting_room_code": conferencesID,
-          "meeting_room_id": roomId,
-          "expired_at": endTimeISO
-        });
-
-        final dio = DioClient();
-        final response = await dio.request(
-          '/interview',
-          data: data,
-          options: Options(
-            method: 'POST',
-          ),
-        );
-        if (response.statusCode == 201) {
-          showDialog(
-            // ignore: use_build_context_synchronously
-            context: context,
-            builder: (context) => DialogCustom(
-              title: "Success",
-              description: "Create a successful interview schedule.",
-              buttonText: 'OK',
-              // buttonTextCancel: "Cancel",
-              statusDialog: 1,
-              onConfirmPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          );
-          Message newMessage = Message(
-              id: const Uuid().v4(),
-              projectID: 560,
-              senderUserId: 5,
-              receiverUserId: 6,
-              title: titleSchedule.text,
-              createdAt: DateTime.now().add(const Duration(minutes: 60)),
-              startTime: parseDateTime(startDateTime!),
-              endTime: parseDateTime(endDateTime!),
-              meetingRoomId: roomId.toString(),
-              meetingRoomCode: conferencesID,
-              meeting: 1,
-              duration: calculateDurationInMinutes());
-          widget.onSendMessage(newMessage);
-        }
-      }
-    } catch (e) {
-      if (e is DioException && e.response != null) {
-        print('Have Error 1: ${e.response!.data}');
-        showDialog(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (context) => DialogCustom(
-            title: "Error",
-            description: "Create a failed interview schedule.",
-            buttonText: 'OK',
-            statusDialog: 1,
-            onConfirmPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        );
-      } else {
-        print('Have Error 2: $e');
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -247,9 +130,6 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                 TextField(
                   controller: titleSchedule,
                   keyboardType: TextInputType.text,
-                  onChanged: (value) {
-                    // Xử lý thay đổi trong TextField ở đây
-                  },
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -476,7 +356,13 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            createInvite();
+                            final data = {
+                              'titleSchedule': titleSchedule.text,
+                              'startDateTime': startDateTime,
+                              'endDateTime': endDateTime,
+                              'conferencesID': conferencesID
+                            };
+                            widget.onSendMessage(data);
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

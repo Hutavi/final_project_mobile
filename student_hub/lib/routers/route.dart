@@ -385,9 +385,15 @@ class AppRoute {
         );
 
       case AppRouterName.chatScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const ChatRoomScreen(),
+              ChatRoomScreen(
+                  idProject: args['idProject']!,
+                  idThisUser: args['idThisUser']!,
+                  idAnyUser: args['idAnyUser']!,
+                  name: args['name']!),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;

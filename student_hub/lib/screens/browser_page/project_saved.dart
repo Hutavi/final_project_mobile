@@ -76,7 +76,8 @@ class _SavedProjectState extends State<SavedProject> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarCustom(
-        title: LocaleData.savedProjects.getString(context),
+        title: LocaleData.savedProjectTitle.getString(context),
+        showBackButton: true,
       ),
       // backgroundColor: Colors.white,
       backgroundColor: Theme.of(context).colorScheme.background,

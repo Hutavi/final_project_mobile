@@ -4,6 +4,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
@@ -33,6 +34,7 @@ class SendHiredState extends State<SendHired>
   List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
+  var idUser = -1;
 
   @override
   void initState() {
@@ -67,10 +69,23 @@ class SendHiredState extends State<SendHired>
       ),
     );
 
+    final responseIdUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
     final proposal = responseProppsal.data['result']['items'];
     final message = responseMessageProppsal.data['result'];
+    final user = responseIdUser.data['result'];
 
     setState(() {
+      if (user['roles'][0] == 0) {
+        idUser = user['student']['userId'];
+      } else {
+        idUser = user['company']['userId'];
+      }
       proposals = proposal;
       listMessage = message;
       isLoading = false;
@@ -477,14 +492,13 @@ class SendHiredState extends State<SendHired>
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // SocketManager.initializeSocket();
-                      // SocketManager.sendMessage(
-                      //   "Hello, world!",
-                      //   560,
-                      //   5,
-                      //   6,
-                      //   0,
-                      // );
+                      Navigator.of(context)
+                          .pushNamed(AppRouterName.chatScreen, arguments: {
+                        'idProject': widget.idProject,
+                        'idThisUser': idUser,
+                        'idAnyUser': proposals[index]['student']['userId'],
+                        'name': proposals[index]['student']['user']['fullname'],
+                      });
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(

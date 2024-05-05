@@ -91,7 +91,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             Icons.search,
                             color: kGrey0,
                           ),
-                          hintText: LocaleData.searchForProject.getString(context),
+                          hintText: LocaleData.searchProject.getString(context),
                           hintStyle: const TextStyle(
                             fontWeight: FontWeight.normal,
                             color: kGrey0,

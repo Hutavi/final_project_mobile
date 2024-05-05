@@ -75,7 +75,9 @@ class _ProjectItemState extends State<ProjectItem> {
     } else if (daysAgo == 1) {
       return LocaleData.createdYesterday.getString(context);
     } else {
-      return '${LocaleData.created.getString(context)} $daysAgo ${LocaleData.dayAgo.getString(context)}';
+      return LocaleData.createdDayAgo
+          .getString(context)
+          .replaceFirst('%a', daysAgo.toString());
     }
   }
 
@@ -143,7 +145,8 @@ class _ProjectItemState extends State<ProjectItem> {
               children: [
                 Text(
                   timeAgo,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 Text(widget.projectForListModel.title ?? '',
                     style: const TextStyle(
