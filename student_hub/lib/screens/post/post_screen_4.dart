@@ -83,6 +83,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
         : '3 to 6 months';
     print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(
         title: 'Student Hub',
       ),
@@ -106,7 +107,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+                      color: kBlue600)),
               const Divider(),
               const Text(
                 'Project description',
@@ -119,7 +120,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   style: const TextStyle(
                       fontSize: 14,
                       // fontWeight: FontWeight.w300,
-                      color: Colors.black)),
+                      color: kBlue600)),
               
               const Divider(),
               SizedBox(
@@ -200,6 +201,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                     var companyID = await getDataIdCompany();
                     ref.read(postProjectProvider.notifier).setCompanyId(companyID);
                     postPoject();
+                    // ignore: use_build_context_synchronously
                     Navigator.pushNamed(context, AppRouterName.navigation);
                     ref.read(postProjectProvider).companyId = null;
                     ref.read(postProjectProvider).projectScopeFlag = null;
@@ -213,6 +215,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
                   foregroundColor: kWhiteColor,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15, vertical: 10),
                 ),
                 child: const Text('Post a job'),
               ),

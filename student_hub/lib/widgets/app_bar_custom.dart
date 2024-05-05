@@ -7,7 +7,10 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final bool showAction;
 
   const AppBarCustom(
-      {Key? key, required this.title, this.showBackButton = true, this.showAction = true})
+      {Key? key,
+      required this.title,
+      this.showBackButton = true,
+      this.showAction = true})
       : super(key: key);
 
   @override
@@ -24,7 +27,7 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Theme.of(context).bottomAppBarTheme.color,
       automaticallyImplyLeading: false,
       leading: showBackButton
           ? IconButton(
@@ -37,27 +40,20 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : null,
-      actions: showAction 
-        ? <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, AppRouterName.switchAccount);
-            },
-          ),
-        ]
-        : <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.person,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-        ],
+      actions: showAction
+          ? <Widget>[
+              IconButton(
+                icon: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, AppRouterName.switchAccount);
+                },
+              ),
+            ]
+          : null,
     );
   }
 }

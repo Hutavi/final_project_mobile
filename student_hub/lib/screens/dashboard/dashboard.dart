@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -8,6 +9,7 @@ import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
 import 'package:student_hub/widgets/loading.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -222,14 +224,14 @@ class DashboardState extends State<Dashboard>
     Duration difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
     } else {
       if (difference.inHours < 1) {
         int minutesDifference = difference.inMinutes;
-        return '$minutesDifference minutes ago';
+        return '$minutesDifference ${LocaleData.minutesAgo.getString(context)}';
       } else {
         int hoursDifference = difference.inHours;
-        return '$hoursDifference hours ago';
+        return '$hoursDifference ${LocaleData.hoursAgo.getString(context)}';
       }
     }
   }
@@ -237,7 +239,7 @@ class DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     if (idStudent != -1) {
-      return const SafeArea(
+      return SafeArea(
         child: Scaffold(
           appBar: null,
           body: Column(
@@ -250,8 +252,8 @@ class DashboardState extends State<Dashboard>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Your Project',
-                      style: TextStyle(
+                      LocaleData.yourProject.getString(context),
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -277,8 +279,8 @@ class DashboardState extends State<Dashboard>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'YOUR PROJECT',
+                    Text(
+                      LocaleData.yourProject.getString(context),
                       style: TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
@@ -344,9 +346,9 @@ class DashboardState extends State<Dashboard>
       labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
       tabs: [
-        Tab(text: 'All projects'),
-        Tab(text: 'Working'),
-        Tab(text: 'Archieved'),
+        Tab(text: LocaleData.allProject.getString(context)),
+        Tab(text: LocaleData.working.getString(context)),
+        Tab(text: LocaleData.archieved.getString(context)),
       ],
       indicatorColor: Colors.blue,
       labelColor: Colors.blue,
@@ -373,8 +375,10 @@ class DashboardState extends State<Dashboard>
                       return _buildProjectItemAllProject(index);
                     },
                   )
-                : const Center(
-                    child: Text('Chưa có project'),
+                : Center(
+                    child: Text(
+                        LocaleData.haveNotProjectYet.getString(context)
+                    ),
                   ),
           );
   }
@@ -391,8 +395,10 @@ class DashboardState extends State<Dashboard>
                       return _buildProjectItemProjectWorking(index);
                     },
                   )
-                : const Center(
-                    child: Text('Chưa có project nào đang Working'),
+                : Center(
+                    child: Text(
+                      LocaleData.haveNotProjectWorking.getString(context)
+                    ),
                   ),
           );
   }
@@ -409,8 +415,10 @@ class DashboardState extends State<Dashboard>
                       return _buildProjectItemProjectArchieved(index);
                     },
                   )
-                : const Center(
-                    child: Text('Chưa có project nào đang Archieved'),
+                : Center(
+                    child: Text(
+                      LocaleData.haveNotProjectArchieved.getString(context)
+                    ),
                   ),
           );
   }
@@ -434,7 +442,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.user,
                         size: 20,
                       ),
-                      title: const Text('View proposals'),
+                      title: Text(LocaleData.viewProposal.getString(context)),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -459,7 +467,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.comments,
                         size: 20,
                       ),
-                      title: const Text('View messages'),
+                      title: Text(LocaleData.viewMesseges.getString(context)),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -484,7 +492,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.clipboardCheck,
                         size: 20,
                       ),
-                      title: const Text('View hired'),
+                      title: Text(LocaleData.viewHired.getString(context)),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -509,7 +517,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.fileImport,
                         size: 20,
                       ),
-                      title: const Text('Archieve this project'),
+                      title: Text(LocaleData.archieveThisProject.getString(context)),
                       onTap: () {
                         Navigator.pop(context);
                         _handleStartArchieved(data[index]['id'], index);
@@ -521,7 +529,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.penToSquare,
                         size: 20,
                       ),
-                      title: const Text('Edit posting'),
+                      title: Text(LocaleData.editPosting.getString(context)),
                       onTap: () {
                         Navigator.pushNamed(context, AppRouterName.reviewPost,
                             arguments: data[index]['id']);
@@ -532,7 +540,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.trashCan,
                         size: 20,
                       ),
-                      title: const Text('Remove posting'),
+                      title: Text(LocaleData.removePosting.getString(context)),
                       onTap: () {
                         deleteProject(index);
                         Navigator.pop(context);
@@ -543,7 +551,7 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.briefcase,
                         size: 20,
                       ),
-                      title: const Text('Start working this project'),
+                      title: Text(LocaleData.startWorkingThisProject.getString(context)),
                       onTap: () {
                         Navigator.pop(context);
                         _handleStartWorking(data[index]['id'], index);
@@ -612,13 +620,13 @@ class DashboardState extends State<Dashboard>
                     },
                     icon: Icon(Icons.pending_outlined,
                         size: MediaQuery.of(context).size.width * 0.06,
-                        color: Colors.black),
+                        ),
                   ),
                 ],
               ),
               const SizedBox(height: 8.0),
-              const Text(
-                'Students are looking for',
+              Text(
+                LocaleData.studentsAreLookingFor.getString(context),
                 style: TextStyle(
                   fontSize: 13.0,
                 ),
@@ -653,12 +661,12 @@ class DashboardState extends State<Dashboard>
                   Text(projects[index]['countHired'].toString()),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Proposals'),
-                  Text('Message'),
-                  Text('Hired'),
+                  Text(LocaleData.proposals.getString(context)),
+                  Text(LocaleData.message.getString(context)),
+                  Text(LocaleData.hired.getString(context)),
                 ],
               ),
             ],
@@ -720,13 +728,13 @@ class DashboardState extends State<Dashboard>
                     },
                     icon: Icon(Icons.pending_outlined,
                         size: MediaQuery.of(context).size.width * 0.06,
-                        color: Colors.black),
+                        ),
                   ),
                 ],
               ),
               const SizedBox(height: 8.0),
-              const Text(
-                'Students are looking for',
+              Text(
+                LocaleData.studentsAreLookingFor.getString(context),
                 style: TextStyle(
                   fontSize: 13.0,
                 ),
@@ -761,12 +769,12 @@ class DashboardState extends State<Dashboard>
                   Text(projectsWorking[index]['countHired'].toString()),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Proposals'),
-                  Text('Message'),
-                  Text('Hired'),
+                  Text(LocaleData.proposals.getString(context)),
+                  Text(LocaleData.message.getString(context)),
+                  Text(LocaleData.hired.getString(context)),
                 ],
               ),
             ],
@@ -834,8 +842,8 @@ class DashboardState extends State<Dashboard>
                 ],
               ),
               const SizedBox(height: 8.0),
-              const Text(
-                'Students are looking for',
+              Text(
+                LocaleData.studentsAreLookingFor.getString(context),
                 style: TextStyle(
                   fontSize: 13.0,
                 ),
@@ -870,12 +878,12 @@ class DashboardState extends State<Dashboard>
                   Text(projectsArchieved[index]['countHired'].toString()),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Proposals'),
-                  Text('Message'),
-                  Text('Hired'),
+                  Text(LocaleData.proposals.getString(context)),
+                  Text(LocaleData.message.getString(context)),
+                  Text(LocaleData.hired.getString(context)),
                 ],
               ),
             ],

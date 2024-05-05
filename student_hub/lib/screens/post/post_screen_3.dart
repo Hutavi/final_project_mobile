@@ -23,6 +23,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
       descriptionController.text = ref.watch(postProjectProvider).description!;
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(
         title: 'Student Hub',
       ),
@@ -120,8 +121,18 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                 TextField(
                   controller: descriptionController,
                   maxLines: 6,
+                  style: TextStyle(
+                    color: kGrey0
+                  ),
                   decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: kWhiteColor,
                       hintText: 'Project Description',
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: kGrey0,
+                      ),
+                      
                       enabledBorder: OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(

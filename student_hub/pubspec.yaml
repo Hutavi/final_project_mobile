@@ -43,14 +43,12 @@ dependencies:
   uuid: ^4.3.3
   equatable: ^2.0.5
   omni_datetime_picker: ^1.0.9
-  intl: ^0.19.0
   zego_uikit_prebuilt_video_conference: ^2.7.1
   quickalert: ^1.0.2
   #add for navigation bar
   #reference: https://pub.dev/packages/google_nav_bar
   google_nav_bar: ^5.0.0
   shared_preferences: ^2.2.2
-
   iconsax_flutter: ^1.0.0
   get: ^4.6.5
   get_storage: ^2.1.1
@@ -61,6 +59,8 @@ dependencies:
   path: ^1.8.0
   socket_io_client: ^2.0.3+1
   lottie: ^3.1.0
+  flutter_localization: ^0.2.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

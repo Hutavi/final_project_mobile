@@ -46,6 +46,7 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
         ? '1 to 3 months'
         : '3 to 6 months';
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(
         title: 'Student Hub',
       ),
@@ -69,7 +70,7 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+                      color: kBlue600)),
               const Divider(),
               const Text(
                 'Project description',
@@ -82,7 +83,7 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   style: const TextStyle(
                       fontSize: 14,
                       // fontWeight: FontWeight.w300,
-                      color: Colors.black)),
+                      color: kBlue600)),
               
               const Divider(),
               SizedBox(
@@ -170,6 +171,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kBlue400,
                     foregroundColor: kWhiteColor,
+                    padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
                   ),
                   child: const Text('Edit project'),
                 ),
@@ -187,6 +190,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kRed,
                     foregroundColor: kWhiteColor,
+                    padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
                   ),
                   child: const Text('Cancel'),
                 ),

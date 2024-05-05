@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -58,11 +60,13 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
     int daysAgo = difference.inDays;
 
     if (daysAgo == 0) {
-      return 'Created today';
+      return LocaleData.createdToday.getString(context);
     } else if (daysAgo == 1) {
-      return 'Created yesterday';
+      return LocaleData.createdYesterday.getString(context);
     } else {
-      return 'Created $daysAgo days ago';
+      return LocaleData.createdDayAgo
+          .getString(context)
+          .replaceFirst('%a', daysAgo.toString());
     }
   }
 
@@ -101,14 +105,24 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
   @override
   Widget build(BuildContext context) {
     String timeAgo = calculateTimeAgo(widget.projectForListModel.createdAt);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final Brightness brightness = Theme.of(context).brightness;
+    Color backgroundColor;
+
+    if (brightness == Brightness.light) {
+      backgroundColor = widget.isEven! ? kWhiteColor : kBlueGray50;
+    } else {
+      backgroundColor =
+          widget.isEven! ? colorScheme.surface : colorScheme.background;
+    }
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: widget.isEven == true ? kWhiteColor : kBlueGray50,
+          color: backgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: kGrey2,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
               blurRadius: 5.0,
             ),
           ]),
@@ -121,19 +135,20 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                 Text(
                   timeAgo,
                   style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
-                Text(widget.projectForListModel.title,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: kBlue800)),
+                Text(
+                  widget.projectForListModel.title,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: kBlue600),
+                ),
                 Text(
                   widget.projectForListModel.projectScopeFlag == 0
                       ? 'Time: 1-3 months'
                       : 'Time: 3-6 months',
-                  style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
                 const Text('Students are looking for',
@@ -144,8 +159,7 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     DescribeItem(
-                      itemDescribe:
-                          widget.projectForListModel.description,
+                      itemDescribe: widget.projectForListModel.description,
                     ),
                   ],
                 ),
@@ -154,8 +168,7 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                 ),
                 Text(
                   'Proposals: ${widget.projectForListModel.numberOfStudents} students',
-                  style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],
             ),

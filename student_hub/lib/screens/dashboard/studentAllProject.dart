@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/constants/colors.dart';
+
 class StudentAllProject extends StatefulWidget {
   const StudentAllProject({super.key});
 
@@ -78,8 +81,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
       });
     } catch (e) {
       if (e is DioException && e.response != null) {
+        // ignore: avoid_print
         print(e);
       } else {
+        // ignore: avoid_print
         print('Have Error: $e');
       }
     }
@@ -91,27 +96,27 @@ class _StudentAllProjectState extends State<StudentAllProject>
     Duration difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
     } else {
       if (difference.inHours < 1) {
         int minutesDifference = difference.inMinutes;
-        return '$minutesDifference minutes ago';
+        return '$minutesDifference ${LocaleData.minutesAgo.getString(context)}';
       } else {
         int hoursDifference = difference.inHours;
-        return '$hoursDifference hours ago';
+        return '$hoursDifference ${LocaleData.hoursAgo.getString(context)}';
       }
     }
   }
 
   String? formatTimeProject(int type) {
     if (type == 0) {
-      return '• Less than 1 month';
+      return '• ${LocaleData.lessThanOneMonth.getString(context)}';
     } else if (type == 1) {
-      return '• 1 to 3 months';
+      return '• ${LocaleData.oneToThreeMonths.getString(context)}';
     } else if (type == 2) {
-      return '• 3 to 6 months';
+      return '• ${LocaleData.threeToSixMonths.getString(context)}';
     } else if (type == 3) {
-      return '• More than 6 months';
+      return '• ${LocaleData.moreThanSixMonths.getString(context)}';
     }
     return null;
   }
@@ -149,12 +154,23 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildTabBar() {
     return TabBar(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
-      tabs: const [
-        Tab(text: 'All projects'),
-        Tab(text: 'Working'),
-        Tab(text: 'Archieved'),
+      tabs: [
+        Tab(text: LocaleData.allProject.getString(context)),
+        Tab(text: LocaleData.working.getString(context)),
+        Tab(text: LocaleData.archieved.getString(context)),
       ],
+      indicatorColor: Colors.blue,
+      labelColor: Colors.blue,
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.hovered) ||
+            states.contains(MaterialState.focused)) {
+          return Colors.blue.withOpacity(0.1);
+        }
+        return null;
+      }),
     );
   }
 
@@ -173,20 +189,21 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
 
   Widget _activeProposal() {
-    if(activeProposal.length == 0){
+    if(activeProposal.isEmpty){
       return Card(
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        // color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(0.0),
                 child: Row(
                   children: [
                     Text(
-                      "Active Proposal (${activeProposal.length})",
+                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -196,9 +213,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
                   ),
               ),
               const SizedBox(height: 8.0),
-              const Text(
-                'No active proposal',
-                style: TextStyle(
+              Text(
+                LocaleData.noActiveProposal.getString(context),
+                style: const TextStyle(
                   fontSize: 13.0,
                 ),
               ),
@@ -209,10 +226,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
     }
     else {
       return Card(
-        // color: Colors.grey[200],
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -221,7 +237,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                 child: Row(
                   children: [
                     Text(
-                      "Active Proposal (${activeProposal.length})",
+                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -248,8 +264,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildActivityProposalItem(int index){
     return Card(
+      color: Theme.of(context).colorScheme.secondary,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -268,7 +285,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                       ),
                     ),
                     Text(
-                      'Submitted ${formatTimeAgo(activeProposal[index]['createdAt'])}',
+                      '${LocaleData.submitted.getString(context)} ${formatTimeAgo(activeProposal[index]['createdAt'])}',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
@@ -279,8 +296,8 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
               style: TextStyle(
                 fontSize: 13.0,
               ),
@@ -313,19 +330,19 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
   Widget _submittedProposal() {
     return Card(
-        color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
                     Text(
-                      "Submitted Proposal (${submittedProposal.length})",
-                      style: TextStyle(
+                      "${LocaleData.submittedProposal.getString(context)} (${submittedProposal.length})",
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -350,6 +367,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildProjectItem(int index) {
     return Card(
+      color: Theme.of(context).colorScheme.secondary,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -370,7 +388,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                       ),
                     ),
                     Text(
-                      'Submitted ${formatTimeAgo(submittedProposal[index]['createdAt'])}',
+                      '${LocaleData.submitted.getString(context)} ${formatTimeAgo(submittedProposal[index]['createdAt'])}',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
@@ -381,9 +399,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
-              style: TextStyle(
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
                 fontSize: 13.0,
               ),
             ),
@@ -458,9 +476,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
-              style: TextStyle(
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
                 fontSize: 13.0,
               ),
             ),
@@ -534,9 +552,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
-              style: TextStyle(
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
                 fontSize: 13.0,
               ),
             ),

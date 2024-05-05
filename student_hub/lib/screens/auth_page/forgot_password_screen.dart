@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_public.dart';
@@ -49,9 +51,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             // ignore: use_build_context_synchronously
             context: context,
             builder: (context) => DialogCustom(
-              title: "Success",
-              description: "New password has been sent to your email.",
-              buttonText: 'Confirm',
+              title: LocaleData.success.getString(context),
+              description: LocaleData.forgotSuccess.getString(context),
+              buttonText: LocaleData.confirm.getString(context),
               // buttonTextCancel: "Cancel",
               statusDialog: 1,
               onConfirmPressed: () {
@@ -107,15 +109,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Center(
+                          Center(
                             child: Text(
-                              'Forgot Password',
-                              style: TextStyle(
+                              LocaleData.forgotPassTitle.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 16),
                             ),
                           ),
                           const SizedBox(
                             height: 20,
+                          ),
+                          Text(
+                            LocaleData.forgotLabel.getString(context),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 5,
                           ),
                           BuildTextField(
                             controller: userNameController,
@@ -125,12 +134,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               userNotFound = false;
                               // validateFields();
                             },
-                            labelText: 'Email',
+                            hint: LocaleData.email,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Email is required';
+                                return LocaleData.emailRequired
+                                    .getString(context);
                               } else if (userNotFound) {
-                                return 'User not found';
+                                return LocaleData.userNotFound
+                                    .getString(context);
                               }
                               return null;
                             },
@@ -157,11 +168,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     backgroundColor: kGrey3,
                                     elevation: 0.5,
                                   ),
-                                  child: const Text(
-                                    'Reset Password',
-                                    style: TextStyle(
+                                  child: Text(
+                                    LocaleData.forgotButton.getString(context),
+                                    style: const TextStyle(
                                       color: kGrey0,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),

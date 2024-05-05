@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -92,13 +94,13 @@ class SendHiredState extends State<SendHired>
 
   String? formatTimeProject(int type) {
     if (type == 0) {
-      return '• Less than 1 month';
+      return '• ${LocaleData.lessThanOneMonth.getString(context)}';
     } else if (type == 1) {
-      return '• 1 to 3 months';
+      return '• ${LocaleData.oneToThreeMonths.getString(context)}';
     } else if (type == 2) {
-      return '• 3 to 6 months';
+      return '• ${LocaleData.threeToSixMonths.getString(context)}';
     } else if (type == 3) {
-      return '• More than 6 months';
+      return '• ${LocaleData.moreThanSixMonths.getString(context)}';
     }
     return null;
   }
@@ -125,17 +127,17 @@ class SendHiredState extends State<SendHired>
       String result;
 
       if (difference == 0) {
-        result = '4th year students';
+        result = LocaleData.fourthYearStudent.getString(context);
       } else if (difference == 1) {
-        result = '3rd year students';
+        result = LocaleData.thirdYearStudent.getString(context);
       } else if (difference == 2) {
-        result = '2nd year students';
+        result = LocaleData.secondYearStudent.getString(context);
       } else {
-        result = '1st year students';
+        result = LocaleData.firstYearStudent.getString(context);
       }
       return result;
     } else {
-      return 'Không có dữ liệu để xử lý.';
+      return LocaleData.noDataToProcess.getString(context);
     }
   }
 
@@ -170,7 +172,7 @@ class SendHiredState extends State<SendHired>
                         _buildProjectList(),
                         _buildProjectDetails(),
                         _buildProjectMessage(),
-                        const Center(child: Text('Hired')),
+                        Center(child: Text(LocaleData.hired.getString(context))),
                       ],
                     ),
                   ),
@@ -197,11 +199,11 @@ class SendHiredState extends State<SendHired>
         }
         return null;
       }),
-      tabs: const [
-        Tab(text: 'Proposals'),
-        Tab(text: 'Detail'),
-        Tab(text: 'Message'),
-        Tab(text: 'Hired'),
+      tabs: [
+        Tab(text: LocaleData.proposals.getString(context)),
+        Tab(text: LocaleData.detail.getString(context)),
+        Tab(text: LocaleData.message.getString(context)),
+        Tab(text: LocaleData.hired.getString(context)),
       ],
     );
   }
@@ -217,8 +219,8 @@ class SendHiredState extends State<SendHired>
                   return _buildProjectItem(context, index);
                 },
               )
-            : const Center(
-                child: Text('Không có Proposal'),
+            : Center(
+                child: Text(LocaleData.noHaveProposal.getString(context)),
               );
   }
 
@@ -233,8 +235,8 @@ class SendHiredState extends State<SendHired>
                   return _buildProjectMessageItem(context, index);
                 },
               )
-            : const Center(
-                child: Text('Không có Message'),
+            : Center(
+                child: Text(LocaleData.noHaveMessage.getString(context)),
               );
   }
 
@@ -258,16 +260,16 @@ class SendHiredState extends State<SendHired>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Hired offer',
+                Text(
+                  LocaleData.hiredOffer.getString(context),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Do you really want to send hired offer for student to do this project?',
+                Text(
+                  LocaleData.confirmSendOffer.getString(context),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -289,8 +291,8 @@ class SendHiredState extends State<SendHired>
                       onPressed: () {
                         Navigator.of(context).pop(); // Đóng dialog
                       },
-                      child: const Text(
-                        'Cancel',
+                      child: Text(
+                        LocaleData.cancel.getString(context),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -310,8 +312,8 @@ class SendHiredState extends State<SendHired>
                         });
                         Navigator.of(context).pop(); // Đóng dialog
                       },
-                      child: const Text(
-                        'Send',
+                      child: Text(
+                        LocaleData.send.getString(context),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -337,8 +339,8 @@ class SendHiredState extends State<SendHired>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Students are looking for',
+                      Text(
+                        LocaleData.studentsAreLookingFor.getString(context),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -370,9 +372,9 @@ class SendHiredState extends State<SendHired>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Project scope',
-                            style: TextStyle(
+                          Text(
+                            LocaleData.projectScope.getString(context),
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 14),
                             overflow: TextOverflow.clip,
                           ),
@@ -396,14 +398,14 @@ class SendHiredState extends State<SendHired>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Team size',
-                            style: TextStyle(
+                          Text(
+                            LocaleData.teamSize.getString(context),
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 14),
                             overflow: TextOverflow.clip,
                           ),
                           Text(
-                            '• ${_projectDetaild!['numberOfStudents'].toString()} students',
+                            '• ${_projectDetaild!['numberOfStudents'].toString()} ${LocaleData.student.getString(context)}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -470,8 +472,8 @@ class SendHiredState extends State<SendHired>
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                const Text(
-                  'Excellent',
+                Text(
+                  LocaleData.excellent.getString(context),
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
@@ -506,8 +508,8 @@ class SendHiredState extends State<SendHired>
                         Colors.white,
                       ),
                     ),
-                    child: const Text(
-                      'Message',
+                    child:Text(
+                      LocaleData.message.getString(context),
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12),
                     ),
