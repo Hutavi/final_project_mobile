@@ -172,7 +172,8 @@ class SendHiredState extends State<SendHired>
                         _buildProjectList(),
                         _buildProjectDetails(),
                         _buildProjectMessage(),
-                        Center(child: Text(LocaleData.hired.getString(context))),
+                        Center(
+                            child: Text(LocaleData.hired.getString(context))),
                       ],
                     ),
                   ),
@@ -262,7 +263,7 @@ class SendHiredState extends State<SendHired>
               children: [
                 Text(
                   LocaleData.hiredOffer.getString(context),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -271,7 +272,7 @@ class SendHiredState extends State<SendHired>
                 Text(
                   LocaleData.confirmSendOffer.getString(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
@@ -341,7 +342,7 @@ class SendHiredState extends State<SendHired>
                     children: [
                       Text(
                         LocaleData.studentsAreLookingFor.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: kBlackColor,
@@ -474,7 +475,7 @@ class SendHiredState extends State<SendHired>
                 ),
                 Text(
                   LocaleData.excellent.getString(context),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
                 ),
@@ -508,10 +509,10 @@ class SendHiredState extends State<SendHired>
                         Colors.white,
                       ),
                     ),
-                    child:Text(
+                    child: Text(
                       LocaleData.message.getString(context),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
