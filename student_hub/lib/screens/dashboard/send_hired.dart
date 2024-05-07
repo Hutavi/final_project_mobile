@@ -46,11 +46,11 @@ class SendHiredState extends State<SendHired>
     getDataProposalIdProject();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _tabController.dispose();
+  //   super.dispose();
+  // }
 
   void getDataProposalIdProject() async {
     final dioPrivate = DioClient();
@@ -345,7 +345,6 @@ class SendHiredState extends State<SendHired>
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: kBlackColor,
                         ),
                       ),
                       ListView(

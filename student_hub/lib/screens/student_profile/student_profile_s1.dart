@@ -689,9 +689,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                          border: Border.all(width: 1),
+                          borderRadius: BorderRadius.circular(6),
+                          color: Theme.of(context).cardColor),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: DropdownButton<String>(
@@ -738,9 +738,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(width: 1),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                          border: Border.all(width: 1),
+                          borderRadius: BorderRadius.circular(6),
+                          color: Theme.of(context).cardColor),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: DropdownButton<String>(

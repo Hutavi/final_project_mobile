@@ -1,14 +1,7 @@
-import 'dart:convert';
 import 'dart:math';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/models/chat/message.dart';
-import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/dio_client_not_api.dart';
-import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
 
 class ScheduleInterview extends StatefulWidget {
@@ -84,15 +77,27 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+    Color? colorStart = (brightness == Brightness.light)
+        ? startDateTime != null && startDateTime!.isNotEmpty
+            ? Theme.of(context).colorScheme.onBackground
+            : Colors.grey
+        : Theme.of(context).colorScheme.onBackground;
+
+    Color? colorEnd = (brightness == Brightness.light)
+        ? endDateTime != null && endDateTime!.isNotEmpty
+            ? Theme.of(context).colorScheme.onBackground
+            : Colors.grey
+        : Theme.of(context).colorScheme.onBackground;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        height: MediaQuery.of(context).size.height * 0.7,
+        height: MediaQuery.of(context).size.height * 0.6,
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: kWhiteColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -132,7 +137,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).cardColor,
                     hintText: 'Enter title',
                     hintStyle: const TextStyle(
                         color: kGrey1,
@@ -169,7 +174,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).cardColor,
                     hintText: 'Enter content',
                     hintStyle: const TextStyle(
                         color: kGrey1,
@@ -212,6 +217,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 1, color: kGrey1),
                     ),
@@ -223,10 +229,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 ? startDateTime!
                                 : "Select Date",
                             style: TextStyle(
-                              color: startDateTime != null &&
-                                      startDateTime!.isNotEmpty
-                                  ? Colors.black
-                                  : Colors.grey,
+                              color: colorStart,
                             ),
                           ),
                         ),
@@ -276,6 +279,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 1, color: kGrey1),
                     ),
@@ -287,10 +291,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 ? endDateTime!
                                 : "Select Date",
                             style: TextStyle(
-                              color:
-                                  endDateTime != null && endDateTime!.isNotEmpty
-                                      ? Colors.black
-                                      : Colors.grey,
+                              color: colorEnd,
                             ),
                           ),
                         ),
@@ -325,9 +326,9 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                 Text(
                   '${calculateDurationInMinutes()} minutes',
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.red),
                 ),
               ],
             ),

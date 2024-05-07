@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
-import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_project.dart';

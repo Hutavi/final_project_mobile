@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -48,6 +47,7 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Theme.of(context).cardColor,
       elevation: 2.0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
