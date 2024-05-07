@@ -468,10 +468,10 @@ class AppRoute {
           },
         );
       case AppRouterName.editProfileCompany:
-        final args = settings.arguments as CompanyUser;
+        final args = settings.arguments as int;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => EditProfile(
-            companyInfo: args,
+            companyID: args,
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
