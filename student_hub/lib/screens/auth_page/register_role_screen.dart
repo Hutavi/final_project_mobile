@@ -80,7 +80,6 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
-                  color: kWhiteColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -91,11 +90,9 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                       children: [
                         const Icon(
                           Icons.person_2_rounded,
-                          color: kGrey0,
                         ),
                         Text(
                           LocaleData.studentRegister.getString(context),
-                          style: const TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -105,7 +102,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: true,
                           groupValue: isStudent,
-                          activeColor: kGrey0,
+                          activeColor: kBlue600,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -120,7 +117,6 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
-                  color: kWhiteColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,11 +126,9 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                       children: [
                         const Icon(
                           Icons.person_2_rounded,
-                          color: kGrey0,
                         ),
                         Text(
                           LocaleData.companyRegister.getString(context),
-                          style: const TextStyle(color: kGrey0),
                         )
                       ],
                     ),
@@ -144,7 +138,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: false,
                           groupValue: isStudent,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: kBlue600,
                           onChanged: handleRadioValueChanged,
                         )
                       ],

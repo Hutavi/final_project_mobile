@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'dart:convert';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -233,11 +234,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      // Settings button pressed
+                      Navigator.pushNamed(
+                          context, AppRouterName.changePassword);
                     },
-                    icon:
-                        const Icon(Icons.settings, color: kBlue400, size: 25.0),
-                    label: Text('Settings',
+                    icon: const Icon(Icons.change_circle,
+                        color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.changePassBtn.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -296,10 +298,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                             ),
                             DropdownMenuItem(
                               value: 'vi',
-                              child: Text('Vietnamese',
-                                  style: TextStyle(
+                              child: Text(
+                                'Vietnamese',
+                                style: TextStyle(
                                     // color: Theme.of(context).colorScheme.onBackground,
-                                    ),),
+                                    ),
+                              ),
                             ),
                           ],
                           onChanged: (String? newValue) {

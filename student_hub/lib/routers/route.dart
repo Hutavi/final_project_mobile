@@ -6,6 +6,7 @@ import 'package:student_hub/models/user.dart' as USER;
 import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/auth_page/change_password.dart';
 import 'package:student_hub/screens/auth_page/forgot_password_screen.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
@@ -127,6 +128,9 @@ class AppRoute {
 
       case AppRouterName.forgotPassword:
         return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
+
+      case AppRouterName.changePassword:
+        return MaterialPageRoute(builder: (_) => const ChangePassword());
 
       case AppRouterName.register:
         return PageRouteBuilder(
