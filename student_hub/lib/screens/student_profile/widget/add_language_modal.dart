@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class AddLanguageModal extends StatefulWidget {
   final String initialLanguageName;
@@ -27,8 +29,13 @@ class AddLanguageModalState extends State<AddLanguageModal> {
     _languageNameController =
         TextEditingController(text: widget.initialLanguageName);
     _selectedLanguageLevel = widget.initialSelectedLanguageLevel;
-    title =
-        widget.initialLanguageName != '' ? 'Update Language' : 'Add Language';
+    title = widget.initialLanguageName != '' ? 'update' : 'add';
+  }
+
+  String _getTitle() {
+    return widget.initialLanguageName != ''
+        ? LocaleData.updateLanguage.getString(context)
+        : LocaleData.addLanguage.getString(context);
   }
 
   @override
@@ -36,14 +43,15 @@ class AddLanguageModalState extends State<AddLanguageModal> {
     return AlertDialog(
       contentPadding:
           const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       title: Text(
-        title,
-        style: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+        title == 'add'
+            ? LocaleData.addLanguage.getString(context)
+            : LocaleData.updateLanguage.getString(context),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
       content: Column(
@@ -59,11 +67,11 @@ class AddLanguageModalState extends State<AddLanguageModal> {
             child: TextField(
               controller: _languageNameController,
               style: const TextStyle(fontSize: 13, color: Colors.black),
-              decoration: const InputDecoration(
-                hintText: 'Language Name',
+              decoration: InputDecoration(
+                hintText: LocaleData.hintLanguageName.getString(context),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
-                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
+                contentPadding: const EdgeInsets.all(10),
+                hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ),
           ),
@@ -117,7 +125,7 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                     ),
                   ),
                 ),
-                child: const Text('Cancel',
+                child: Text(LocaleData.cancel.getString(context),
                     style: TextStyle(fontSize: 13, color: Colors.white)),
               ),
             ),
@@ -131,8 +139,9 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                         _languageNameController.text, _selectedLanguageLevel);
                     Navigator.of(context).pop();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Please enter language and level.'),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text(LocaleData.hintLanguageLevel.getString(context)),
                     ));
                   }
                 },
@@ -145,8 +154,8 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                     ),
                   ),
                 ),
-                child: const Text('Accept',
-                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                child: Text(LocaleData.accept.getString(context),
+                    style: const TextStyle(fontSize: 13, color: Colors.white)),
               ),
             ),
           ],

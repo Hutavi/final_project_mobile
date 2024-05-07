@@ -67,35 +67,35 @@ class _NavigationMenuState extends State<NavigationMenu> {
             indicatorColor: Colors.black.withOpacity(0.2),
             destinations:[
               NavigationDestination(
-                icon: Icon(Iconsax.document_text),
+                icon: const Icon(Iconsax.document_text),
                 label: LocaleData.project.getString(context),
-                selectedIcon: Icon(
+                selectedIcon: const Icon(
                   Iconsax.document_text,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(Iconsax.folder_open),
+                icon: const Icon(Iconsax.folder_open),
                 label: LocaleData.dashboard.getString(context),
-                selectedIcon: Icon(
+                selectedIcon: const Icon(
                   Iconsax.folder_open,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(
+                icon: const Icon(
                   Iconsax.message,
                 ),
                 label: LocaleData.message.getString(context),
-                selectedIcon: Icon(
+                selectedIcon: const Icon(
                   Iconsax.message,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(Iconsax.notification),
+                icon: const Icon(Iconsax.notification),
                 label: LocaleData.alerts.getString(context),
-                selectedIcon: Icon(
+                selectedIcon: const Icon(
                   Iconsax.notification,
                   color: kBlue700,
                 ),

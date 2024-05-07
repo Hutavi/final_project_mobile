@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -10,16 +12,16 @@ class NotificationPage extends StatelessWidget {
         appBar: null,
         body: ListView(
           padding: const EdgeInsets.all(10.0),
-          children: const [
+          children: [
             NotificationCard(
               icon: Icons.notifications,
-              text: 'You have a new message',
+              text: LocaleData.notificationMessage.getString(context),
               time: '10:00 AM',
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             NotificationCard(
               icon: Icons.event_available,
-              text: 'Your event starts soon',
+              text: LocaleData.notificationEventStart.getString(context),
               time: '12:00 PM',
               showButton: true,
             ),
@@ -77,7 +79,7 @@ class NotificationCard extends StatelessWidget {
                 onPressed: () {
                   // Handle button press
                 },
-                child: const Text('Join'),
+                child:  Text(LocaleData.joinBtn.getString(context)),
               ),
             ],
           ],
