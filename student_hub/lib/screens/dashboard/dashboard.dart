@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
@@ -32,10 +33,13 @@ class DashboardState extends State<Dashboard>
 
   User? user = User();
 
+  int roleLocal = -1;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    getRoleFromLocal();
     getDataDefault();
     getDataStudent();
   }
@@ -44,6 +48,11 @@ class DashboardState extends State<Dashboard>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void getRoleFromLocal() async {
+    roleLocal = await RoleUser.getRole();
+    print('roleLocal: $roleLocal');
   }
 
   void getDataIdCompany() async {
@@ -238,7 +247,7 @@ class DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    if (idStudent != -1) {
+    if (roleLocal == 0) {
       return SafeArea(
         child: Scaffold(
           appBar: null,
