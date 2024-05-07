@@ -45,6 +45,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     // print(_currentLocale);
     getUserInfoFromToken();
     getAccounts();
+    getRole();
   }
 
   @override
@@ -59,6 +60,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     String? token = await TokenManager.getTokenFromLocal();
 
     User? userInfo = await ApiManager.getUserInfo(token);
+    print(userInfo?.companyUser?.companyName);
     setState(() {
       userCurr = userInfo;
     });
@@ -74,10 +76,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     });
   }
 
-  void logout() async {
-    //getToken
-
-    // Gọi API để logout
+  void logout() async { 
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',
@@ -106,7 +105,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
@@ -160,6 +158,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         child: AccountTile(
                           accountModel: accountCurr,
                           accountManager: accountManager,
+                          role: role,
                         ),
                       );
                     }).toList(),
@@ -198,20 +197,21 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      // print(userCurr?.companyUser?.printAll());
-                      if (userCurr?.roles?[0] == 1 &&
-                          userCurr?.companyUser == null) {
+                      if (role == 1 && userCurr?.companyUser == null) {
                         print('chưa có profile company');
                         Navigator.pushNamed(
                             context, AppRouterName.profileInput);
-                      } else if (userCurr?.roles?[0] == 1 &&
+                      } else if (role == 1 &&
                           userCurr?.companyUser != null) {
                         print("(đã có) edit profile company");
                         Navigator.pushNamed(
                             context, AppRouterName.editProfileCompany,
                             arguments: userCurr?.companyUser);
-                      } else {
+                      } else if(role == 0 && userCurr?.studentUser == null){
                         print('student');
+                        Navigator.pushNamed(context, AppRouterName.profileS1);
+                      } else if(role == 0 && userCurr?.studentUser != null){
+                        print('edit student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
                       }
                     },
@@ -308,7 +308,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               child: Text(
                                 'Vietnamese',
                                 style: TextStyle(
-                                    // color: Theme.of(context).colorScheme.onBackground,
                                     ),
                               ),
                             ),
@@ -377,27 +376,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
 }
 
 class AccountController {
-  
-  int role =-1;
-
-  Future<void> getRole() async {
-    role = await RoleUser.getRole();
-  }
-  Future<void> setRole (int role) async {
-    await RoleUser.saveRole(role);
-  }
-
-  void changeRole(){
-    if(role == 1){
-      setRole(0);
-    }
-    else if(role == 0) {
-      setRole(1);
-    }
-  }
-
   void reloadScreen(BuildContext context) {
-    changeRole();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SwitchAccount()),
@@ -405,32 +384,27 @@ class AccountController {
   }
 
   void toCreateProfileStudent(BuildContext context){
-    changeRole();
     Navigator.pushNamed(context, AppRouterName.profileS1);
   }
 
   void toCreateProfileCompany(BuildContext context){
-    changeRole();
     Navigator.pushNamed(context, AppRouterName.profileInput);
   }
 }
 
+// ignore: must_be_immutable
 class AccountTile extends StatelessWidget{
   AccountModel accountModel;
   AccountController accountManager;
-
+  int role;
   AccountTile({
     Key? key,
     required this.accountModel,
     required this.accountManager,
+    required this.role,
   }) : super(key: key);
   
-  int role = -1;
   List<dynamic> rolesList = [];
-
-  Future<void> getRole() async {
-    role = await RoleUser.getRole();
-  }
 
   Future<void> getRoleList() async {
     try {
@@ -441,53 +415,54 @@ class AccountTile extends StatelessWidget{
           ));
       if (response.statusCode == 200) {
         final roles = response.data['result']['roles'];
-        print(roles);
         rolesList = roles;
-        print('rolesList: $rolesList');
       }
     } catch (e) {
       print(e);
     }
   }
+  Future<void> setRole (int role) async {
+    await RoleUser.saveRole(role);
+  }
 
-  Future<int> checkRole() async {
-    await getRole();
+  void changeRole() async{
+    if(role == 1){
+      await setRole(0);
+      
+    }
+    else if(role == 0) {
+      await setRole(1);
+    }
+    int x = await RoleUser.getRole();
+      print('role after = $x');
+  }
+
+  void selectAccount(context) async {
     await getRoleList();
     int count = 0;
-    for(var role in rolesList){
-      if(role == 1){
+    print('roleBefore: $role');
+    print('rolesList: $rolesList');
+    for(int i = 0; i < rolesList.length; i++){
+      if(rolesList[i] == 1){
         count +=1;
       }
-      if(role == 2){
+      if(rolesList[i]== 0){
         count += 2;
       }
     }
     if(count == 1){
       print('only company');
-      return 1;
+      accountManager.toCreateProfileStudent(context);
     }
     if(count == 2){
       print('only student');
-      return 2;
-    }
-    if(count == 3){
-      print('both');
-      return 3;
-    }
-    return -1;
-  }
-
-  void selectAccount(context) async {
-    final int rst = await checkRole();
-    if(rst == 1){
-      accountManager.toCreateProfileStudent(context);
-    }
-    if(rst == 2){
       accountManager.toCreateProfileCompany(context);
     }
-    if(rst == 3){
+    if(count == 3){
+      print('both student and company');
       accountManager.reloadScreen(context);
     }
+    changeRole();
   }
 
   @override
@@ -497,7 +472,7 @@ class AccountTile extends StatelessWidget{
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
       title: Text('${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
-      onTap: () async {  
+      onTap: () {  
         selectAccount(context);
       },
     );
