@@ -1,7 +1,9 @@
 import 'dart:convert'; 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
@@ -57,8 +59,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Project details",
+              Text(
+                LocaleData.projectDetail.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -72,8 +74,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                       fontWeight: FontWeight.bold,
                       color: kBlue600)),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
@@ -100,8 +102,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.projectScope.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -130,8 +132,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Student required:',
+                      Text(
+                        LocaleData.studentRequired.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -174,7 +176,7 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                     padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 10),
                   ),
-                  child: const Text('Edit project'),
+                  child: Text(LocaleData.editProject.getString(context)),
                 ),
               ),
               // SizedBox(width: 10,),
@@ -193,7 +195,7 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                     padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 10),
                   ),
-                  child: const Text('Cancel'),
+                  child: Text(LocaleData.cancel.getString(context)),
                 ),
               ),
             ],

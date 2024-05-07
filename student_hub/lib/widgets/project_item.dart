@@ -156,12 +156,13 @@ class _ProjectItemState extends State<ProjectItem> {
                     )),
                 Text(
                   widget.projectForListModel.projectScopeFlag == 0
-                      ? 'Time: 1-3 months'
-                      : 'Time: 3-6 months',
+                      ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonths.getString(context)}'
+                      : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonths.getString(context)}',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
-                const Text('Students are looking for',
+                Text(
+                    LocaleData.studentsAreLookingFor.getString(context),
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ListView(
@@ -178,7 +179,7 @@ class _ProjectItemState extends State<ProjectItem> {
                   height: 10,
                 ),
                 Text(
-                  'Proposals: ${widget.projectForListModel.numberOfStudents} students',
+                  '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} ${LocaleData.student.getString(context)}',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],

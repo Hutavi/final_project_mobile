@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -418,8 +417,8 @@ class _StundentProfileS3TranscriptState
                       context,
                       MaterialPageRoute(
                         builder: (context) => NavigationMenu(
-                          // companyUser: accountList[0],
-                        ),
+                            // companyUser: accountList[0],
+                            ),
                       ),
                     );
                     showDialog(

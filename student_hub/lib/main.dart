@@ -5,7 +5,12 @@ import 'package:student_hub/app.dart';
 // import 'package:student_hub/screens/dashboard/dashboard.dart';
 // import 'package:student_hub/screens/profile_page/edit_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/services/socket.dart';
 
 void main() {
-  runApp(const ProviderScope(child:MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  SocketManager.initializeSocket();
+  SocketManager.recieveMessage();
+
+  runApp(const ProviderScope(child: MyApp()));
 }

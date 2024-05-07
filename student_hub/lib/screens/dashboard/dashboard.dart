@@ -6,7 +6,6 @@ import 'package:student_hub/models/user.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/dashboard/studentAllProject.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/assets/localization/locales.dart';
@@ -246,8 +245,8 @@ class DashboardState extends State<Dashboard>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding:
-                    EdgeInsets.only(top: 16.0, bottom: 0, left: 16, right: 16),
+                padding: const EdgeInsets.only(
+                    top: 16.0, bottom: 0, left: 16, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -261,7 +260,7 @@ class DashboardState extends State<Dashboard>
                   ],
                 ),
               ),
-              StudentAllProject(),
+              const StudentAllProject(),
             ],
           ),
         ),
@@ -281,7 +280,7 @@ class DashboardState extends State<Dashboard>
                   children: [
                     Text(
                       LocaleData.yourProject.getString(context),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -376,9 +375,8 @@ class DashboardState extends State<Dashboard>
                     },
                   )
                 : Center(
-                    child: Text(
-                        LocaleData.haveNotProjectYet.getString(context)
-                    ),
+                    child:
+                        Text(LocaleData.haveNotProjectYet.getString(context)),
                   ),
           );
   }
@@ -397,8 +395,7 @@ class DashboardState extends State<Dashboard>
                   )
                 : Center(
                     child: Text(
-                      LocaleData.haveNotProjectWorking.getString(context)
-                    ),
+                        LocaleData.haveNotProjectWorking.getString(context)),
                   ),
           );
   }
@@ -417,8 +414,7 @@ class DashboardState extends State<Dashboard>
                   )
                 : Center(
                     child: Text(
-                      LocaleData.haveNotProjectArchieved.getString(context)
-                    ),
+                        LocaleData.haveNotProjectArchieved.getString(context)),
                   ),
           );
   }
@@ -517,7 +513,8 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.fileImport,
                         size: 20,
                       ),
-                      title: Text(LocaleData.archieveThisProject.getString(context)),
+                      title: Text(
+                          LocaleData.archieveThisProject.getString(context)),
                       onTap: () {
                         Navigator.pop(context);
                         _handleStartArchieved(data[index]['id'], index);
@@ -551,7 +548,8 @@ class DashboardState extends State<Dashboard>
                         FontAwesomeIcons.briefcase,
                         size: 20,
                       ),
-                      title: Text(LocaleData.startWorkingThisProject.getString(context)),
+                      title: Text(LocaleData.startWorkingThisProject
+                          .getString(context)),
                       onTap: () {
                         Navigator.pop(context);
                         _handleStartWorking(data[index]['id'], index);
@@ -618,16 +616,17 @@ class DashboardState extends State<Dashboard>
                     onPressed: () {
                       _showPopupMenu(context, index);
                     },
-                    icon: Icon(Icons.pending_outlined,
-                        size: MediaQuery.of(context).size.width * 0.06,
-                        ),
+                    icon: Icon(
+                      Icons.pending_outlined,
+                      size: MediaQuery.of(context).size.width * 0.06,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 8.0),
               Text(
                 LocaleData.studentsAreLookingFor.getString(context),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13.0,
                 ),
               ),
@@ -726,16 +725,17 @@ class DashboardState extends State<Dashboard>
                     onPressed: () {
                       _showPopupMenu(context, index);
                     },
-                    icon: Icon(Icons.pending_outlined,
-                        size: MediaQuery.of(context).size.width * 0.06,
-                        ),
+                    icon: Icon(
+                      Icons.pending_outlined,
+                      size: MediaQuery.of(context).size.width * 0.06,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 8.0),
               Text(
                 LocaleData.studentsAreLookingFor.getString(context),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13.0,
                 ),
               ),
@@ -844,7 +844,7 @@ class DashboardState extends State<Dashboard>
               const SizedBox(height: 8.0),
               Text(
                 LocaleData.studentsAreLookingFor.getString(context),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13.0,
                 ),
               ),

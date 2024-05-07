@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
@@ -79,8 +81,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
   Widget build(BuildContext context) {
     
     final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
-        ? '1 to 3 months'
-        : '3 to 6 months';
+        ? LocaleData.oneToThreeMonths.getString(context)
+        : LocaleData.threeToSixMonths.getString(context);
     print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -94,8 +96,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "4/4-Project details",
+              Text(
+                LocaleData.reviewTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -109,8 +111,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                       fontWeight: FontWeight.bold,
                       color: kBlue600)),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
@@ -137,8 +139,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.projectScope.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -167,8 +169,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Student required:',
+                      Text(
+                        LocaleData.studentRequired.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -218,7 +220,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15, vertical: 10),
                 ),
-                child: const Text('Post a job'),
+                child: Text(LocaleData.postJob.getString(context)),
               ),
             ],
           ),

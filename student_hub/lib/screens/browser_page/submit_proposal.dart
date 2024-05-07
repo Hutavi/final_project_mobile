@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:flutter/material.dart';
@@ -82,11 +84,11 @@ class SubmitProposalState extends State<SubmitProposal> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Cover letter',
+                  LocaleData.coverLetter.getString(context),
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -98,11 +100,11 @@ class SubmitProposalState extends State<SubmitProposal> {
             const SizedBox(
               height: 10,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Describe why do you fit to this project',
+                  LocaleData.submitProposalScript.getString(context),
                   style: TextStyle(
                       fontSize: 13,
                       // fontWeight: FontWeight.w500,
@@ -159,7 +161,7 @@ class SubmitProposalState extends State<SubmitProposal> {
                         ),
                         backgroundColor: kWhiteColor,
                         foregroundColor: kRed),
-                    child: const Text('Cancel'),
+                    child: Text(LocaleData.cancel.getString(context)),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -178,7 +180,7 @@ class SubmitProposalState extends State<SubmitProposal> {
                         ),
                         backgroundColor: kWhiteColor,
                         foregroundColor: kBlue700),
-                    child: const Text('Submit proposal'),
+                    child: Text(LocaleData.submitProposal.getString(context)),
                   ),
                 ),
               ],

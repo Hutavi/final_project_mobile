@@ -111,8 +111,8 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   // List
-                  const Text(
-                    'StudentHub is university market place to connect high-skilled student and company on a real-world project',
+                  Text(
+                    LocaleData.homeTitle.getString(context),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.normal,

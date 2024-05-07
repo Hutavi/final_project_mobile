@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_education_modal.dart';
 import 'package:student_hub/screens/student_profile/widget/add_language_modal.dart';
@@ -7,6 +9,7 @@ import 'package:student_hub/screens/student_profile/widget/tags.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
 
 class StudentProfileS1 extends StatefulWidget {
@@ -229,114 +232,24 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
   void _showSuccess() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thành công',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Success",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
   void _showError() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thất bại',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'Cancle',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Fail",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
@@ -355,14 +268,16 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
       if (responseLanguage.statusCode == 200) {
         setState(() {
-          notify = 'Cập nhật Profile thành công';
+          notify =
+              '${LocaleData.updateProfile.getString(context)} ${LocaleData.success.getString(context)}';
           _showSuccess();
           isTechStackChanged = false;
           isSkillSetChanged = false;
         });
       } else {
         setState(() {
-          notify = 'Cập nhật Profile thất bại';
+          notify =
+              '${LocaleData.updateProfile.getString(context)} ${LocaleData.failed.getString(context)}';
           _showError();
         });
       }
@@ -376,7 +291,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
       if (responseLanguage.statusCode == 201) {
         setState(() {
-          notify = 'Tạo Profile thành công';
+          notify =
+              '${LocaleData.createdProfile.getString(context)} ${LocaleData.success.getString(context)}';
           getIDStudent();
           _showSuccess();
           isTechStackChanged = false;
@@ -384,7 +300,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
         });
       } else {
         setState(() {
-          notify = 'Tạo Profile thất bại';
+          notify =
+              '${LocaleData.createdProfile.getString(context)} ${LocaleData.failed.getString(context)}';
           _showError();
         });
       }
@@ -460,7 +377,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Tạo Language mới thành công';
+        notify =
+            '${LocaleData.createdLanguage.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listLanguage.insert(0, {
           'languageName': languageName,
@@ -469,8 +387,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       });
     } else {
       setState(() {
-        notify = 'Tạo Language mới thất bại';
-
+        notify =
+            '${LocaleData.createdLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -500,14 +418,16 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Cập nhật Language thành công';
+        notify =
+            '${LocaleData.updatedLanguage.getString(context)} ${LocaleData.success.getString(context)}';
 
         _showSuccess();
         listLanguage[index] = updatedEducation;
       });
     } else {
       setState(() {
-        notify = 'Cập nhật Language mới thất bại';
+        notify =
+            '${LocaleData.updatedLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
 
         _showError();
       });
@@ -568,8 +488,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseEducation.statusCode == 200) {
       setState(() {
-        notify = 'Tạo Education mới thành công';
-
+        notify =
+            '${LocaleData.createdEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation.insert(0, {
           'schoolName': educationName,
@@ -579,8 +499,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       });
     } else {
       setState(() {
-        notify = 'Tạo Education mới thất bại';
-
+        notify =
+            '${LocaleData.createdEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -625,15 +545,15 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseEducation.statusCode == 200) {
       setState(() {
-        notify = 'Cập nhật Education thành công';
-
+        notify =
+            '${LocaleData.updatedEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation[index] = updatedEducation;
       });
     } else {
       setState(() {
-        notify = 'Cập nhật Education thất bại';
-
+        notify =
+            '${LocaleData.updatedEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -675,15 +595,15 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Language thành công';
-
+        notify =
+            '${LocaleData.removeLanguage.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listLanguage.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Language thất bại';
-
+        notify =
+            '${LocaleData.removeLanguage.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -708,15 +628,15 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Education thành công';
-
+        notify =
+            '${LocaleData.removeEducation.getString(context)} ${LocaleData.success.getString(context)}';
         _showSuccess();
         listEducation.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Education thất bại';
-
+        notify =
+            '${LocaleData.removeEducation.getString(context)} ${LocaleData.failed.getString(context)}';
         _showError();
       });
     }
@@ -733,11 +653,11 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                 child: Column(
                   children: <Widget>[
                     // Welcome message
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
                       child: Text(
-                        'Welcome to Student Hub',
-                        style: TextStyle(
+                        LocaleData.edtProfileCompanyTitle.getString(context),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -746,20 +666,19 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                     ),
 
                     // Tell us about yourself
-                    const Text(
-                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    Text(
+                      LocaleData.welcomeLine2.getString(context),
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w500),
                     ),
-
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                             child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'TechStack',
-                            style: TextStyle(
+                            LocaleData.techStack.getString(context),
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
@@ -770,8 +689,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
 
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black, width: 1),
+                        border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Padding(
@@ -780,9 +698,10 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                           isExpanded: true,
                           menuMaxHeight: 200,
                           value: _selectedValueTech,
-                          hint: const Text('Select Techstack',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.grey)),
+                          hint: Text(
+                              LocaleData.selectTechStack.getString(context),
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey)),
                           items: dropdownTechStackOptions
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
@@ -800,16 +719,15 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         ),
                       ),
                     ),
-
                     // Skillset
-                    const Row(
+                    Row(
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Text(
-                              'Skillset',
-                              style: TextStyle(
+                              LocaleData.skillSet.getString(context),
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -820,8 +738,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black, width: 1),
+                        border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Padding(
@@ -829,9 +746,10 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                         child: DropdownButton<String>(
                           isExpanded: true,
                           menuMaxHeight: 200,
-                          hint: const Text('Select Skillset',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.grey)),
+                          hint: Text(
+                              LocaleData.selectSkillSet.getString(context),
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey)),
                           value: _selectedValue,
                           onChanged: _onDropdownChanged,
                           items: dropdownSkillSetOptions.map((String value) {
@@ -875,7 +793,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                 const Size(100, 36)),
                           ),
                           child: Text(
-                            created ? 'Save' : 'Create',
+                            created
+                                ? LocaleData.save.getString(context)
+                                : LocaleData.create.getString(context),
                             style: TextStyle(
                               color: isTechStackChanged || isSkillSetChanged
                                   ? Colors.blue
@@ -898,9 +818,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Languages',
-                                style: TextStyle(
+                              Text(
+                                LocaleData.language.getString(context),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 14),
                               ),
                               Row(
@@ -914,11 +834,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                         color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground
+                                                .withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 4,
-                                            offset: const Offset(0, 2),
+                                            offset: const Offset(0, 0),
                                           ),
                                         ],
                                       ),
@@ -926,6 +848,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                       child: const Icon(
                                         Icons.add,
                                         size: 16,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   )
@@ -949,9 +872,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                           final language = listLanguage[index];
                           return Card(
                             elevation: 2,
+                            color: Theme.of(context).cardColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6)),
-                            color: Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(12),
                               child: Column(
@@ -983,11 +906,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                                 color: Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground
                                                         .withOpacity(0.2),
                                                     spreadRadius: 2,
                                                     blurRadius: 4,
-                                                    offset: const Offset(0, 2),
+                                                    offset: const Offset(0, 0),
                                                   ),
                                                 ],
                                               ),
@@ -1012,11 +937,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                                 color: Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground
                                                         .withOpacity(0.2),
                                                     spreadRadius: 2,
                                                     blurRadius: 4,
-                                                    offset: const Offset(0, 2),
+                                                    offset: const Offset(0, 0),
                                                   ),
                                                 ],
                                               ),
@@ -1049,9 +976,9 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                'Education',
-                                style: TextStyle(
+                              Text(
+                                LocaleData.education.getString(context),
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 14),
                               ),
                               Row(
@@ -1065,11 +992,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                         color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground
+                                                .withOpacity(0.2),
                                             spreadRadius: 2,
                                             blurRadius: 4,
-                                            offset: const Offset(0, 2),
+                                            offset: const Offset(0, 0),
                                           ),
                                         ],
                                       ),
@@ -1077,6 +1006,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                       child: const Icon(
                                         Icons.add,
                                         size: 16,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   )
@@ -1101,11 +1031,11 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: Card(
+                              color: Theme.of(context).cardColor,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              color: Colors.white,
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -1138,12 +1068,14 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onBackground
                                                           .withOpacity(0.2),
                                                       spreadRadius: 2,
                                                       blurRadius: 4,
                                                       offset:
-                                                          const Offset(0, 2),
+                                                          const Offset(0, 0),
                                                     ),
                                                   ],
                                                 ),
@@ -1169,12 +1101,14 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onBackground
                                                           .withOpacity(0.2),
                                                       spreadRadius: 2,
                                                       blurRadius: 4,
                                                       offset:
-                                                          const Offset(0, 2),
+                                                          const Offset(0, 0),
                                                     ),
                                                   ],
                                                 ),
@@ -1212,10 +1146,13 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
             ? Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -1235,8 +1172,8 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  child: const Text('Continue',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text(LocaleData.continu.getString(context),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               )
             : const SizedBox());

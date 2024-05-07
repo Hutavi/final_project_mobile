@@ -65,19 +65,22 @@ class AddEducationModalState extends State<AddEducationModal> {
                 color: Colors.white),
             child: TextField(
               controller: _educationNameController,
-              style: const TextStyle(fontSize: 13),
+              style: const TextStyle(fontSize: 13, color: Colors.black),
               decoration: const InputDecoration(
                 hintText: 'Education Name',
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
-                hintStyle: TextStyle(fontSize: 13),
+                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Start year',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.background),
           ),
           const SizedBox(height: 4),
           Container(
@@ -111,9 +114,12 @@ class AddEducationModalState extends State<AddEducationModal> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'End year',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.background),
           ),
           const SizedBox(height: 4),
           Container(

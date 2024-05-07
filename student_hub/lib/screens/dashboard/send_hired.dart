@@ -4,6 +4,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
@@ -33,6 +34,7 @@ class SendHiredState extends State<SendHired>
   List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
+  var idUser = -1;
 
   @override
   void initState() {
@@ -67,10 +69,23 @@ class SendHiredState extends State<SendHired>
       ),
     );
 
+    final responseIdUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
     final proposal = responseProppsal.data['result']['items'];
     final message = responseMessageProppsal.data['result'];
+    final user = responseIdUser.data['result'];
 
     setState(() {
+      if (user['roles'][0] == 0) {
+        idUser = user['student']['userId'];
+      } else {
+        idUser = user['company']['userId'];
+      }
       proposals = proposal;
       listMessage = message;
       isLoading = false;
@@ -157,7 +172,8 @@ class SendHiredState extends State<SendHired>
                         _buildProjectList(),
                         _buildProjectDetails(),
                         _buildProjectMessage(),
-                        Center(child: Text(LocaleData.hired.getString(context))),
+                        Center(
+                            child: Text(LocaleData.hired.getString(context))),
                       ],
                     ),
                   ),
@@ -247,7 +263,7 @@ class SendHiredState extends State<SendHired>
               children: [
                 Text(
                   LocaleData.hiredOffer.getString(context),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -256,7 +272,7 @@ class SendHiredState extends State<SendHired>
                 Text(
                   LocaleData.confirmSendOffer.getString(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
@@ -326,7 +342,7 @@ class SendHiredState extends State<SendHired>
                     children: [
                       Text(
                         LocaleData.studentsAreLookingFor.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: kBlackColor,
@@ -459,7 +475,7 @@ class SendHiredState extends State<SendHired>
                 ),
                 Text(
                   LocaleData.excellent.getString(context),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
                 ),
@@ -477,14 +493,13 @@ class SendHiredState extends State<SendHired>
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // SocketManager.initializeSocket();
-                      // SocketManager.sendMessage(
-                      //   "Hello, world!",
-                      //   560,
-                      //   5,
-                      //   6,
-                      //   0,
-                      // );
+                      Navigator.of(context)
+                          .pushNamed(AppRouterName.chatScreen, arguments: {
+                        'idProject': widget.idProject,
+                        'idThisUser': idUser,
+                        'idAnyUser': proposals[index]['student']['userId'],
+                        'name': proposals[index]['student']['user']['fullname'],
+                      });
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -494,10 +509,10 @@ class SendHiredState extends State<SendHired>
                         Colors.white,
                       ),
                     ),
-                    child:Text(
+                    child: Text(
                       LocaleData.message.getString(context),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),

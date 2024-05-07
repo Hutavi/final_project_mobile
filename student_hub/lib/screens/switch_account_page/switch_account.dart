@@ -168,7 +168,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           context, AppRouterName.navigation);
                     },
                     icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
-                    label: Text('Home',
+                    label: Text(LocaleData.home.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -210,7 +210,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
-                    label: Text('Profiles',
+                    label: Text(LocaleData.profile.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -264,15 +264,16 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.language, color: kBlue400, size: 25.0),
-                          SizedBox(
+                          const Icon(Icons.language,
+                              color: kBlue400, size: 25.0),
+                          const SizedBox(
                             width: 8,
                           ),
                           Text(
-                            "Language:",
-                            style: TextStyle(fontSize: 16),
+                            '${LocaleData.language.getString(context)}:',
+                            style: const TextStyle(fontSize: 16),
                           )
                         ],
                       ),
@@ -296,7 +297,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                                           .labelLarge!
                                           .color)),
                             ),
-                            DropdownMenuItem(
+                            const DropdownMenuItem(
                               value: 'vi',
                               child: Text(
                                 'Vietnamese',
@@ -325,7 +326,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       logout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
-                    label: Text('Log out',
+                    label: Text(LocaleData.logOut.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -441,9 +442,6 @@ class AccountTile extends StatelessWidget {
   }
 
   void logout() async {
-    //getToken
-
-    // Gọi API để logout
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',
