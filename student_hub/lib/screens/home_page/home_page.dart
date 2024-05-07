@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> setRoleCurr(int value) async{
+    await RoleUser.clearRole();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    await RoleUser.saveRole(value);
+    int a = await RoleUser.getRole();
+    // print('roleUser: $value');
+    // print('curr: ' + a.toString());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +74,8 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            await setRoleCurr(1);
                             Navigator.pushReplacementNamed(
                                 context, AppRouterName.login);
                           },
@@ -86,7 +97,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 10),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            await setRoleCurr(0);
                             Navigator.pushReplacementNamed(
                                 context, AppRouterName.login);
                           },

@@ -12,6 +12,7 @@ import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/screens/switch_account_page/account_manager.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -51,15 +52,42 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.statusCode == 201) {
           final token = response.data['result']['token'];
           await saveTokenToLocal(token);
-          // ignore: use_build_context_synchronously
-          Navigator.pushReplacementNamed(context, AppRouterName.navigation);
 
           // await AccountManager.clearSharedPreferences();
+          List<dynamic> roles = await ApiManager.getRoles(token);
+          print(roles);
+          
+          //get role from local
+          final roleLocal = await RoleUser.getRole();
+          print('roleLocal: $roleLocal');
+          
+          for(int i = 0; i < roles.length; i++){
+            print(roles[i]);
+            if(roles[i] == roleLocal){
+              
+              String fullname = await ApiManager.getFullname(token);
+              print(fullname);
+              await AccountManager.saveAccountToLocal(userNameController.text, passwordController.text, fullname);
 
-          String fullname = await ApiManager.getFullname(token);
-          print(fullname);
-          await AccountManager.saveAccountToLocal(
-              userNameController.text, passwordController.text, fullname);
+              // ignore: use_build_context_synchronously
+              Navigator.pushReplacementNamed(context, AppRouterName.navigation); 
+              return;
+            }
+            
+          }
+          //loop through roles to check if role isn't mapped with local role, then show dialog
+          showDialog(
+            context: context, 
+            builder: (context) => DialogCustom(
+              title: LocaleData.error.getString(context),
+              description: 'Account is not map with your choosen role. Please choose another role.',
+              buttonText: LocaleData.confirm.getString(context),
+              onConfirmPressed: () {
+                Navigator.pushReplacementNamed(context, AppRouterName.homePage);
+              },
+              statusDialog: 0,
+          ));
+          
         } else {
           print("Login failed: ${response.data}");
         }

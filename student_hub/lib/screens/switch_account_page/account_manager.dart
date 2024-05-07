@@ -67,3 +67,29 @@ class AccountManager {
     await prefs.clear();
   }
 }
+
+class RoleUser {
+  static const String _key = 'roleUser';
+
+  static Future<int> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? rolesJson = prefs.getString(_key);
+    if (rolesJson != null) {
+      int role = jsonDecode(rolesJson);
+      return role;
+    }
+    return -1;
+    //-1 is error
+  }
+
+  static Future<void> saveRole(int role) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String roleJson = jsonEncode(role);
+    prefs.setString(_key, roleJson);
+  }
+
+  static Future<void> clearRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
+  }
+}

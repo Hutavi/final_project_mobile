@@ -31,6 +31,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   late FlutterLocalization _flutterLocalization;
   late String _currentLocale;
+  int role = -1;
+
+  void getRole() async {
+    role = await RoleUser.getRole();
+  }
 
   @override
   void initState() {
@@ -130,15 +135,15 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           width: 10,
                         ),
                         Text(
-                          accountList
+                          '${accountList
                               .where((element) => element.isLogin == true)
                               .first
-                              .getName,
+                              .getName} (${role == 1 ? 'Company' : 'Student'})',
                           style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -148,11 +153,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     onExpansionChanged: (bool expanded) {
                       if (expanded) {}
                     },
-                    children: inactiveAccountList.map((inactiveAccount) {
+                    children: accountList
+                              .where((element) => element.isLogin == true).map((accountCurr) {
                       return GestureDetector(
                         onTap: () {},
                         child: AccountTile(
-                          accountModel: inactiveAccount,
+                          accountModel: accountCurr,
                           accountManager: accountManager,
                         ),
                       );
@@ -303,6 +309,10 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               child: Text('Vietnamese',
                                   style: TextStyle(
                                     // color: Theme.of(context).colorScheme.onBackground,
+                                    color: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .color
                                     ),),
                             ),
                           ],
@@ -371,16 +381,45 @@ class _SwitchAccountState extends State<SwitchAccount> {
 }
 
 class AccountController {
+  
+  int role =-1;
+
+  Future<void> getRole() async {
+    role = await RoleUser.getRole();
+  }
+  Future<void> setRole (int role) async {
+    await RoleUser.saveRole(role);
+  }
+
+  void changeRole(){
+    if(role == 1){
+      setRole(0);
+    }
+    else if(role == 0) {
+      setRole(1);
+    }
+  }
+
   void reloadScreen(BuildContext context) {
+    changeRole();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SwitchAccount()),
     );
   }
+
+  void toCreateProfileStudent(BuildContext context){
+    changeRole();
+    Navigator.pushNamed(context, AppRouterName.profileS1);
+  }
+
+  void toCreateProfileCompany(BuildContext context){
+    changeRole();
+    Navigator.pushNamed(context, AppRouterName.profileInput);
+  }
 }
 
-// ignore: must_be_immutable
-class AccountTile extends StatelessWidget {
+class AccountTile extends StatelessWidget{
   AccountModel accountModel;
   AccountController accountManager;
 
@@ -389,110 +428,81 @@ class AccountTile extends StatelessWidget {
     required this.accountModel,
     required this.accountManager,
   }) : super(key: key);
+  
+  int role = -1;
+  List<dynamic> rolesList = [];
 
-  Future<void> sendRequestToLogIn(String username, String password) async {
-    try {
-      final dio = DioClientWithoutToken();
-      final response = await dio.request(
-        '/auth/sign-in',
-        data: jsonEncode({
-          "email": username,
-          "password": password,
-        }),
-        options: Options(
-          method: 'POST',
-        ),
-      );
-      if (response.statusCode == 201) {
-        final token = response.data['result']['token'];
-
-        print('Login success: $token');
-
-        await saveTokenToLocal(token);
-
-        String fullname = await ApiManager.getFullname(token);
-        // print('fullname');
-        // print(fullname);
-
-        await AccountManager.saveAccountToLocal(username, password, fullname);
-        // List<AccountModel> ss = await AccountManager.getAccounts();
-        // for(var i = 0; i<ss.length; i++){
-        //   if(ss[i].getIsLogin==true){
-        //     print('sendRequestToLogIn:');
-        //     print(ss[i].getName);
-        //   }
-        // }
-      } else {
-        print("Login failed: ${response.data}");
-      }
-    } catch (e) {
-      if (e is DioException && e.response != null) {
-        if (e.response!.data['errorDetails'] == 'Not found user') {
-          print('User not found');
-        } else if (e.response!.data['errorDetails'] == 'Incorrect password') {
-          print('Incorrect password');
-        }
-      }
-    }
+  Future<void> getRole() async {
+    role = await RoleUser.getRole();
   }
 
-  Future<void> saveTokenToLocal(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accessToken', token);
-  }
-
-  void logout() async {
+  Future<void> getRoleList() async {
     try {
       final dio = DioClient();
-      final response = await dio.request('/auth/logout',
+      final response = await dio.request('/auth/me',
           options: Options(
-            method: 'POST',
+            method: 'GET',
           ));
-      if (response.statusCode == 201) {
-        // Xóa token từ local storage
-        await TokenManager.removeTokenFromLocal();
-        String? token = await TokenManager.getTokenFromLocal();
-        if (token == '') {
-          print('Logout success');
-        } else {
-          print(token);
-          print('Logout failed');
-        }
+      if (response.statusCode == 200) {
+        final roles = response.data['result']['roles'];
+        rolesList = roles;
       }
     } catch (e) {
       print(e);
     }
   }
 
-  List<AccountModel> accountList =
-      []; //danh sách tất cả tài khoản đã từng đăng nhập
-  List<AccountModel> inactiveAccountList =
-      []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập
+  Future<int> checkRole() async {
+    await getRole();
+    await getRoleList();
+    int count = 0;
+    for(var role in rolesList){
+      if(role == 1){
+        count +=1;
+      }
+      if(role == 2){
+        count += 2;
+      }
+    }
+    if(count == 1){
+      print('only company');
+      return 1;
+    }
+    if(count == 2){
+      print('only student');
+      return 2;
+    }
+    if(count == 3){
+      print('both');
+      return 3;
+    }
+    return -1;
+  }
 
-  void getAccounts() async {
-    List<AccountModel> inactiveAccounts =
-        await AccountManager.getInactiveAccounts();
-    List<AccountModel> accounts = await AccountManager.getAccounts();
-
-    accountList = accounts;
-    inactiveAccountList = inactiveAccounts;
+  void selectAccount(context) async {
+    final int rst = await checkRole();
+    if(rst == 1){
+      accountManager.toCreateProfileStudent(context);
+    }
+    if(rst == 2){
+      accountManager.toCreateProfileCompany(context);
+    }
+    if(rst == 3){
+      accountManager.reloadScreen(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const CircleAvatar(
-        // backgroundImage: AssetImage('lib/assets/images/avatar_${account.userId}.png'),
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
-      title: Text(accountModel.getName),
-      onTap: () {
-        logout();
-        sendRequestToLogIn(accountModel.getEmail, accountModel.getPassword)
-            .then((_) {
-          accountManager.reloadScreen(context);
-        });
+      title: Text('${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
+      onTap: () async {  
+        selectAccount(context);
       },
     );
   }
 }
+
