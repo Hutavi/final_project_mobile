@@ -45,7 +45,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late ScrollController _scrollController;
   final FocusNode _messageFocusNode = FocusNode();
   late bool isLoading;
-  var roomID = -1;
 
   @override
   void initState() {
@@ -70,9 +69,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   void connectSocket() async {
     socket!.on('RECEIVE_INTERVIEW', (data) {
-      print('nó ở ngoài');
       if (data['notification']['content'] == 'Interview created') {
-        print('nó ở trong');
+        print(data);
         setState(() {
           messages.add(Message(
             projectID: data['notification']['message']['projectId'],
@@ -118,13 +116,36 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void _sendMessage() async {
     if (messageController.text == '') return;
 
-    socket!.emit('SEND_MESSAGE', {
+    // socket!.emit('SEND_MESSAGE', {
+    //   'content': messageController.text.trim(),
+    //   'projectId': widget.idProject,
+    //   'senderId': widget.idThisUser,
+    //   'receiverId': widget.idAnyUser,
+    //   'messageFlag': 0,
+    // });
+    final data = {
       'content': messageController.text.trim(),
       'projectId': widget.idProject,
       'senderId': widget.idThisUser,
       'receiverId': widget.idAnyUser,
       'messageFlag': 0,
-    });
+    };
+
+    final dioPrivate = DioClient();
+
+    final responseListMessage = await dioPrivate.request(
+      '/message/sendMessage',
+      data: data,
+      options: Options(
+        method: 'POST',
+      ),
+    );
+
+    if (responseListMessage.statusCode == 201) {
+      final listMessage = responseListMessage.data['result'];
+
+      print(listMessage);
+    }
 
     messageController.clear();
 
@@ -260,7 +281,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     try {
       // Tạo phòng họp trước khi mời và lấy ID của phòng họp
       final roomId = await createRoom(conferencesID, endDateTime);
-      roomID = roomId!;
 
       var data = json.encode({
         "title": titleSchedule,
@@ -270,7 +290,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         "projectId": widget.idProject,
         "senderId": widget.idThisUser,
         "receiverId": widget.idAnyUser,
-        "meeting_room_code": conferencesID,
+        "meeting_room_code": '9999hh',
         "meeting_room_id": roomId,
         "expired_at": endTimeISO
       });
@@ -321,36 +341,42 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     }
   }
 
-  void receiveMessageInterview(String? startDateTime, String? endDateTime,
-      String titleSchedule, String conferencesID) {
-    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        .format(parseDateTime(startDateTime!));
-    String endTimeISO =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
+  // void receiveMessageInterview(String? startDateTime, String? endDateTime,
+  //     String titleSchedule, String conferencesID) {
+  //   String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+  //       .format(parseDateTime(startDateTime!));
+  //   String endTimeISO =
+  //       DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
 
-    print(roomID);
+  //   print(roomID);
 
-    socket!.emit('SCHEDULE_INTERVIEW', {
-      "title": titleSchedule,
-      "content": titleSchedule,
-      "startTime": startTimeISO,
-      "endTime": endTimeISO,
-      "projectId": widget.idProject,
-      "senderId": widget.idThisUser,
-      "receiverId": widget.idAnyUser,
-      "meeting_room_code": conferencesID,
-      "meeting_room_id": roomID
-    });
+  //   socket!.emit('SCHEDULE_INTERVIEW', {
+  //     "title": titleSchedule,
+  //     "content": titleSchedule,
+  //     "startTime": startTimeISO,
+  //     "endTime": endTimeISO,
+  //     "projectId": widget.idProject,
+  //     "senderId": widget.idThisUser,
+  //     "receiverId": widget.idAnyUser,
+  //     "meeting_room_code": conferencesID,
+  //     "meeting_room_id": roomID
+  //   });
 
-    _scrollToBottom();
-  }
+  //   _scrollToBottom();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+
+    Color? color = (brightness == Brightness.light)
+        ? Colors.grey[200]
+        : Theme.of(context).cardColor;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -364,7 +390,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           children: [
             Avatar(
               imageUrl: ImageManagent.imgAvatar,
-              radius: 18,
+              radius: 20,
             ),
             const Gap(16),
             Text(
@@ -432,7 +458,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                           children: [
                                             Avatar(
                                               imageUrl: ImageManagent.imgAvatar,
-                                              radius: 15,
+                                              radius: 16,
                                             ),
                                           ],
                                         ),
@@ -462,7 +488,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                           children: [
                                             Avatar(
                                               imageUrl: ImageManagent.imgAvatar,
-                                              radius: 15,
+                                              radius: 16,
                                             ),
                                           ],
                                         ),
@@ -476,7 +502,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 if (!isLoading)
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.background,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -507,11 +533,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                           newMessage['endDateTime'],
                                           newMessage['titleSchedule']!,
                                           newMessage['conferencesID']!);
-                                      receiveMessageInterview(
-                                          newMessage['startDateTime'],
-                                          newMessage['endDateTime'],
-                                          newMessage['titleSchedule']!,
-                                          newMessage['conferencesID']!);
+                                      // receiveMessageInterview(
+                                      //     newMessage['startDateTime'],
+                                      //     newMessage['endDateTime'],
+                                      //     newMessage['titleSchedule']!,
+                                      //     newMessage['conferencesID']!);
                                     });
                                   });
                                 },
@@ -519,7 +545,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             },
                             icon: const Icon(
                               Icons.calendar_month,
-                              color: Colors.black,
                             ),
                           ),
                           Expanded(
@@ -534,7 +559,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                 keyboardType: TextInputType.multiline,
                                 decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: Colors.lightBlue[50],
+                                  fillColor: color,
                                   hintText: 'Message',
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 8.0, horizontal: 16.0),
@@ -550,7 +575,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                     hoverColor: Colors.transparent,
                                     icon: const Icon(
                                       Icons.send,
-                                      color: Colors.black,
                                     ),
                                   ),
                                 ),

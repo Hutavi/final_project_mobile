@@ -129,12 +129,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           BuildTextField(
                             controller: userNameController,
                             inputType: TextInputType.text,
-                            fillColor: kWhiteColor,
+                            fillColor: Theme.of(context).canvasColor,
                             onChange: (value) {
                               userNotFound = false;
                               // validateFields();
                             },
-                            hint: LocaleData.email,
+                            hint: LocaleData.emailPlaholder.getString(context),
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return LocaleData.emailRequired

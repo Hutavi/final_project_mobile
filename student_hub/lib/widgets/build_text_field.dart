@@ -95,11 +95,10 @@ class BuildTextField extends StatelessWidget {
         focusColor: kWhiteColor,
         hoverColor: kWhiteColor,
       ),
-      cursorColor: kBlackColor,
+      cursorColor: kGrey1,
       style: const TextStyle(
         fontSize: textMedium,
         fontWeight: FontWeight.w500,
-        color: kBlackColor,
       ),
     );
   }

@@ -19,6 +19,7 @@ class AddLanguageModal extends StatefulWidget {
 class AddLanguageModalState extends State<AddLanguageModal> {
   late TextEditingController _languageNameController;
   late String _selectedLanguageLevel;
+  var title = '';
 
   @override
   void initState() {
@@ -26,6 +27,8 @@ class AddLanguageModalState extends State<AddLanguageModal> {
     _languageNameController =
         TextEditingController(text: widget.initialLanguageName);
     _selectedLanguageLevel = widget.initialSelectedLanguageLevel;
+    title =
+        widget.initialLanguageName != '' ? 'Update Language' : 'Add Language';
   }
 
   @override
@@ -37,9 +40,9 @@ class AddLanguageModalState extends State<AddLanguageModal> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      title: const Text(
-        'Add Language',
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
         textAlign: TextAlign.center,
       ),
@@ -55,12 +58,12 @@ class AddLanguageModalState extends State<AddLanguageModal> {
             ),
             child: TextField(
               controller: _languageNameController,
-              style: const TextStyle(fontSize: 13),
+              style: const TextStyle(fontSize: 13, color: Colors.black),
               decoration: const InputDecoration(
                 hintText: 'Language Name',
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(10),
-                hintStyle: TextStyle(fontSize: 13),
+                hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ),
           ),

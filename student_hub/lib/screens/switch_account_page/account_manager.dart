@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/models/account_models.dart';
 
 class AccountManager {

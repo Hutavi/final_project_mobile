@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -30,8 +28,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Student Hub',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold)),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       backgroundColor: Colors.grey[200],
       actions: <Widget>[
         IconButton(
@@ -79,7 +76,7 @@ class _Content extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: Text(
               LocaleData.edtProfileCompanyTitle.getString(context),
-              style: TextStyle(
+              style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -91,7 +88,7 @@ class _Content extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: Text(
               LocaleData.welcomeLine1.getString(context),
-              style: TextStyle(
+              style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 15,
               ),
@@ -105,9 +102,7 @@ class _Content extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => NavigationMenu(
-                        )),
+                MaterialPageRoute(builder: (context) => const NavigationMenu()),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -115,8 +110,7 @@ class _Content extends StatelessWidget {
             ),
             child: Text(
               LocaleData.getStarted.getString(context),
-              style: TextStyle(
-                color: kWhiteColor),
+              style: const TextStyle(color: kWhiteColor),
             ),
           ),
         ]);

@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -346,10 +345,13 @@ class _StundentProfileS3TranscriptState
                                   color: Colors.white,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground
+                                          .withOpacity(0.2),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: const Offset(0, 2),
+                                      offset: const Offset(0, 0),
                                     ),
                                   ],
                                 ),
@@ -366,25 +368,33 @@ class _StundentProfileS3TranscriptState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             trancriptImage == null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: DottedBorder(
-                                      color: Colors.blue,
-                                      dashPattern: const [8, 4],
-                                      strokeWidth: 2,
-                                      borderType: BorderType.RRect,
-                                      radius: const Radius.circular(12),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0, vertical: 30.0),
-                                        child: DragTarget(
-                                          builder: (
-                                            BuildContext context,
-                                            List<dynamic> accepted,
-                                            List<dynamic> rejected,
-                                          ) {
-                                            return _buildDropZone();
-                                          },
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: DottedBorder(
+                                        color: Colors.blue,
+                                        dashPattern: const [8, 4],
+                                        strokeWidth: 2,
+                                        borderType: BorderType.RRect,
+                                        radius: const Radius.circular(12),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0,
+                                            vertical: 30.0,
+                                          ),
+                                          child: DragTarget(
+                                            builder: (
+                                              BuildContext context,
+                                              List<dynamic> accepted,
+                                              List<dynamic> rejected,
+                                            ) {
+                                              return _buildDropZone();
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -402,10 +412,13 @@ class _StundentProfileS3TranscriptState
             ? Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
@@ -417,9 +430,7 @@ class _StundentProfileS3TranscriptState
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NavigationMenu(
-                          // companyUser: accountList[0],
-                        ),
+                        builder: (context) => const NavigationMenu(),
                       ),
                     );
                     showDialog(
@@ -444,7 +455,6 @@ class _StundentProfileS3TranscriptState
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 20),

@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       BuildTextField(
                         controller: userNameController,
                         inputType: TextInputType.text,
-                        fillColor: kWhiteColor,
+                        fillColor: Theme.of(context).canvasColor,
                         onChange: (value) {
                           userNotFound = false;
                           // validateFields();
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: passwordController,
                         inputType: TextInputType.text,
                         obscureText: true,
-                        fillColor: kWhiteColor,
+                        fillColor: Theme.of(context).canvasColor,
                         onChange: (value) {
                           // validateFields();
                           passwordWrong = false;

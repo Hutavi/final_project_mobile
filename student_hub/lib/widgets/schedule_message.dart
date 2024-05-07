@@ -200,14 +200,11 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             Text(
               widget.message.title!,
-              style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
             Text(
               '${widget.message.duration!} minutes',
-              style: const TextStyle(fontSize: 13, color: Colors.white),
+              style: const TextStyle(fontSize: 13),
             ),
           ],
         ),
@@ -216,12 +213,10 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "Start time: ",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
             Text(
               formatDateTime(widget.message.startTime!),
-              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -229,12 +224,10 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "End time: ",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
             Text(
               formatDateTime(widget.message.endTime!),
-              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -242,10 +235,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "Code room: ",
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             Text(
               widget.message.meetingRoomCode!,
@@ -291,7 +281,6 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                     },
                     child: const Icon(
                       Icons.pending_outlined,
-                      color: Colors.white,
                     ),
                   ),
                 ],

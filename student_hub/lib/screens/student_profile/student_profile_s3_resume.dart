@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/utils/extensions.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:file_picker/file_picker.dart';
@@ -87,9 +89,9 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
           const Text(
             'Choose File Here',
             style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.black),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
           ),
           if (resumeImage == null)
             Container(
@@ -98,6 +100,7 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                 onPressed: _pickImageResume,
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.blue,
+                  backgroundColor: Colors.white,
                   padding: const EdgeInsets.all(10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
@@ -114,114 +117,24 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
   void _showSuccess() {
     showDialog(
       context: this.context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thành công',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Success",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
   void _showError() {
     showDialog(
       context: this.context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thất bại',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'Cancle',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Fail",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
@@ -344,10 +257,13 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                                   color: Colors.white,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground
+                                          .withOpacity(0.2),
                                       spreadRadius: 2,
                                       blurRadius: 4,
-                                      offset: const Offset(0, 2),
+                                      offset: const Offset(0, 0),
                                     ),
                                   ],
                                 ),
@@ -364,25 +280,33 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             resumeImage == null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: DottedBorder(
-                                      color: Colors.blue,
-                                      dashPattern: const [8, 4],
-                                      strokeWidth: 2,
-                                      borderType: BorderType.RRect,
-                                      radius: const Radius.circular(12),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0, vertical: 30.0),
-                                        child: DragTarget(
-                                          builder: (
-                                            BuildContext context,
-                                            List<dynamic> accepted,
-                                            List<dynamic> rejected,
-                                          ) {
-                                            return _buildDropZone();
-                                          },
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: DottedBorder(
+                                        color: Colors.blue,
+                                        dashPattern: const [8, 4],
+                                        strokeWidth: 2,
+                                        borderType: BorderType.RRect,
+                                        radius: const Radius.circular(12),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0,
+                                            vertical: 30.0,
+                                          ),
+                                          child: DragTarget(
+                                            builder: (
+                                              BuildContext context,
+                                              List<dynamic> accepted,
+                                              List<dynamic> rejected,
+                                            ) {
+                                              return _buildDropZone();
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -400,10 +324,13 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
             ? Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 4,
                       offset: const Offset(0, 2),

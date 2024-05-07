@@ -24,6 +24,7 @@ class SkillsetTagsDisplay extends StatelessWidget {
               children: [
                 Card(
                   elevation: 2,
+                  color: Theme.of(context).cardColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

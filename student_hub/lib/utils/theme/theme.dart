@@ -20,7 +20,7 @@ class TAppTheme {
     primaryColor: kBlue600,
     scaffoldBackgroundColor: kWhiteColor,
     textTheme: TTextTheme.lightTextTheme,
-    elevatedButtonTheme: TElevatedCustomTheme.lightElevatedButtonTheme,
+    // elevatedButtonTheme: TElevatedCustomTheme.lightElevatedButtonTheme,
     appBarTheme: TAppBarTheme.lightAppBarTheme,
     // bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -28,6 +28,7 @@ class TAppTheme {
       selectedItemColor: kBlue600,
       unselectedItemColor: kGrey1,
     ),
+    cardColor: kWhiteColor,
   );
   static ThemeData darkTheme = ThemeData(
     colorScheme: const ColorScheme.dark(
@@ -41,7 +42,7 @@ class TAppTheme {
     primaryColor: kBlackTheme,
     scaffoldBackgroundColor: kBlackTheme,
     textTheme: TTextTheme.darkTextTheme,
-    elevatedButtonTheme: TElevatedCustomTheme.darkElevatedButtonTheme,
+    // elevatedButtonTheme: TElevatedCustomTheme.darkElevatedButtonTheme,
     appBarTheme: TAppBarTheme.darkAppBarTheme,
     bottomSheetTheme: TBottomSheetTheme.darkBottomSheetTheme,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -49,5 +50,6 @@ class TAppTheme {
       selectedItemColor: kBlue600,
       unselectedItemColor: kGrey1,
     ),
+    cardColor: Colors.grey[850],
   );
 }

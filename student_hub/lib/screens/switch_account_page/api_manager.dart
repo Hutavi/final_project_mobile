@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:student_hub/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:student_hub/services/dio_client.dart';
 
 Future<void> clearLocalStorage() async {
   final prefs = await SharedPreferences.getInstance();
