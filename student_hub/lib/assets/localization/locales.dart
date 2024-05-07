@@ -60,6 +60,19 @@ mixin LocaleData {
   static const String forgotButton = 'forgot_button';
   static const String forgotSuccess = 'forgot_success';
 
+  //Change password
+  static const String changePassBtn = 'change_pass_btn';
+  static const String changePassTitle = 'change_pass_title';
+  static const String oldPassword = 'old_password';
+  static const String oldPasswordPlaholder = 'old_password_placeholder';
+  static const String newPassword = 'new_password';
+  static const String newPasswordPlaholder = 'new_password_placeholder';
+  static const String oldPasswordRequired = 'old_password_required';
+  static const String newPasswordRequired = 'new_password_required';
+  static const String newPasswordWeak = 'new_password_weak';
+  static const String changePassSuccess = 'change_pass_success';
+  static const String changePassFailed = 'change_pass_failed';
+
   //Modal
   static const String cancel = 'cancel';
   static const String confirm = 'confirm';
@@ -298,7 +311,7 @@ mixin LocaleData {
     userNotFound: 'User not found',
     passwordRequiered: 'Password is required',
     passwordWrong: 'Password is wrong',
-    clickHere: 'Click here',
+    clickHere: ' Click here',
 
     //register page
     titleRegister: 'Join as Company or Student',
@@ -377,6 +390,19 @@ mixin LocaleData {
     forgotPasswordTitle: 'Forgot Password',
     enterEmailToResetPassword: 'Enter your email to reset password',
     resetPassword: 'Reset Password',
+
+    //Change password
+    changePassBtn: 'Change password',
+    changePassTitle: 'Change new password',
+    oldPassword: 'Old password',
+    oldPasswordPlaholder: 'Enter your old password',
+    newPassword: 'New password',
+    newPasswordPlaholder: 'Enter your new password',
+    oldPasswordRequired: 'Old password is required',
+    newPasswordRequired: 'New password is required',
+    newPasswordWeak: 'New password is weak',
+    changePassSuccess: 'Change password success',
+    changePassFailed: 'Change password failed',
 
     //register by screen
     registerTitle: 'Register successfully',
@@ -546,6 +572,7 @@ mixin LocaleData {
 
   };
 
+  /// Vietnamese
   static const Map<String, dynamic> VI = {
     //Home page
     student: 'Sinh viên',
@@ -570,7 +597,7 @@ mixin LocaleData {
     userNotFound: 'Người dùng không tồn tại',
     passwordRequiered: 'Mật khẩu là bắt buộc',
     passwordWrong: 'Mật khẩu không đúng',
-    clickHere: 'Nhấn vào đây',
+    clickHere: ' Nhấn vào đây',
     dontHaveAccount: 'Chưa có tài khoản Student Hub?',
 
     //register page
@@ -600,6 +627,19 @@ mixin LocaleData {
     forgotLabel: 'Nhập email của bạn để đặt lại mật khẩu',
     forgotButton: 'Đặt lại mật khẩu',
     forgotSuccess: 'Mật khẩu mới đã được gửi đến email của bạn.',
+
+    //change password'
+    changePassBtn: 'Đổi mật khẩu',
+    changePassTitle: 'Đổi mật khẩu mới',
+    oldPassword: 'Mật khẩu cũ',
+    oldPasswordPlaholder: 'Nhập mật khẩu cũ của bạn',
+    newPassword: 'Mật khẩu mới',
+    newPasswordPlaholder: 'Nhập mật khẩu mới của bạn',
+    oldPasswordRequired: 'Mật khẩu cũ là bắt buộc',
+    newPasswordRequired: 'Mật khẩu mới là bắt buộc',
+    newPasswordWeak: 'Mật khẩu mới quá yếu',
+    changePassSuccess: 'Đổi mật khẩu thành công',
+    changePassFailed: 'Đổi mật khẩu thất bại',
 
     //Project list
     searchProjectTitle: 'Tìm kiếm dự án',

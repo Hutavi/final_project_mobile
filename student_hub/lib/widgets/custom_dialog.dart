@@ -41,7 +41,7 @@ class DialogCustom extends StatelessWidget {
           ),
           margin: const EdgeInsets.only(top: 50),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).canvasColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(16),
             boxShadow: const [

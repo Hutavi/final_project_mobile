@@ -21,8 +21,8 @@ class TAppBarTheme {
   );
 
   static const darkAppBarTheme = AppBarTheme(
-    backgroundColor: kBlackTheme,
-    foregroundColor: kBlackTheme,
+    backgroundColor: kBlackAppBarTheme,
+    foregroundColor: kBlackAppBarTheme,
     centerTitle: false,
     scrolledUnderElevation: 0,
     elevation: 0,

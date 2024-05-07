@@ -9,6 +9,7 @@ class AppRouterName {
   static const login = '/login';
   static const registerBy = '/register-by';
   static const forgotPassword = '/forgot-password';
+  static const changePassword = '/change-password';
 
   static const switchAccount = '/switch-acc';
   static const projectList = '/project-list';

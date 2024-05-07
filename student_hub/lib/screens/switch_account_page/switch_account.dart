@@ -168,8 +168,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           context, AppRouterName.navigation);
                     },
                     icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
-                    label: Text(
-                        LocaleData.home.getString(context),
+                    label: Text(LocaleData.home.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -211,8 +210,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
-                    label: Text(
-                        LocaleData.profile.getString(context),
+                    label: Text(LocaleData.profile.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -236,12 +234,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      // Settings button pressed
+                      Navigator.pushNamed(
+                          context, AppRouterName.changePassword);
                     },
-                    icon:
-                        const Icon(Icons.settings, color: kBlue400, size: 25.0),
-                    label: Text(
-                        LocaleData.settings.getString(context),
+                    icon: const Icon(Icons.change_circle,
+                        color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.changePassBtn.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -268,13 +266,14 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.language, color: kBlue400, size: 25.0),
-                          SizedBox(
+                          const Icon(Icons.language,
+                              color: kBlue400, size: 25.0),
+                          const SizedBox(
                             width: 8,
                           ),
                           Text(
                             '${LocaleData.language.getString(context)}:',
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           )
                         ],
                       ),
@@ -298,12 +297,14 @@ class _SwitchAccountState extends State<SwitchAccount> {
                                           .labelLarge!
                                           .color)),
                             ),
-                            DropdownMenuItem(
+                            const DropdownMenuItem(
                               value: 'vi',
-                              child: Text('Vietnamese',
-                                  style: TextStyle(
+                              child: Text(
+                                'Vietnamese',
+                                style: TextStyle(
                                     // color: Theme.of(context).colorScheme.onBackground,
-                                    ),),
+                                    ),
+                              ),
                             ),
                           ],
                           onChanged: (String? newValue) {
@@ -325,8 +326,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       logout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
-                    label: Text(
-                        LocaleData.logOut.getString(context),
+                    label: Text(LocaleData.logOut.getString(context),
                         style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,

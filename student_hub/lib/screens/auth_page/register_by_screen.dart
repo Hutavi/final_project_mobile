@@ -194,10 +194,10 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   BuildTextField(
                     controller: fullNameController,
                     inputType: TextInputType.text,
-                    fillColor: kWhiteColor,
                     onChange: (value) {
                       // validateFields();
                     },
+                    fillColor: Theme.of(context).canvasColor,
                     hint: LocaleData.fullNamePlaholder.getString(context),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -217,12 +217,12 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   BuildTextField(
                     controller: mailForWorkController,
                     inputType: TextInputType.text,
-                    fillColor: kWhiteColor,
                     onChange: (value) {
                       // validateFields();
                       isEmail = false;
                       emailExist = false;
                     },
+                    fillColor: Theme.of(context).canvasColor,
                     hint: LocaleData.emailPlaholder.getString(context),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -246,7 +246,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   BuildTextField(
                     controller: passworkController,
                     inputType: TextInputType.text,
-                    fillColor: kWhiteColor,
+                    fillColor: Theme.of(context).canvasColor,
                     onChange: (value) {
                       // validateFields();
                       passworkWeak = false;
@@ -275,7 +275,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   BuildTextField(
                     controller: confirmPasswordController,
                     inputType: TextInputType.text,
-                    fillColor: kWhiteColor,
+                    fillColor: Theme.of(context).canvasColor,
                     onChange: (value) {
                       isPasswordMatch = true;
                     },
