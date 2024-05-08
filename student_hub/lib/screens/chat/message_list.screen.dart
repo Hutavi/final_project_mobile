@@ -34,23 +34,21 @@ class _MessageListScreenState extends State<MessageListScreen> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _searchController.dispose();
+  //   super.dispose();
+  // }
 
-  void initSocket() {
-    for (var item in displayedList) {
-      SocketManager.addQueryParameter(item['project']['id']);
+  void initSocket(int projectID) {
+    SocketManager.addQueryParameter(projectID);
+    SocketManager.connect();
 
-      SocketManager.connect();
-    }
     socket = SocketManager.socket;
   }
 
   void connectSocket() async {
-    if (socket != null) {
+    if (socket != null && mounted) {
       socket!.on('RECEIVE_MESSAGE', (data) {
         setState(() {
           getListMessage();
@@ -104,7 +102,6 @@ class _MessageListScreenState extends State<MessageListScreen> {
       }
       originalList = listMessage.reversed.toList();
       displayedList = originalList;
-      initSocket();
       isLoading = false;
     });
   }
@@ -133,7 +130,9 @@ class _MessageListScreenState extends State<MessageListScreen> {
                         itemCount: displayedList.length,
                         itemBuilder: (ctx, index) {
                           return MessageItem(
-                              data: displayedList[index], idUser: idUser);
+                              data: displayedList[index],
+                              idUser: idUser,
+                              initSocket: initSocket);
                         },
                       ),
                     ),
