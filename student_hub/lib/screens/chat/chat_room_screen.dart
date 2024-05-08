@@ -281,6 +281,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     try {
       // Tạo phòng họp trước khi mời và lấy ID của phòng họp
       final roomId = await createRoom(conferencesID, endDateTime);
+      print(conferencesID);
 
       var data = json.encode({
         "title": titleSchedule,
@@ -290,7 +291,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         "projectId": widget.idProject,
         "senderId": widget.idThisUser,
         "receiverId": widget.idAnyUser,
-        "meeting_room_code": '9999hh',
+        "meeting_room_code": conferencesID + roomId.toString(),
         "meeting_room_id": roomId,
         "expired_at": endTimeISO
       });

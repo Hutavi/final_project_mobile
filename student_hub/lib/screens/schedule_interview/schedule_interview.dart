@@ -30,7 +30,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
   @override
   void initState() {
     currentTime = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
-    conferencesID = generateRandomNumber();
+    conferencesID = generateRandomString(4);
     super.initState();
   }
 
@@ -39,13 +39,13 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
     super.dispose();
   }
 
-  String generateRandomNumber() {
-    // Tạo một số nguyên ngẫu nhiên từ 1000 đến 9999
+  String generateRandomString(int length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     var random = Random();
-    int randomNumber = random.nextInt(9000) + 1000;
-
-    // Chuyển số nguyên ngẫu nhiên thành chuỗi và trả về
-    return randomNumber.toString();
+    String randomString =
+        List.generate(length, (index) => chars[random.nextInt(chars.length)])
+            .join();
+    return randomString;
   }
 
   String formatDateTimeString(String inputString) {
@@ -139,43 +139,6 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     filled: true,
                     fillColor: Theme.of(context).cardColor,
                     hintText: 'Enter title',
-                    hintStyle: const TextStyle(
-                        color: kGrey1,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 6.0, horizontal: 10.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      borderSide: const BorderSide(color: kBlue50),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Content",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                TextField(
-                  controller: contentSchedule,
-                  keyboardType: TextInputType.text,
-                  onChanged: (value) {
-                    // Xử lý thay đổi trong TextField ở đây
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor,
-                    hintText: 'Enter content',
                     hintStyle: const TextStyle(
                         color: kGrey1,
                         fontWeight: FontWeight.w400,
