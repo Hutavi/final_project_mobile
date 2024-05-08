@@ -8,7 +8,12 @@ import 'package:student_hub/widgets/display_text.dart';
 class MessageItem extends StatelessWidget {
   final dynamic data;
   final int idUser;
-  const MessageItem({super.key, required this.data, required this.idUser});
+  final void Function(int) initSocket;
+  const MessageItem(
+      {super.key,
+      required this.data,
+      required this.idUser,
+      required this.initSocket});
 
   String formatDate(String date) {
     DateTime change = DateTime.parse(date);
@@ -25,6 +30,7 @@ class MessageItem extends StatelessWidget {
     final deviceSize = context.deviceSize;
     return InkWell(
       onTap: () {
+        initSocket(data['project']['id']);
         Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
           'idProject': data['project']['id'] as int,
           'idThisUser': idUser == data['receiver']['id']
