@@ -74,6 +74,30 @@ class ApiManager {
       return 'Error';
     }
   }
+  static Future<List<dynamic>> getRoles(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://34.16.137.128/api/auth/me'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body); 
+        final List<dynamic> roles = userData['result']['roles'];
+        // Kiểm tra dữ liệu người dùng hợp lệ
+        return roles;
+      } else {
+        // Xử lý lỗi từ API
+        print('fullname Failed to load user info: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      // Xử lý lỗi khi gọi API
+      print('Error fetching user info: $e');
+      return [];
+    }
+  }
 }
 
 class TokenManager {

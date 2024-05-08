@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:student_hub/services/dio_client.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -168,7 +170,7 @@ class NotificationCard extends StatelessWidget {
                 onPressed: () {
                   // Handle button press
                 },
-                child: const Text('Join'),
+                child: Text(LocaleData.joinBtn.getString(context)),
               ),
             ],
           ],

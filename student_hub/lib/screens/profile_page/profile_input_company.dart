@@ -46,7 +46,8 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderStateMixin {
+class _NewLoginPageState extends State<ProfileInput>
+    with SingleTickerProviderStateMixin {
   int activeIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -110,9 +111,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
       final response = await DioClient().request(
         '/profile/company/',
         data: requestData,
-        options: Options(
-          method: 'POST'
-          ),
+        options: Options(method: 'POST'),
       );
 
       User? userInfo = await ApiManager.getUserInfo(token);
@@ -121,7 +120,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
       print(e.toString());
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +138,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                   children: [
                     Text(
                       LocaleData.edtProfileCompanyTitle.getString(context),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 17.0,
                         fontWeight: FontWeight.w600,
@@ -158,7 +157,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     children: [
                       Text(
                         LocaleData.tellUsAboutYourCompany.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
@@ -166,7 +165,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                       ),
                       Text(
                         LocaleData.yourWayConnectWith.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
@@ -183,14 +182,14 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                   children: [
                     Text(
                       LocaleData.howManyPeopleInYourCompany.getString(context),
-                      style: TextStyle(fontSize: 17),
+                      style: const TextStyle(fontSize: 17),
                     ),
                     const SizedBox(height: 10),
                     Column(
                       children: [
                         RadioListTile<int>(
                           title: Text(LocaleData.itJustMe.getString(context),
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 0,
                           groupValue: _selectedValue,
@@ -202,8 +201,9 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('2-9 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '2-9 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 1,
                           groupValue: _selectedValue,
@@ -215,8 +215,9 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('10-99 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '10-99 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 2,
                           groupValue: _selectedValue,
@@ -228,8 +229,9 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('100-1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '100-1000 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 3,
                           groupValue: _selectedValue,
@@ -241,8 +243,9 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 4,
                           groupValue: _selectedValue,
@@ -264,7 +267,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.companyName.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -289,7 +292,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -315,7 +319,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.website.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -340,7 +344,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -364,7 +369,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -389,7 +394,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -431,7 +437,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         child: MaterialButton(
                           onPressed: () {
                             _createProfile();
-                            Navigator.pushNamed(context, AppRouterName.welcomeScreen);
+                            Navigator.pushNamed(
+                                context, AppRouterName.welcomeScreen);
                           },
                           height: 45,
                           color: kBlue400,
@@ -442,8 +449,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           ),
                           child: Text(
                             LocaleData.continu.getString(context),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16.0),
                           ),
                         ),
                       ),

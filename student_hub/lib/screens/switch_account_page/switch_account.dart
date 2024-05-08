@@ -2,17 +2,14 @@ import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
-import 'dart:convert';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/models/account_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -23,6 +20,9 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
+  int companyData = -1 ;
+  int studentData = -1;
+
   List<AccountModel> accountList =
       []; //danh sách tất cả tài khoản đã từng đăng nhập
   List<AccountModel> inactiveAccountList =
@@ -31,6 +31,11 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   late FlutterLocalization _flutterLocalization;
   late String _currentLocale;
+  int role = -1;
+
+  void getRole() async {
+    role = await RoleUser.getRole();
+  }
 
   @override
   void initState() {
@@ -40,6 +45,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     // print(_currentLocale);
     getUserInfoFromToken();
     getAccounts();
+    getRole();
   }
 
   @override
@@ -51,12 +57,29 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   // Phương thức để lấy thông tin user từ token
   Future<void> getUserInfoFromToken() async {
-    String? token = await TokenManager.getTokenFromLocal();
+    try {
+      final dioPrivate = DioClient();
 
-    User? userInfo = await ApiManager.getUserInfo(token);
-    setState(() {
-      userCurr = userInfo;
-    });
+      final respondData = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final studentDataAPI = respondData.data['result']['student']['id'];
+      final companyDataAPI = respondData.data['result']['company']['id'];
+      final user = (respondData.data['result']);
+      
+      setState(() {
+        studentData = studentDataAPI;
+        print('studentData: $studentData');
+        companyData = companyDataAPI;
+        print('companyData: $companyData');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getAccounts() async {
@@ -70,9 +93,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
   }
 
   void logout() async {
-    //getToken
-
-    // Gọi API để logout
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',
@@ -84,7 +104,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
         await TokenManager.removeTokenFromLocal();
 
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, AppRouterName.login);
+        Navigator.pushReplacementNamed(context, AppRouterName.homePage);
       }
     } catch (e) {
       print(e);
@@ -101,7 +121,6 @@ class _SwitchAccountState extends State<SwitchAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
@@ -130,15 +149,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           width: 10,
                         ),
                         Text(
-                          accountList
-                              .where((element) => element.isLogin == true)
-                              .first
-                              .getName,
+                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 ? 'Company' : 'Student'})',
                           style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
                             fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -148,12 +164,15 @@ class _SwitchAccountState extends State<SwitchAccount> {
                     onExpansionChanged: (bool expanded) {
                       if (expanded) {}
                     },
-                    children: inactiveAccountList.map((inactiveAccount) {
+                    children: accountList
+                        .where((element) => element.isLogin == true)
+                        .map((accountCurr) {
                       return GestureDetector(
                         onTap: () {},
                         child: AccountTile(
-                          accountModel: inactiveAccount,
+                          accountModel: accountCurr,
                           accountManager: accountManager,
+                          role: role,
                         ),
                       );
                     }).toList(),
@@ -192,20 +211,21 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      // print(userCurr?.companyUser?.printAll());
-                      if (userCurr?.roles?[0] == 1 &&
-                          userCurr?.companyUser == null) {
+                      if (role == 1 && companyData == -1) {
                         print('chưa có profile company');
                         Navigator.pushNamed(
                             context, AppRouterName.profileInput);
-                      } else if (userCurr?.roles?[0] == 1 &&
-                          userCurr?.companyUser != null) {
+                      } else if (role == 1 &&
+                          companyData != -1) {
                         print("(đã có) edit profile company");
                         Navigator.pushNamed(
                             context, AppRouterName.editProfileCompany,
-                            arguments: userCurr?.companyUser);
-                      } else {
+                            arguments: companyData);
+                      } else if(role == 0 && studentData == -1){
                         print('student');
+                        Navigator.pushNamed(context, AppRouterName.profileS1);
+                      } else if(role == 0 && studentData != -1){
+                        print('edit student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
                       }
                     },
@@ -301,9 +321,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               value: 'vi',
                               child: Text(
                                 'Vietnamese',
-                                style: TextStyle(
-                                    // color: Theme.of(context).colorScheme.onBackground,
-                                    ),
+                                style: TextStyle(),
                               ),
                             ),
                           ],
@@ -377,121 +395,98 @@ class AccountController {
       MaterialPageRoute(builder: (context) => const SwitchAccount()),
     );
   }
+
+  void toCreateProfileStudent(BuildContext context) {
+    Navigator.pushNamed(context, AppRouterName.profileS1);
+  }
+
+  void toCreateProfileCompany(BuildContext context) {
+    Navigator.pushNamed(context, AppRouterName.profileInput);
+  }
 }
 
 // ignore: must_be_immutable
 class AccountTile extends StatelessWidget {
   AccountModel accountModel;
   AccountController accountManager;
-
+  int role;
   AccountTile({
     Key? key,
     required this.accountModel,
     required this.accountManager,
+    required this.role,
   }) : super(key: key);
 
-  Future<void> sendRequestToLogIn(String username, String password) async {
-    try {
-      final dio = DioClientWithoutToken();
-      final response = await dio.request(
-        '/auth/sign-in',
-        data: jsonEncode({
-          "email": username,
-          "password": password,
-        }),
-        options: Options(
-          method: 'POST',
-        ),
-      );
-      if (response.statusCode == 201) {
-        final token = response.data['result']['token'];
+  List<dynamic> rolesList = [];
 
-        print('Login success: $token');
-
-        await saveTokenToLocal(token);
-
-        String fullname = await ApiManager.getFullname(token);
-        // print('fullname');
-        // print(fullname);
-
-        await AccountManager.saveAccountToLocal(username, password, fullname);
-        // List<AccountModel> ss = await AccountManager.getAccounts();
-        // for(var i = 0; i<ss.length; i++){
-        //   if(ss[i].getIsLogin==true){
-        //     print('sendRequestToLogIn:');
-        //     print(ss[i].getName);
-        //   }
-        // }
-      } else {
-        print("Login failed: ${response.data}");
-      }
-    } catch (e) {
-      if (e is DioException && e.response != null) {
-        if (e.response!.data['errorDetails'] == 'Not found user') {
-          print('User not found');
-        } else if (e.response!.data['errorDetails'] == 'Incorrect password') {
-          print('Incorrect password');
-        }
-      }
-    }
-  }
-
-  Future<void> saveTokenToLocal(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accessToken', token);
-  }
-
-  void logout() async {
+  Future<void> getRoleList() async {
     try {
       final dio = DioClient();
-      final response = await dio.request('/auth/logout',
+      final response = await dio.request('/auth/me',
           options: Options(
-            method: 'POST',
+            method: 'GET',
           ));
-      if (response.statusCode == 201) {
-        // Xóa token từ local storage
-        await TokenManager.removeTokenFromLocal();
-        String? token = await TokenManager.getTokenFromLocal();
-        if (token == '') {
-          print('Logout success');
-        } else {
-          print(token);
-          print('Logout failed');
-        }
+      if (response.statusCode == 200) {
+        final roles = response.data['result']['roles'];
+        rolesList = roles;
       }
     } catch (e) {
       print(e);
     }
   }
 
-  List<AccountModel> accountList =
-      []; //danh sách tất cả tài khoản đã từng đăng nhập
-  List<AccountModel> inactiveAccountList =
-      []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập
+  Future<void> setRole(int role) async {
+    await RoleUser.saveRole(role);
+  }
 
-  void getAccounts() async {
-    List<AccountModel> inactiveAccounts =
-        await AccountManager.getInactiveAccounts();
-    List<AccountModel> accounts = await AccountManager.getAccounts();
+  void changeRole() async {
+    if (role == 1) {
+      await setRole(0);
+    } else if (role == 0) {
+      await setRole(1);
+    }
+    int x = await RoleUser.getRole();
+    print('role after = $x');
+  }
 
-    accountList = accounts;
-    inactiveAccountList = inactiveAccounts;
+  void selectAccount(context) async {
+    await getRoleList();
+    int count = 0;
+    print('roleBefore: $role');
+    print('rolesList: $rolesList');
+    for (int i = 0; i < rolesList.length; i++) {
+      if (rolesList[i] == 1) {
+        count += 1;
+      }
+      if (rolesList[i] == 0) {
+        count += 2;
+      }
+    }
+    if (count == 1) {
+      print('only company');
+      accountManager.toCreateProfileStudent(context);
+    }
+    if (count == 2) {
+      print('only student');
+      accountManager.toCreateProfileCompany(context);
+    }
+    if (count == 3) {
+      print('both student and company');
+      accountManager.reloadScreen(context);
+    }
+    changeRole();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const CircleAvatar(
-        // backgroundImage: AssetImage('lib/assets/images/avatar_${account.userId}.png'),
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
-      title: Text(accountModel.getName),
+      title: Text(
+          '${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
       onTap: () {
-        logout();
-        sendRequestToLogIn(accountModel.getEmail, accountModel.getPassword)
-            .then((_) {
-          accountManager.reloadScreen(context);
-        });
+        selectAccount(context);
       },
     );
   }

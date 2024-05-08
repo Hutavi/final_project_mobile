@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/utils/extensions.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -86,9 +87,9 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
             size: 60,
             color: Colors.blue,
           ),
-          const Text(
-            'Choose File Here',
-            style: TextStyle(
+          Text(
+            LocaleData.chooseFile.getString(context as BuildContext),
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,
             ),
@@ -106,7 +107,8 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                child: const Text('Choose Image'),
+                child: Text(
+                    LocaleData.chooseFile.getString(context as BuildContext)),
               ),
             ),
         ],
@@ -118,7 +120,7 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
     showDialog(
       context: this.context,
       builder: (context) => DialogCustom(
-        title: "Success",
+        title: LocaleData.success.getString(context),
         description: notify,
         buttonText: 'OK',
         statusDialog: 1,
@@ -130,10 +132,10 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
     showDialog(
       context: this.context,
       builder: (context) => DialogCustom(
-        title: "Fail",
+        title: LocaleData.error.getString(context),
         description: notify,
         buttonText: 'OK',
-        statusDialog: 1,
+        statusDialog: 2,
       ),
     );
   }
@@ -166,13 +168,15 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
 
       if (responseProfileResume.statusCode == 200) {
         setState(() {
-          notify = 'Cập nhật resume thành công.';
+          notify = LocaleData.updatedResumeSuccess
+              .getString(context as BuildContext);
 
           getDataIdStudent();
           _showSuccess();
         });
       } else {
-        notify = 'Cập nhật resume thất bại.';
+        notify =
+            LocaleData.updatedResumeFailed.getString(context as BuildContext);
 
         _showError();
       }
@@ -228,11 +232,11 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, bottom: 16.0),
                         child: Text(
-                          'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                          style: TextStyle(
+                          LocaleData.tellUs.getString(context),
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -349,8 +353,8 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  child: const Text('Continue',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text(LocaleData.continu.getString(context),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               )
             : const SizedBox());
