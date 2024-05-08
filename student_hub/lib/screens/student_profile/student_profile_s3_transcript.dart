@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -85,9 +87,9 @@ class _StundentProfileS3TranscriptState
             size: 60,
             color: Colors.blue,
           ),
-          const Text(
-            'Choose File Here',
-            style: TextStyle(
+          Text(
+            LocaleData.chooseFile.getString(context as BuildContext),
+            style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
@@ -96,16 +98,17 @@ class _StundentProfileS3TranscriptState
             Container(
               padding: const EdgeInsets.only(top: 10),
               child: ElevatedButton(
-                onPressed: _pickImageTranscript,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  padding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
+                  onPressed: _pickImageTranscript,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    padding: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                   ),
-                ),
-                child: const Text('Choose Image'),
-              ),
+                  child: Text(
+                    LocaleData.chooseImage.getString(context as BuildContext),
+                  )),
             ),
         ],
       ),
@@ -117,10 +120,10 @@ class _StundentProfileS3TranscriptState
       context: this.context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title: Center(
             child: Text(
-              'Thành công',
-              style: TextStyle(
+              LocaleData.success.getString(context),
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -174,10 +177,10 @@ class _StundentProfileS3TranscriptState
       context: this.context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(
+          title: Center(
             child: Text(
-              'Thất bại',
-              style: TextStyle(
+              LocaleData.failed.getString(context),
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.red,
@@ -207,11 +210,12 @@ class _StundentProfileS3TranscriptState
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     child: Text(
-                      'Cancle',
-                      style: TextStyle(
+                      LocaleData.cancel.getString(context),
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.red,
                       ),
@@ -254,13 +258,15 @@ class _StundentProfileS3TranscriptState
 
       if (responseProfileTranscript.statusCode == 200) {
         setState(() {
-          notify = 'Cập nhật transcript thành công.';
+          notify = LocaleData.updatedTranscriptSuccess
+              .getString(context as BuildContext);
 
           getDataIdStudent();
           _showSuccess();
         });
       } else {
-        notify = 'Cập nhật transcript thất bại.';
+        notify = LocaleData.updatedTranscriptFailed
+            .getString(context as BuildContext);
 
         _showError();
       }
@@ -316,11 +322,11 @@ class _StundentProfileS3TranscriptState
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, bottom: 16.0),
                         child: Text(
-                          'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                          style: TextStyle(
+                          LocaleData.tellUs.getString(context),
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -437,10 +443,10 @@ class _StundentProfileS3TranscriptState
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Center(
+                          title: Center(
                             child: Text(
-                              'Welcome',
-                              style: TextStyle(
+                              LocaleData.welcome.getString(context),
+                              style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue,
@@ -450,10 +456,11 @@ class _StundentProfileS3TranscriptState
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text(
-                                'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects',
+                              Text(
+                                LocaleData.welcomeDescription
+                                    .getString(context),
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                 ),
                               ),
@@ -471,11 +478,11 @@ class _StundentProfileS3TranscriptState
                                           BorderRadius.all(Radius.circular(6)),
                                     ),
                                   ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(10.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
                                     child: Text(
-                                      'Next',
-                                      style: TextStyle(
+                                      LocaleData.next.getString(context),
+                                      style: const TextStyle(
                                         fontSize: 18,
                                         color: Colors.white,
                                       ),
@@ -496,8 +503,8 @@ class _StundentProfileS3TranscriptState
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  child: const Text('Continue',
-                      style: TextStyle(color: Colors.white)),
+                  child: Text(LocaleData.continu.getString(context),
+                      style: const TextStyle(color: Colors.white)),
                 ),
               )
             : const SizedBox());

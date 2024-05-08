@@ -32,12 +32,6 @@ class AddLanguageModalState extends State<AddLanguageModal> {
     title = widget.initialLanguageName != '' ? 'update' : 'add';
   }
 
-  String _getTitle() {
-    return widget.initialLanguageName != ''
-        ? LocaleData.updateLanguage.getString(context)
-        : LocaleData.addLanguage.getString(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -62,16 +56,15 @@ class AddLanguageModalState extends State<AddLanguageModal> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               border: Border.all(color: Colors.black),
-              color: Colors.white,
             ),
             child: TextField(
               controller: _languageNameController,
-              style: const TextStyle(fontSize: 13, color: Colors.black),
+              style: const TextStyle(fontSize: 13),
               decoration: InputDecoration(
                 hintText: LocaleData.hintLanguageName.getString(context),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(10),
-                hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
+                hintStyle: const TextStyle(fontSize: 13),
               ),
             ),
           ),
@@ -79,7 +72,6 @@ class AddLanguageModalState extends State<AddLanguageModal> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(4),
               border: Border.all(color: Colors.black),
             ),
@@ -97,10 +89,7 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(
-                    value,
-                    style: const TextStyle(color: Colors.black),
-                  ),
+                  child: Text(value),
                 );
               }).toList(),
               underline: const SizedBox(),

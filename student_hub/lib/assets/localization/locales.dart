@@ -286,6 +286,21 @@ mixin LocaleData {
   static const String selectSkillSet = 'select_skill_set';
   static const String create = 'create';
   static const String education = 'education';
+  static const String experience = 'experience';
+  static const String deletedProjcetSuccess = 'deleted_projcet_success';
+  static const String deletedProjcetFailed = 'deleted_projcet_failed';
+  static const String day = 'day';
+  static const String month = 'month';
+  static const String tellUs = 'tell_us';
+  static const String updatedResumeFailed = 'updated_resume_failed';
+  static const String updatedResumeSuccess = 'updated_resume_success';
+  static const String chooseFile = 'choose_file';
+  static const String chooseImage = 'choose_image';
+  static const String updatedTranscriptFailed = 'updated_transcript_failed';
+  static const String updatedTranscriptSuccess = 'updated_transcript_success';
+  static const String welcome = 'welcome';
+  static const String welcomeDescription = 'welcome_description';
+  static const String next = 'next';
 
   //Notification page
   static const String notificationMessage = 'notification_message';
@@ -298,6 +313,14 @@ mixin LocaleData {
   static const String updateLanguage = 'update_language';
   static const String hintLanguageName = "hint_language_name";
   static const String hintLanguageLevel = "hint_language_level";
+
+  //Modal Add, Update Education
+  static const String addEducation = 'add_education';
+  static const String updateEducation = 'update_education';
+  static const String hintEducationName = "hint_education_name";
+  static const String hintEducation = "hint_education";
+  static const String startYear = "start_year";
+  static const String endYear = "end_year";
 
   static const Map<String, dynamic> EN = {
     //Home page
@@ -588,6 +611,27 @@ mixin LocaleData {
     selectSkillSet: 'Select skillset',
     create: 'Create',
     education: 'Education',
+    experience: 'Experience',
+
+    //
+    deletedProjcetSuccess: 'Deleted project success',
+    deletedProjcetFailed: 'Deleted project failed',
+    day: 'days',
+    month: 'months',
+    tellUs:
+        'Tell us about yourself and you will be on your way to connect with real-world projects.',
+
+    updatedResumeFailed: 'Updated resume failed',
+    updatedResumeSuccess: 'Updated resume success',
+    updatedTranscriptFailed: 'Updated transcript failed',
+    updatedTranscriptSuccess: 'Updated transcript success',
+    chooseFile: 'Choose file here',
+    chooseImage: 'Choose image',
+    welcome: 'Welcome',
+    welcomeDescription:
+        'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects',
+    next: 'Next',
+    //
 
     //Notification page
     notificationMessage: 'You have a new message',
@@ -600,6 +644,14 @@ mixin LocaleData {
     updateLanguage: 'Update Language',
     hintLanguageName: "Language name",
     hintLanguageLevel: "Please enter language and level.",
+
+    //Modal Add, Update Education
+    addEducation: 'Add Education',
+    updateEducation: 'Update Education',
+    hintEducationName: "Education name",
+    hintEducation: "Please enter education, start year and end year.",
+    startYear: "Start year",
+    endYear: "End year",
   };
 
   /// Vietnamese
@@ -715,6 +767,7 @@ mixin LocaleData {
     edit: 'Chỉnh sửa',
     continu: 'Tiếp tục',
     failed: 'Thất bại',
+    accept: 'Chấp nhận',
 
     //forgot password
     forgotPasswordTitle: 'Quên mật khẩu',
@@ -888,6 +941,23 @@ mixin LocaleData {
     create: 'Tạo',
     education: 'Học vấn',
     selectSkillSet: 'Chọn kỹ năng',
+    experience: 'Kinh nghiệm',
+    deletedProjcetSuccess: 'Xóa dự án thành công',
+    deletedProjcetFailed: 'Xóa dự án thất bại',
+    day: 'ngày',
+    month: 'tháng',
+    tellUs:
+        'Hãy cho chúng tôi biết về bạn và bạn sẽ trên đường kết nối với các dự án thực tế.',
+    updatedResumeFailed: 'Cập nhật hồ sơ thất bại',
+    updatedResumeSuccess: 'Cập nhật hồ sơ thành công',
+    updatedTranscriptFailed: 'Cập nhật bảng điểm thất bại',
+    updatedTranscriptSuccess: 'Cập nhật bảng điểm thành công',
+    chooseFile: 'Chọn file ở đây',
+    chooseImage: 'Chọn ảnh',
+    welcome: 'Chào mừng',
+    welcomeDescription: 'Chào mừng đến với StudentHub, nơi kết nối Sinh viên <> Dự án thực tế',
+    next: 'Tiếp theo',
+
 
     //Notification page
     notificationMessage: 'Bạn có một tin nhắn mới',
@@ -900,5 +970,15 @@ mixin LocaleData {
     hintLanguageName: "Tên ngôn ngữ",
     hintLanguageLevel: "Vui lòng nhập ngôn ngữ và cấp độ.",
     updateLanguage: 'Cập nhật ngôn ngữ',
+
+    //Modal Add, Update Education
+    addEducation: 'Thêm học vấn',
+    hintEducationName: "Tên học vấn",
+    hintEducation: "Vui lòng nhập học vấn, năm bắt đầu và năm kết thúc.",
+    updateEducation: 'Cập nhật học vấn',
+
+    //Modal Add, Update Education
+    startYear: "Năm bắt đầu",
+    endYear: "Năm tốt nghiệp"
   };
 }

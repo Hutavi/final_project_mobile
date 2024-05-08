@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_project.dart';
@@ -260,14 +262,14 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Project thành công';
+        notify = LocaleData.deletedProjcetSuccess.getString(context);
 
         _showSuccess();
         projects.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Project thất bại';
+        notify = LocaleData.deletedProjcetFailed.getString(context);
 
         _showError();
       });
@@ -285,12 +287,14 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
     if (startYear == endYear && startMonth == endMonth) {
       Duration difference = endDate.difference(startDate);
       int days = difference.inDays;
-      duration = '$startMonth/$startYear, $days days';
+      duration =
+          '$startMonth/$startYear, $days ${LocaleData.day.getString(context)}';
     } else {
       int months = (endDate.year - startDate.year) * 12 +
           endDate.month -
           startDate.month;
-      duration = '$startMonth/$startYear - $endMonth/$endYear, $months months';
+      duration =
+          '$startMonth/$startYear - $endMonth/$endYear, $months ${LocaleData.month.getString(context)}';
     }
 
     return duration;
@@ -307,11 +311,11 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
               child: Column(
                 children: <Widget>[
                   // Welcome message
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      'Experiences',
-                      style: TextStyle(
+                      LocaleData.experience.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -319,12 +323,12 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     ),
                   ),
 
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 16.0),
                     child: Text(
-                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                      LocaleData.tellUs.getString(context),
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ),
 
@@ -335,9 +339,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Projects',
-                            style: TextStyle(
+                          Text(
+                            LocaleData.project.getString(context),
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                           Row(
@@ -528,9 +532,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                                   overflow: TextOverflow.ellipsis),
                               const SizedBox(height: 8.0),
                               // Tiêu đề Skillset
-                              const Text(
-                                'Skillset',
-                                style: TextStyle(
+                              Text(
+                                LocaleData.skillSet.getString(context),
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -612,8 +616,8 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                child: const Text('Continue',
-                    style: TextStyle(color: Colors.white)),
+                child: Text(LocaleData.continu.getString(context),
+                    style: const TextStyle(color: Colors.white)),
               ),
             )
           : const SizedBox(),
