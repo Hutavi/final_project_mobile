@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -5,22 +7,24 @@ import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:student_hub/models/company_user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/models/user.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
+
 class EditProfile extends StatefulWidget {
-  final CompanyUser companyInfo; 
-  const EditProfile({super.key, required this.companyInfo});
-  
+  final int companyID;
+  const EditProfile({super.key, required this.companyID});
+
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> with SingleTickerProviderStateMixin {
+class _EditProfileState extends State<EditProfile>
+    with SingleTickerProviderStateMixin {
   int activeIndex = 0;
-  String postCompanyData = '';//lưu trữ dữ liệu post lên API
-  
+  String postCompanyData = ''; //lưu trữ dữ liệu post lên API
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   Timer? _timer;
@@ -34,15 +38,25 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   final TextEditingController _descriptionController = TextEditingController();
   Future<void> getUserInfoFromToken() async {
     // Lấy token từ local storage
-    String? token = await TokenManager.getTokenFromLocal();
-    if (token != null) {
-      User? userInfo = await ApiManager.getUserInfo(token);
+    try {
+      final dioPrivate = DioClient();
+
+      final respondData = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+      print(respondData.data['result']['company']);
       setState(() {
-        userCurr = userInfo;
-        _companyNameController.text = userCurr?.companyUser?.companyName ?? '';
-        _websiteController.text = userCurr?.companyUser?.website ?? '';
-        _descriptionController.text = userCurr?.companyUser?.description ?? '';
-        switch (userCurr?.companyUser?.size) {
+        int size = (respondData.data['result']['company']['size']);
+        print(size);
+        _companyNameController.text =
+            respondData.data['result']['company']['companyName'] ?? '';
+        _websiteController.text = respondData.data['result']['company']['website'] ?? '';
+        _descriptionController.text =
+            respondData.data['result']['company']['description'] ?? '';
+        switch (size) {
           case 0:
             _selectedValue = 0;
             break;
@@ -62,17 +76,18 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
             _selectedValue = null;
         }
       });
+    } catch (e) {
+      print(e.toString());
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
     getUserInfoFromToken();
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
-        setState(() {
-        });
+        setState(() {});
       }
     });
     _animationController = AnimationController(
@@ -98,7 +113,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     _descriptionController.dispose();
     super.dispose();
   }
-  
+
   void _editProfile() async {
     String token = await TokenManager.getTokenFromLocal();
     var requestData = json.encode({
@@ -112,11 +127,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
     try {
       // ignore: unused_local_variable
       final response = await DioClient().request(
-        '/profile/company/${widget.companyInfo.id}',
+        '/profile/company/${widget.companyID}',
         data: requestData,
-        options: Options(
-          method: 'PUT'
-          ),
+        options: Options(method: 'PUT'),
       );
 
       User? userInfo = await ApiManager.getUserInfo(token);
@@ -129,7 +142,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const _AppBar(),
+        appBar: AppBarCustom(title: 'Edit Profile'),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -143,7 +156,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   children: [
                     Text(
                       LocaleData.edtProfileCompanyTitle.getString(context),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 17.0,
                         fontWeight: FontWeight.w600,
@@ -161,7 +174,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         Text(
                           LocaleData.companyName.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -186,7 +199,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -212,7 +226,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         Text(
                           LocaleData.website.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -237,7 +251,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -261,7 +276,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         Text(
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -286,7 +301,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -310,14 +326,14 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                   children: [
                     Text(
                       LocaleData.howManyPeopleInYourCompany.getString(context),
-                      style: TextStyle(fontSize: 17),
+                      style: const TextStyle(fontSize: 17),
                     ),
                     const SizedBox(height: 10),
                     Column(
                       children: [
                         RadioListTile<int>(
                           title: Text(LocaleData.itJustMe.getString(context),
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 0,
                           groupValue: _selectedValue,
@@ -329,8 +345,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('2-9 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '2-9 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 1,
                           groupValue: _selectedValue,
@@ -342,8 +359,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('10-99 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '10-99 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 2,
                           groupValue: _selectedValue,
@@ -355,8 +373,9 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('100-1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                          title: Text(
+                              '100-1000 ${LocaleData.employees.getString(context)}',
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 3,
                           groupValue: _selectedValue,
@@ -370,7 +389,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         RadioListTile<int>(
                           title: Text(
                               '${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 4,
                           groupValue: _selectedValue,
@@ -409,7 +428,7 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: MaterialButton(
-                            onPressed: (){
+                            onPressed: () {
                               _editProfile();
                             },
                             height: 45,
@@ -422,13 +441,14 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                             ),
                             child: Text(
                               LocaleData.edit.getString(context),
-                              style: TextStyle(color: Colors.white, fontSize: 16.0),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16.0),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10), // Khoảng cách giữa hai button
+                    const SizedBox(width: 10), // Khoảng cách giữa hai button
                     Expanded(
                       child: SlideTransition(
                         position: Tween<Offset>(
@@ -460,7 +480,8 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
                             ),
                             child: Text(
                               LocaleData.cancel.getString(context),
-                              style: TextStyle(color: Colors.white, fontSize: 16.0),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16.0),
                             ),
                           ),
                         ),
@@ -476,29 +497,29 @@ class _EditProfileState extends State<EditProfile> with SingleTickerProviderStat
 }
 
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
+// class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+//   const _AppBar({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return AppBar(
+//       title: const Text('Student Hub',
+//           style: TextStyle(
+//               color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+//       backgroundColor: Colors.grey[200],
+//       actions: <Widget>[
+//         IconButton(
+//           icon: SizedBox(
+//             width: 25,
+//             height: 25,
+//             child: Image.asset('lib/assets/images/avatar.png'),
+//           ),
+//           onPressed: () {},
+//         ),
+//       ],
+//     );
+//   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
+//   @override
+//   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+// }

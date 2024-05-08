@@ -20,6 +20,9 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
+  int companyData = -1 ;
+  int studentData = -1;
+
   List<AccountModel> accountList =
       []; //danh sách tất cả tài khoản đã từng đăng nhập
   List<AccountModel> inactiveAccountList =
@@ -54,13 +57,29 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   // Phương thức để lấy thông tin user từ token
   Future<void> getUserInfoFromToken() async {
-    String? token = await TokenManager.getTokenFromLocal();
+    try {
+      final dioPrivate = DioClient();
 
-    User? userInfo = await ApiManager.getUserInfo(token);
-    print(userInfo?.companyUser?.companyName);
-    setState(() {
-      userCurr = userInfo;
-    });
+      final respondData = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final studentDataAPI = respondData.data['result']['student']['id'];
+      final companyDataAPI = respondData.data['result']['company']['id'];
+      final user = (respondData.data['result']);
+      
+      setState(() {
+        studentData = studentDataAPI;
+        print('studentData: $studentData');
+        companyData = companyDataAPI;
+        print('companyData: $companyData');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getAccounts() async {
@@ -192,19 +211,20 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      if (role == 1 && userCurr?.companyUser == null) {
+                      if (role == 1 && companyData == -1) {
                         print('chưa có profile company');
                         Navigator.pushNamed(
                             context, AppRouterName.profileInput);
-                      } else if (role == 1 && userCurr?.companyUser != null) {
+                      } else if (role == 1 &&
+                          companyData != -1) {
                         print("(đã có) edit profile company");
                         Navigator.pushNamed(
                             context, AppRouterName.editProfileCompany,
-                            arguments: userCurr?.companyUser);
-                      } else if (role == 0 && userCurr?.studentUser == null) {
+                            arguments: companyData);
+                      } else if(role == 0 && studentData == -1){
                         print('student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
-                      } else if (role == 0 && userCurr?.studentUser != null) {
+                      } else if(role == 0 && studentData != -1){
                         print('edit student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
                       }
