@@ -1,10 +1,15 @@
 import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/chat/message.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/schedule_interview/re_schedule_interview.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/services/dio_client_not_api.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
@@ -56,6 +61,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
         if (response.data['result'] == true) {
           print(response.data['result']);
           // Chuyển đến trang họp nếu phòng họp hợp lệ
+          // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, AppRouterName.meetingRoom,
               arguments: widget.message.meetingRoomCode);
         } else {
@@ -94,6 +100,104 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
     return randomNumber.toString();
   }
 
+  void cancelMeeting() async {
+    // Gọi API để hủy cuộc họp
+    try {
+      final dio = DioClient();
+      final response = await dio.request(
+        '/interview/${widget.message.interviewID}/disable',
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+      print(widget.message.interviewID);
+
+      if (response.statusCode == 200) {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Success",
+            description: "The meeting has been cancelled.",
+            buttonText: 'OK',
+            statusDialog: 1,
+            onConfirmPressed: () {
+              setState(() {
+                isMeetingCancelled = true;
+              });
+              Navigator.pop(context);
+            },
+          ),
+        );
+      } else {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Error",
+            description: "Failed to cancel the meeting.",
+            buttonText: 'OK',
+            statusDialog: 2,
+            onConfirmPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e.response!.data['errorDetails']);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  // void reScheduleInterview() {
+  //   // Chuyển đến trang tạo cuộc họp mới với thông tin đã có
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (BuildContext context) {
+  //       return ReScheduleInterview(onSendMessage: (newMessage) {
+  //         // setState(() {
+  //         //   createInvite(newMessage['startDateTime'], newMessage['endDateTime'],
+  //         //       newMessage['titleSchedule']!, newMessage['conferencesID']!);
+  //         // });
+  //       });
+  //     },
+  //   );
+  // }
+
+  void reScheduleInterview() {
+    // Lưu thông tin cũ vào các biến tạm thời
+    String oldTitle = widget.message.title!;
+    String oldStartDateTime = formatDateTime(widget.message.startTime!);
+    String oldEndDateTime = formatDateTime(widget.message.endTime!);
+    int idInterview = widget.message.interviewID!;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return ReScheduleInterview(
+          // Truyền thông tin cũ cho màn hình cập nhật
+          title: oldTitle,
+          startDateTime: oldStartDateTime,
+          endDateTime: oldEndDateTime,
+          interviewID: idInterview,
+          onSendMessage: (newMessage) {},
+        );
+      },
+    );
+  }
+
   void _showOptionsModal(BuildContext context) {
     showDialog(
       context: context,
@@ -104,7 +208,6 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              backgroundColor: Colors.white,
             ),
           ),
           child: AlertDialog(
@@ -112,14 +215,15 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text('Re-schedule the meeting'),
+                GestureDetector(
+                    onTap: () {
+                      reScheduleInterview();
+                    },
+                    child: const Text('Re-schedule the meeting')),
                 const Divider(),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      isMeetingCancelled = true;
-                    });
-                    Navigator.pop(context);
+                    cancelMeeting();
                   },
                   child: const Text(
                     'Cancel the meeting',
@@ -143,7 +247,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              backgroundColor: Colors.white,
+              // backgroundColor: Colors.white,
             ),
           ),
           child: AlertDialog(
@@ -155,7 +259,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                   controller: codeRoom,
                   inputType: TextInputType.text,
                   onChange: () {},
-                  fillColor: kWhiteColor,
+                  fillColor: Theme.of(context).canvasColor,
                   hint: "Enter code room",
                 ),
                 const SizedBox(
@@ -172,9 +276,10 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                       backgroundColor: kWhiteColor,
                       minimumSize: Size.zero,
                       foregroundColor: kBlue700),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Text('Confirm'),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Text(LocaleData.confirm.getString(context)),
                   ),
                 )
               ],
