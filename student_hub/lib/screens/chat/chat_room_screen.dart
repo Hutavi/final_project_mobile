@@ -61,55 +61,60 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    messageController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   messageController.dispose();
+  //   super.dispose();
+  // }
 
   void connectSocket() async {
     socket!.on('RECEIVE_INTERVIEW', (data) {
-      if (data['notification']['content'] == 'Interview created') {
-        print(data);
+      if (data['notification']['content'] == 'Interview created' && mounted) {
+        print(data['notification']['message']['interview']['startTime']);
+        print(data['notification']['message']['interview']['endTime']);
         setState(() {
           messages.add(Message(
-            projectID: data['notification']['message']['projectId'],
-            senderUserId: data['notification']['senderId'],
-            receiverUserId: data['notification']['receiverId'],
-            interviewID: data['notification']['interview']['id'],
-            title: data['notification']['interview']['title'],
-            createdAt:
-                DateTime.parse(data['notification']['interview']['createdAt']),
-            startTime:
-                DateTime.parse(data['notification']['interview']['startTime']),
-            endTime:
-                DateTime.parse(data['notification']['interview']['endTime']),
-            meeting: data['notification']['message']['messageFlag'],
-            meetingRoomId:
-                data['notification']['meetingRoom']['meeting_room_id'] ?? '',
-            meetingRoomCode:
-                data['notification']['meetingRoom']['meeting_room_code'] ?? '',
-          ));
+              projectID: data['notification']['message']['projectId'],
+              senderUserId: data['notification']['senderId'],
+              receiverUserId: data['notification']['receiverId'],
+              interviewID: data['notification']['interviewId'],
+              title: data['notification']['message']['interview']['title'],
+              createdAt: DateTime.parse(
+                  data['notification']['message']['interview']['createdAt']),
+              startTime: DateTime.parse(
+                  data['notification']['message']['interview']['startTime']),
+              endTime: DateTime.parse(
+                  data['notification']['message']['interview']['endTime']),
+              meeting: data['notification']['message']['messageFlag'],
+              meetingRoomId: data['notification']['message']['interview']
+                      ['meetingRoom']['meeting_room_id'] ??
+                  '',
+              meetingRoomCode: data['notification']['message']['interview']
+                      ['meetingRoom']['meeting_room_code'] ??
+                  '',
+              duration: calculateDurationInMinutes(
+                  data['notification']['message']['interview']['startTime'],
+                  data['notification']['message']['interview']['endTime'])));
           _scrollToBottom();
         });
       }
     });
 
     socket!.on('RECEIVE_MESSAGE', (data) {
-      setState(() {
-        print(data);
+      if (mounted) {
+        setState(() {
+          messages.add(Message(
+            projectID: data['notification']['message']['projectId'],
+            senderUserId: data['notification']['senderId'],
+            receiverUserId: data['notification']['receiverId'],
+            content: data['notification']['message']['content'],
+            createdAt: DateTime.parse(data['notification']['createdAt']),
+            meeting: data['notification']['message']['messageFlag'],
+          ));
 
-        messages.add(Message(
-          projectID: data['notification']['message']['projectId'],
-          senderUserId: data['notification']['senderId'],
-          receiverUserId: data['notification']['receiverId'],
-          content: data['notification']['message']['content'],
-          createdAt: DateTime.parse(data['notification']['createdAt']),
-          meeting: data['notification']['message']['messageFlag'],
-        ));
-
-        _scrollToBottom();
-      });
+          _scrollToBottom();
+        });
+      }
     });
   }
 
@@ -281,6 +286,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     try {
       // Tạo phòng họp trước khi mời và lấy ID của phòng họp
       final roomId = await createRoom(conferencesID, endDateTime);
+      print(conferencesID);
 
       var data = json.encode({
         "title": titleSchedule,
@@ -290,7 +296,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         "projectId": widget.idProject,
         "senderId": widget.idThisUser,
         "receiverId": widget.idAnyUser,
-        "meeting_room_code": '9999hh',
+        "meeting_room_code": conferencesID + roomId.toString(),
         "meeting_room_id": roomId,
         "expired_at": endTimeISO
       });
@@ -311,7 +317,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             title: "Success",
             description: "Create a successful interview schedule.",
             buttonText: 'OK',
-            // buttonTextCancel: "Cancel",
             statusDialog: 1,
             onConfirmPressed: () {
               Navigator.pop(context);
@@ -329,7 +334,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             title: "Error",
             description: "Create a failed interview schedule.",
             buttonText: 'OK',
-            statusDialog: 1,
+            statusDialog: 2,
             onConfirmPressed: () {
               Navigator.pop(context);
             },

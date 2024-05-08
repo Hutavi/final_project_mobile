@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/constants/colors.dart';
 
 class DescribeItem extends StatefulWidget {
   final String? itemDescribe;

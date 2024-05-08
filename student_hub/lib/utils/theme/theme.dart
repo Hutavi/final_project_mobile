@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/utils/theme/custom_theme/app_bar_theme.dart';
 import 'package:student_hub/utils/theme/custom_theme/bottom_sheet_theme.dart';
-import 'package:student_hub/utils/theme/custom_theme/elevated_custom_theme.dart';
 import 'package:student_hub/utils/theme/custom_theme/text_theme.dart';
 
 class TAppTheme {

@@ -20,7 +20,8 @@ class ProfileInput extends StatefulWidget {
   State<ProfileInput> createState() => _NewLoginPageState();
 }
 
-class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderStateMixin {
+class _NewLoginPageState extends State<ProfileInput>
+    with SingleTickerProviderStateMixin {
   int activeIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -84,9 +85,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
       final response = await DioClient().request(
         '/profile/company/',
         data: requestData,
-        options: Options(
-          method: 'POST'
-          ),
+        options: Options(method: 'POST'),
       );
 
       User? userInfo = await ApiManager.getUserInfo(token);
@@ -95,7 +94,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
       print(e.toString());
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -408,7 +407,8 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         child: MaterialButton(
                           onPressed: () {
                             _createProfile();
-                            Navigator.pushNamed(context, AppRouterName.welcomeScreen);
+                            Navigator.pushNamed(
+                                context, AppRouterName.welcomeScreen);
                           },
                           height: 45,
                           color: kBlue400,

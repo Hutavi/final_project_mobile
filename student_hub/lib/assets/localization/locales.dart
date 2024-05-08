@@ -86,7 +86,8 @@ mixin LocaleData {
   static const String edit = 'edit';
   static const String continu = 'continu';
   static const String failed = 'failed';
-  
+  static const String accept = 'accept';
+
   //Project list
   static const String searchProjectTitle = 'search_project_title';
   static const String searchProject = 'search_project';
@@ -141,7 +142,7 @@ mixin LocaleData {
   static const String editPosting = 'edit_posting';
   static const String removePosting = 'remove_posting';
   static const String startWorkingThisProject = 'start_working_this_project';
-  static const String studentsAreLookingFor = 'students_are_looking_for'; 
+  static const String studentsAreLookingFor = 'students_are_looking_for';
   static const String hired = 'hired';
   static const String dayAgo = 'day_ago';
   static const String minutesAgo = 'minutes_ago';
@@ -162,7 +163,7 @@ mixin LocaleData {
   static const String noHaveMessage = 'no_have_message';
   static const String hiredOffer = 'hired_offer';
   static const String confirmSendOffer = 'confirm_send_offer';
-  static const String send = 'send'; 
+  static const String send = 'send';
   static const String teamSize = 'team_size';
   static const String excellent = 'excellent';
   static const String activeProposal = 'active_proposal';
@@ -204,12 +205,14 @@ mixin LocaleData {
   static const String postingScopeTitle = 'posting_scope_title';
   static const String postingScopeDescribeItem = 'posting_scope_describe_item';
   static const String postingScopeHowLong = 'posting_scope_how_long';
-  static const String postingScopeHowManyStudents = 'posting_scope_how_many_students';
+  static const String postingScopeHowManyStudents =
+      'posting_scope_how_many_students';
   static const String numberOfStudents = 'number_of_students';
   static const String nextDescription = 'next_description';
   //posting - page3
   static const String postingDescriptionTitle = 'posting_description_title';
-  static const String postingDescriptionDescribeItem = 'posting_description_describe_item';
+  static const String postingDescriptionDescribeItem =
+      'posting_description_describe_item';
   static const String postingDescriptionLine1 = 'posting_description_line1';
   static const String postingDescriptionLine2 = 'posting_description_line2';
   static const String postingDescriptionLine3 = 'posting_description_line3';
@@ -234,7 +237,7 @@ mixin LocaleData {
   static const String created = 'created';
 
   //project search
-  static const String searchForProject = 'search_for_project'; 
+  static const String searchForProject = 'search_for_project';
 
   //submit proposal
   static const String submitProposal = 'submit_proposal';
@@ -256,7 +259,8 @@ mixin LocaleData {
   static const String itJustMe = 'it_just_me';
   static const String employees = 'employees';
   static const String moreThan = 'more_than';
-  static const String howManyPeopleInYourCompany = 'how_many_people_in_your_company';
+  static const String howManyPeopleInYourCompany =
+      'how_many_people_in_your_company';
 
   //create profile company
   static const String tellUsAboutYourCompany = 'tell_us_about_your_company';
@@ -279,13 +283,45 @@ mixin LocaleData {
   static const String techStack = 'tech_stack';
   static const String selectTechStack = 'select_tech_stack';
   static const String skillSet = 'skill_set';
-  static const String selectSkillSet = 'select_skill_set'; 
+  static const String selectSkillSet = 'select_skill_set';
   static const String create = 'create';
   static const String education = 'education';
+  static const String experience = 'experience';
+  static const String deletedProjcetSuccess = 'deleted_projcet_success';
+  static const String deletedProjcetFailed = 'deleted_projcet_failed';
+  static const String day = 'day';
+  static const String month = 'month';
+  static const String tellUs = 'tell_us';
+  static const String updatedResumeFailed = 'updated_resume_failed';
+  static const String updatedResumeSuccess = 'updated_resume_success';
+  static const String chooseFile = 'choose_file';
+  static const String chooseImage = 'choose_image';
+  static const String updatedTranscriptFailed = 'updated_transcript_failed';
+  static const String updatedTranscriptSuccess = 'updated_transcript_success';
+  static const String welcome = 'welcome';
+  static const String welcomeDescription = 'welcome_description';
+  static const String next = 'next';
 
+  //Notification page
+  static const String notificationMessage = 'notification_message';
+  static const String notificationEventStart = 'notification_event_start';
+  static const String joinBtn = 'join_btn';
 
+  //Modal
+  // Modal Add, Update Languages
+  static const String addLanguage = 'add_language';
+  static const String updateLanguage = 'update_language';
+  static const String hintLanguageName = "hint_language_name";
+  static const String hintLanguageLevel = "hint_language_level";
 
-  
+  //Modal Add, Update Education
+  static const String addEducation = 'add_education';
+  static const String updateEducation = 'update_education';
+  static const String hintEducationName = "hint_education_name";
+  static const String hintEducation = "hint_education";
+  static const String startYear = "start_year";
+  static const String endYear = "end_year";
+
   static const Map<String, dynamic> EN = {
     //Home page
     student: 'Student',
@@ -373,7 +409,7 @@ mixin LocaleData {
     time: 'Time',
     projectScope: 'Project scope',
 
-    //Modal
+    //Modal Button
     cancel: 'Cancel',
     confirm: 'Confirm',
     close: 'Close',
@@ -381,10 +417,11 @@ mixin LocaleData {
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
-    saved: 'Saved', 
+    saved: 'Saved',
     edit: 'Edit',
     continu: 'Continue',
     failed: 'Failed',
+    accept: 'Accept',
 
     //forgot password
     forgotPasswordTitle: 'Forgot Password',
@@ -421,7 +458,8 @@ mixin LocaleData {
     passwordTooWeak: 'Password is too weak',
     passwordTooShort: 'Password is too short',
     confirmPassword: 'Confirm password',
-    homeScript: 'StudentHub is university market place to connect high-skilled student and company on a real-world project',
+    homeScript:
+        'StudentHub is university market place to connect high-skilled student and company on a real-world project',
 
     //navigation menu
     project: 'Project',
@@ -484,20 +522,24 @@ mixin LocaleData {
         'This helps your post stand out to the right students. It\'s the first thing they will see, so make it impressive',
     postingPlaceholder: 'Write a title for your post',
     postingExampleTitle: 'Example title',
-    postingExample: 'Build responsive WorldPress site with booking/paying functionality',
+    postingExample:
+        'Build responsive WorldPress site with booking/paying functionality',
     postingExample1: 'Facebook ad specialist need for product launch',
     nextScope: 'Next Scope',
     //posting - page2
     postingScopeTitle: '2/4 - Next, estimate the scope of your job',
-    postingScopeDescribeItem: 'Consider the size of your project and the timeline',
+    postingScopeDescribeItem:
+        'Consider the size of your project and the timeline',
     postingScopeHowLong: 'How long will your project take?',
-    postingScopeHowManyStudents: 'How many students do you want for this project?',
+    postingScopeHowManyStudents:
+        'How many students do you want for this project?',
     numberOfStudents: 'Number of students',
     nextDescription: 'Next: Description',
     //posting - page3
     postingDescriptionTitle: '3/4 - Next, provide project description',
     postingDescriptionDescribeItem: 'Students are looking for:',
-    postingDescriptionLine1: 'Clear expectations about your project or deliverables',
+    postingDescriptionLine1:
+        'Clear expectations about your project or deliverables',
     postingDescriptionLine2: 'The skills required for your project',
     postingDescriptionLine3: 'Details about your project',
     projectDescription: 'Project Description',
@@ -543,15 +585,15 @@ mixin LocaleData {
     employees: 'Employees',
     moreThan: 'More than',
     howManyPeopleInYourCompany: 'How many people are in your company?',
-    
+
     //create profile company
     tellUsAboutYourCompany: 'Tell us about your company and you will be on',
     yourWayConnectWith: 'your way connect with high-skilled students',
-  
+
     //welcome screen
     welcomeLine1: 'Let\'s start with your first project post!',
-    getStarted: 'Get Started',  
-    
+    getStarted: 'Get Started',
+
     //create profile student
     updateProfile: 'Update Profile',
     createdProfile: 'Created Profile',
@@ -561,15 +603,55 @@ mixin LocaleData {
     updatedEducation: 'Updated Education',
     removeLanguage: 'Remove Language',
     removeEducation: 'Remove Education',
-    welcomeLine2: 'Tell us about yourself and you will be on your way to connect with real-world projects',
+    welcomeLine2:
+        'Tell us about yourself and you will be on your way to connect with real-world projects',
     techStack: 'Techstack',
     selectTechStack: 'Select techstack',
     skillSet: 'Skillset',
     selectSkillSet: 'Select skillset',
     create: 'Create',
     education: 'Education',
+    experience: 'Experience',
 
+    //
+    deletedProjcetSuccess: 'Deleted project success',
+    deletedProjcetFailed: 'Deleted project failed',
+    day: 'days',
+    month: 'months',
+    tellUs:
+        'Tell us about yourself and you will be on your way to connect with real-world projects.',
 
+    updatedResumeFailed: 'Updated resume failed',
+    updatedResumeSuccess: 'Updated resume success',
+    updatedTranscriptFailed: 'Updated transcript failed',
+    updatedTranscriptSuccess: 'Updated transcript success',
+    chooseFile: 'Choose file here',
+    chooseImage: 'Choose image',
+    welcome: 'Welcome',
+    welcomeDescription:
+        'Welcome to StudentHub, a marketplace to connect Student <> Real-world projects',
+    next: 'Next',
+    //
+
+    //Notification page
+    notificationMessage: 'You have a new message from',
+    notificationEventStart: 'You have a new interview from',
+    joinBtn: 'Join',
+
+    //Modal
+    // Modal Add, Update Languages
+    addLanguage: 'Add Language',
+    updateLanguage: 'Update Language',
+    hintLanguageName: "Language name",
+    hintLanguageLevel: "Please enter language and level.",
+
+    //Modal Add, Update Education
+    addEducation: 'Add Education',
+    updateEducation: 'Update Education',
+    hintEducationName: "Education name",
+    hintEducation: "Please enter education, start year and end year.",
+    startYear: "Start year",
+    endYear: "End year",
   };
 
   /// Vietnamese
@@ -685,6 +767,7 @@ mixin LocaleData {
     edit: 'Chỉnh sửa',
     continu: 'Tiếp tục',
     failed: 'Thất bại',
+    accept: 'Chấp nhận',
 
     //forgot password
     forgotPasswordTitle: 'Quên mật khẩu',
@@ -708,7 +791,8 @@ mixin LocaleData {
     passwordTooWeak: 'Mật khẩu quá yếu',
     passwordTooShort: 'Mật khẩu quá ngắn',
     confirmPassword: 'Xác nhận mật khẩu',
-    homeScript: 'StudentHub là nơi kết nối sinh viên có kỹ năng cao và công ty trên dự án thực tế',
+    homeScript:
+        'StudentHub là nơi kết nối sinh viên có kỹ năng cao và công ty trên dự án thực tế',
 
     //navigation menu
     project: 'Dự án',
@@ -769,14 +853,16 @@ mixin LocaleData {
         'Điều này giúp bài đăng của bạn nổi bật với sinh viên phù hợp. Đây là điều đầu tiên họ sẽ thấy, vì vậy hãy làm cho nó ấn tượng',
     postingPlaceholder: 'Viết tiêu đề cho bài đăng của bạn',
     postingExampleTitle: 'Tiêu đề minh họa',
-    postingExample: 'Xây dựng trang web WorldPress phản hồi với chức năng đặt phòng/thanh toán',
+    postingExample:
+        'Xây dựng trang web WorldPress phản hồi với chức năng đặt phòng/thanh toán',
     postingExample1: 'Chuyên gia quảng cáo Facebook cần cho ra mắt sản phẩm',
     nextScope: 'Phạm vi tiếp theo',
     //posting - page2
     postingScopeTitle: '2/4 - Tiếp theo, ước lượng phạm vi công việc của bạn',
     postingScopeDescribeItem: 'Xem xét kích thước dự án của bạn và thời gian',
     postingScopeHowLong: 'Dự án của bạn sẽ mất bao lâu?',
-    postingScopeHowManyStudents: 'Bạn muốn bao nhiêu sinh viên tham gia dự án này?',
+    postingScopeHowManyStudents:
+        'Bạn muốn bao nhiêu sinh viên tham gia dự án này?',
     numberOfStudents: 'Số lượng sinh viên',
     nextDescription: 'Tiếp theo: Mô tả',
     //posting - page3
@@ -795,7 +881,7 @@ mixin LocaleData {
     //reviewPost
     projectDetail: 'Chi tiết dự án',
     editProject: 'Chỉnh sửa',
-    
+
     //edit projetc
     projectTitle: 'Tiêu đề dự án',
 
@@ -830,7 +916,8 @@ mixin LocaleData {
     howManyPeopleInYourCompany: 'Có bao nhiêu người trong công ty của bạn?',
 
     //create profile company
-    tellUsAboutYourCompany: 'Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ trên',
+    tellUsAboutYourCompany:
+        'Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ trên',
     yourWayConnectWith: 'đường kết nối với sinh viên có kỹ năng cao',
 
     //welcome screen
@@ -846,12 +933,52 @@ mixin LocaleData {
     updatedEducation: 'Cập nhật học vấn',
     removeLanguage: 'Xóa ngôn ngữ',
     removeEducation: 'Xóa học vấn',
-    welcomeLine2: 'Hãy cho chúng tôi biết về bạn và bạn sẽ trên đường kết nối với các dự án thực tế',
+    welcomeLine2:
+        'Hãy cho chúng tôi biết về bạn và bạn sẽ trên đường kết nối với các dự án thực tế',
     techStack: 'Công nghệ sử dụng',
     selectTechStack: 'Chọn công nghệ sử dụng',
     skillSet: 'Kỹ năng',
     create: 'Tạo',
     education: 'Học vấn',
+    selectSkillSet: 'Chọn kỹ năng',
+    experience: 'Kinh nghiệm',
+    deletedProjcetSuccess: 'Xóa dự án thành công',
+    deletedProjcetFailed: 'Xóa dự án thất bại',
+    day: 'ngày',
+    month: 'tháng',
+    tellUs:
+        'Hãy cho chúng tôi biết về bạn và bạn sẽ trên đường kết nối với các dự án thực tế.',
+    updatedResumeFailed: 'Cập nhật hồ sơ thất bại',
+    updatedResumeSuccess: 'Cập nhật hồ sơ thành công',
+    updatedTranscriptFailed: 'Cập nhật bảng điểm thất bại',
+    updatedTranscriptSuccess: 'Cập nhật bảng điểm thành công',
+    chooseFile: 'Chọn file ở đây',
+    chooseImage: 'Chọn ảnh',
+    welcome: 'Chào mừng',
+    welcomeDescription:
+        'Chào mừng đến với StudentHub, nơi kết nối Sinh viên <> Dự án thực tế',
+    next: 'Tiếp theo',
 
-  };    
+    //Notification page
+    notificationMessage: 'Bạn có một tin nhắn mới từ',
+    notificationEventStart: 'Bạn có 1 interview mới từ',
+    joinBtn: 'Tham gia',
+
+    //Modal
+    // Modal Add, Update Languages
+    addLanguage: 'Thêm ngôn ngữ',
+    hintLanguageName: "Tên ngôn ngữ",
+    hintLanguageLevel: "Vui lòng nhập ngôn ngữ và cấp độ.",
+    updateLanguage: 'Cập nhật ngôn ngữ',
+
+    //Modal Add, Update Education
+    addEducation: 'Thêm học vấn',
+    hintEducationName: "Tên học vấn",
+    hintEducation: "Vui lòng nhập học vấn, năm bắt đầu và năm kết thúc.",
+    updateEducation: 'Cập nhật học vấn',
+
+    //Modal Add, Update Education
+    startYear: "Năm bắt đầu",
+    endYear: "Năm tốt nghiệp"
+  };
 }

@@ -2,17 +2,14 @@ import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
-import 'dart:convert';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/models/account_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -110,7 +107,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     });
   }
 
-  void logout() async { 
+  void logout() async {
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',
@@ -122,7 +119,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
         await TokenManager.removeTokenFromLocal();
 
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, AppRouterName.login);
+        Navigator.pushReplacementNamed(context, AppRouterName.homePage);
       }
     } catch (e) {
       print(e);
@@ -167,10 +164,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           width: 10,
                         ),
                         Text(
-                          '${accountList
-                              .where((element) => element.isLogin == true)
-                              .first
-                              .getName} (${role == 1 ? 'Company' : 'Student'})',
+                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 ? 'Company' : 'Student'})',
                           style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -186,7 +180,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
                       if (expanded) {}
                     },
                     children: accountList
-                              .where((element) => element.isLogin == true).map((accountCurr) {
+                        .where((element) => element.isLogin == true)
+                        .map((accountCurr) {
                       return GestureDetector(
                         onTap: () {},
                         child: AccountTile(
@@ -341,8 +336,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                               value: 'vi',
                               child: Text(
                                 'Vietnamese',
-                                style: TextStyle(
-                                    ),
+                                style: TextStyle(),
                               ),
                             ),
                           ],
@@ -417,17 +411,17 @@ class AccountController {
     );
   }
 
-  void toCreateProfileStudent(BuildContext context){
+  void toCreateProfileStudent(BuildContext context) {
     Navigator.pushNamed(context, AppRouterName.profileS1);
   }
 
-  void toCreateProfileCompany(BuildContext context){
+  void toCreateProfileCompany(BuildContext context) {
     Navigator.pushNamed(context, AppRouterName.profileInput);
   }
 }
 
 // ignore: must_be_immutable
-class AccountTile extends StatelessWidget{
+class AccountTile extends StatelessWidget {
   AccountModel accountModel;
   AccountController accountManager;
   int role;
@@ -437,7 +431,7 @@ class AccountTile extends StatelessWidget{
     required this.accountManager,
     required this.role,
   }) : super(key: key);
-  
+
   List<dynamic> rolesList = [];
 
   Future<void> getRoleList() async {
@@ -455,20 +449,19 @@ class AccountTile extends StatelessWidget{
       print(e);
     }
   }
-  Future<void> setRole (int role) async {
+
+  Future<void> setRole(int role) async {
     await RoleUser.saveRole(role);
   }
 
-  void changeRole() async{
-    if(role == 1){
+  void changeRole() async {
+    if (role == 1) {
       await setRole(0);
-      
-    }
-    else if(role == 0) {
+    } else if (role == 0) {
       await setRole(1);
     }
     int x = await RoleUser.getRole();
-      print('role after = $x');
+    print('role after = $x');
   }
 
   void selectAccount(context) async {
@@ -476,23 +469,23 @@ class AccountTile extends StatelessWidget{
     int count = 0;
     print('roleBefore: $role');
     print('rolesList: $rolesList');
-    for(int i = 0; i < rolesList.length; i++){
-      if(rolesList[i] == 1){
-        count +=1;
+    for (int i = 0; i < rolesList.length; i++) {
+      if (rolesList[i] == 1) {
+        count += 1;
       }
-      if(rolesList[i]== 0){
+      if (rolesList[i] == 0) {
         count += 2;
       }
     }
-    if(count == 1){
+    if (count == 1) {
       print('only company');
       accountManager.toCreateProfileStudent(context);
     }
-    if(count == 2){
+    if (count == 2) {
       print('only student');
       accountManager.toCreateProfileCompany(context);
     }
-    if(count == 3){
+    if (count == 3) {
       print('both student and company');
       accountManager.reloadScreen(context);
     }
@@ -505,11 +498,11 @@ class AccountTile extends StatelessWidget{
       leading: const CircleAvatar(
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
-      title: Text('${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
-      onTap: () {  
+      title: Text(
+          '${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
+      onTap: () {
         selectAccount(context);
       },
     );
   }
 }
-

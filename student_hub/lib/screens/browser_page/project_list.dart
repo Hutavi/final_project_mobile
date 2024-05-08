@@ -5,6 +5,7 @@ import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
 import 'package:student_hub/widgets/loading.dart';
@@ -21,16 +22,23 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
   List<ProjectForListModel> listProject = [];
   var isLoading = true;
+  int role = -1;
 
   @override
   void initState() {
     fecthData();
+    getRole();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void getRole() async {
+    role = await RoleUser.getRole();
+    print(role);
   }
 
   void fecthData() async {
@@ -119,30 +127,33 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                   BorderRadius.all(Radius.circular(20)),
                               borderSide: BorderSide(width: 1, color: kGrey1)),
                         ),
-                        // onChanged: searchProject,
                         onTap: () {
-                          _showSearchBottomSheet(
-                              context); // Call function to show BottomSheet
+                          _showSearchBottomSheet(context);
                         },
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, AppRouterName.projectSaved)
-                            .then((_) => {
-                                  setState(() {
-                                    fecthData();
-                                  })
-                                });
-                      },
-                      child: const Icon(
-                        Icons.favorite,
-                        color: kRed,
-                      ),
-                    )
+                    role == 1
+                        ? const SizedBox(
+                            height: 1,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                      context, AppRouterName.projectSaved)
+                                  .then((_) => {
+                                        setState(() {
+                                          fecthData();
+                                        })
+                                      });
+                            },
+                            child: const Icon(
+                              Icons.favorite,
+                              color: kRed,
+                            ),
+                          )
                   ],
                 ),
                 isLoading
