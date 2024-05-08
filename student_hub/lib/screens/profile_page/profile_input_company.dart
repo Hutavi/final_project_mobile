@@ -11,39 +11,13 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/models/user.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class ProfileInput extends StatefulWidget {
   const ProfileInput({super.key});
 
   @override
   State<ProfileInput> createState() => _NewLoginPageState();
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderStateMixin {
@@ -125,7 +99,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const _AppBar(),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: const AppBarCustom(
+          title: 'Create Profile',
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -139,8 +116,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                   children: [
                     Text(
                       LocaleData.edtProfileCompanyTitle.getString(context),
-                      style: TextStyle(
-                        color: Colors.black,
+                      style: const TextStyle(
                         fontSize: 17.0,
                         fontWeight: FontWeight.w600,
                       ),
@@ -158,16 +134,14 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     children: [
                       Text(
                         LocaleData.tellUsAboutYourCompany.getString(context),
-                        style: TextStyle(
-                          color: Colors.black,
+                        style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         LocaleData.yourWayConnectWith.getString(context),
-                        style: TextStyle(
-                          color: Colors.black,
+                        style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
                         ),
@@ -183,14 +157,14 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                   children: [
                     Text(
                       LocaleData.howManyPeopleInYourCompany.getString(context),
-                      style: TextStyle(fontSize: 17),
+                      style: const TextStyle(fontSize: 17),
                     ),
                     const SizedBox(height: 10),
                     Column(
                       children: [
                         RadioListTile<int>(
                           title: Text(LocaleData.itJustMe.getString(context),
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 0,
                           groupValue: _selectedValue,
@@ -203,7 +177,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         ),
                         RadioListTile<int>(
                           title: Text('2-9 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 1,
                           groupValue: _selectedValue,
@@ -216,7 +190,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         ),
                         RadioListTile<int>(
                           title: Text('10-99 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 2,
                           groupValue: _selectedValue,
@@ -229,7 +203,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         ),
                         RadioListTile<int>(
                           title: Text('100-1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 3,
                           groupValue: _selectedValue,
@@ -242,7 +216,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         ),
                         RadioListTile<int>(
                           title: Text('${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
-                              style: TextStyle(fontSize: 14)),
+                              style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 4,
                           groupValue: _selectedValue,
@@ -264,8 +238,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.companyName.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Colors.black,
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -275,8 +248,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _companyNameController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Your Company Name!',
                         hintStyle: const TextStyle(
@@ -289,11 +264,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
-                          color: Colors.black,
                           fontSize: 18.0,
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -315,8 +289,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.website.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Colors.black,
+                          style: const TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -326,8 +299,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _websiteController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Your Company Website!',
                         hintStyle: const TextStyle(
@@ -340,7 +315,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -364,7 +339,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                         Text(
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -375,8 +350,10 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _descriptionController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Desciption about your company!',
                         hintStyle: const TextStyle(
@@ -389,7 +366,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -443,7 +420,7 @@ class _NewLoginPageState extends State<ProfileInput> with SingleTickerProviderSt
                           child: Text(
                             LocaleData.continu.getString(context),
                             style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                                const TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                         ),
                       ),
