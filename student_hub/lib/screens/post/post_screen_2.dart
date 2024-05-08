@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 enum ProjectDuration {
   oneToThreeMonths,
@@ -28,7 +31,6 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
     _numberStudentsController.dispose();
     super.dispose();
   }
-
 
   // change value of project-duration when selecting another duration
   void onSelectedDuration(ProjectDuration? duration) {
@@ -58,15 +60,16 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
       }
     }
     return Scaffold(
-      appBar: _AppBar(),
+      backgroundColor: Theme.of(context).colorScheme.background, 
+      appBar: const AppBarCustom(title: 'Student Hub'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '2/4 - Next, estimate the scope of your job',
+              Text(
+                LocaleData.postingScopeTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -74,20 +77,20 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'Consider the size of your project and the timeline',
+              Text(
+                LocaleData.postingScopeDescribeItem.getString(context),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How long will your project take?',
+              Text(
+                LocaleData.postingScopeHowLong.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
-                title: const Text('1 to 3 months'),
+                title: Text(LocaleData.oneToThreeMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.oneToThreeMonths,
                   groupValue: _projectDuration,
@@ -95,7 +98,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                 ),
               ),
               ListTile(
-                title: const Text('3 to 6 months'),
+                title: Text(LocaleData.threeToSixMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.threeToSixMonths,
                   groupValue: _projectDuration,
@@ -107,8 +110,8 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How many students do you want for this project?',
+              Text(
+                LocaleData.postingScopeHowManyStudents.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -118,8 +121,14 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
               ),
               TextFormField(
                 controller: _numberStudentsController,
-                decoration: const InputDecoration(
-                    hintText: 'Number of students',
+                decoration: InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
+                    hintText: LocaleData.numberOfStudents.getString(context),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
@@ -146,6 +155,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                   });
                 },
                 style: TextStyle(
+                  color: kGrey0,
                   fontSize: MediaQuery.of(context).size.width < 300
                       ? 14 // Điều chỉnh kích thước chữ cho màn hình nhỏ hơn
                       : 16,
@@ -162,7 +172,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                   onPressed: () {
                     Navigator.pushNamed(context, AppRouterName.postScreen3);
                   },
-                  child: const Text('Next: Description'),
+                  child: Text(LocaleData.nextDescription.getString(context)),
                   style: ElevatedButton.styleFrom(
                     // Adjust minimum size based on screen size
                     minimumSize: MediaQuery.of(context).size.width < 300
@@ -189,33 +199,4 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

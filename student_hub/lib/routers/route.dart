@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/models/chat/user.dart';
 import 'package:student_hub/models/company_user.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
-import 'package:student_hub/models/user.dart' as USER;
-import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/auth_page/change_password.dart';
+import 'package:student_hub/screens/auth_page/forgot_password_screen.dart';
 import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/auth_page/register_by_screen.dart';
 import 'package:student_hub/screens/auth_page/register_role_screen.dart';
@@ -16,7 +15,6 @@ import 'package:student_hub/screens/browser_page/project_saved.dart';
 import 'package:student_hub/screens/browser_page/project_search.dart';
 import 'package:student_hub/screens/browser_page/submit_proposal.dart';
 import 'package:student_hub/screens/chat/chat.dart';
-import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/post/edit_project.dart';
@@ -25,7 +23,8 @@ import 'package:student_hub/screens/profile_page/profile_input_company.dart';
 import 'package:student_hub/screens/schedule_interview/video_conference_screen.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
 import 'package:student_hub/screens/student_profile/student_profile_s2.dart';
-import 'package:student_hub/screens/student_profile/student_profile_s3.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s3_resume.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s3_transcript.dart';
 import 'package:student_hub/screens/switch_account_page/switch_account.dart';
 import 'package:student_hub/screens/post/post_screen_1.dart';
 import 'package:student_hub/screens/post/post_screen_2.dart';
@@ -83,10 +82,29 @@ class AppRoute {
           },
         );
 
-      case AppRouterName.profileS3:
+      case AppRouterName.profileS3Resume:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const StundentProfileS3(),
+              const StundentProfileS3Resume(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        );
+
+      case AppRouterName.profileS3Transcript:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const StundentProfileS3Transcript(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -103,23 +121,13 @@ class AppRoute {
         );
 
       case AppRouterName.login:
-        return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.ease;
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
 
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      case AppRouterName.forgotPassword:
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
+      case AppRouterName.changePassword:
+        return MaterialPageRoute(builder: (_) => const ChangePassword());
 
       case AppRouterName.register:
         return PageRouteBuilder(
@@ -271,10 +279,9 @@ class AppRoute {
       case AppRouterName.reviewPost:
         final args = settings.arguments as int;
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              ReviewPost(
-                projectID: args,
-              ),
+          pageBuilder: (context, animation, secondaryAnimation) => ReviewPost(
+            projectID: args,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -288,14 +295,13 @@ class AppRoute {
             );
           },
         );
-        
+
       case AppRouterName.editPoject:
         final args = settings.arguments as int;
         return PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              EditProject(
-                projectID: args,
-              ),
+          pageBuilder: (context, animation, secondaryAnimation) => EditProject(
+            projectID: args,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -316,7 +322,7 @@ class AppRoute {
       case AppRouterName.projectSaved:
         return MaterialPageRoute(builder: (_) => const SavedProject());
       case AppRouterName.navigation:
-        return MaterialPageRoute(builder: (_) => NavigationMenu());
+        return MaterialPageRoute(builder: (_) => const NavigationMenu());
 
       case AppRouterName.projectSearch:
         final args = settings.arguments as String;
@@ -380,9 +386,15 @@ class AppRoute {
         );
 
       case AppRouterName.chatScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const ChatRoomScreen(),
+              ChatRoomScreen(
+                  idProject: args['idProject']!,
+                  idThisUser: args['idThisUser']!,
+                  idAnyUser: args['idAnyUser']!,
+                  name: args['name']!),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -435,9 +447,12 @@ class AppRoute {
         );
 
       case AppRouterName.submitProposal:
+        final args = settings.arguments as ProjectForListModel;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const submitProposal(),
+              SubmitProposal(
+            projectId: args,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
             const end = Offset.zero;
@@ -453,10 +468,10 @@ class AppRoute {
           },
         );
       case AppRouterName.editProfileCompany:
-        final args = settings.arguments as CompanyUser;
+        final args = settings.arguments as int;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => EditProfile(
-            companyInfo: args,
+            companyID: args,
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
@@ -476,7 +491,7 @@ class AppRoute {
         // final args = settings.arguments as CompanyUser;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              WelcomeScreen(
+              const WelcomeScreen(
                   // companyInfo: args,
                   ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

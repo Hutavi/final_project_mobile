@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/filter_provider.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
@@ -39,9 +41,9 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    print(ref.watch(filterProvider).projectScopeFlag);
-    print(ref.watch(filterProvider).numberOfStudents);
-    print(ref.watch(filterProvider).proposalsLessThan);
+    // print(ref.watch(filterProvider).projectScopeFlag);
+    // print(ref.watch(filterProvider).numberOfStudents);
+    // print(ref.watch(filterProvider).proposalsLessThan);
 
     if (ref.watch(filterProvider).projectScopeFlag != null) {
       _selectedLength = ref.watch(filterProvider).projectScopeFlag!;
@@ -64,7 +66,6 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
         height: screenHeight * 0.8,
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: kWhiteColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -89,9 +90,10 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
               padding: const EdgeInsets.only(bottom: 10),
               decoration: const BoxDecoration(
                   border: Border(bottom: BorderSide(width: 1, color: kGrey0))),
-              child: const Text(
-                "Filter By",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                LocaleData.filterByTitle.getString(context),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(
@@ -100,14 +102,15 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Project lenght",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                Text(
+                  LocaleData.projectLenght.getString(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 RadioListTile<String>(
-                  title: const Text(
-                    "Less than one month",
-                    style: TextStyle(fontSize: 16),
+                  title: Text(
+                    LocaleData.lessThanOneMonth.getString(context),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   value: "Less than one month",
                   dense: true,
@@ -126,9 +129,9 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                   activeColor: kBlue800,
                 ),
                 RadioListTile<String>(
-                  title: const Text(
-                    "1 to 3 months",
-                    style: TextStyle(fontSize: 16),
+                  title: Text(
+                    LocaleData.oneToThreeMonth.getString(context),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   value: "1 to 3 months",
                   dense: true,
@@ -147,9 +150,9 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                   activeColor: kBlue800,
                 ),
                 RadioListTile<String>(
-                  title: const Text(
-                    "3 to 6 months",
-                    style: TextStyle(fontSize: 16),
+                  title: Text(
+                    LocaleData.threeToSixMonth.getString(context),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   value: "3 to 6 months",
                   dense: true,
@@ -168,9 +171,9 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                   activeColor: kBlue800,
                 ),
                 RadioListTile<String>(
-                  title: const Text(
-                    "More than 6 months",
-                    style: TextStyle(fontSize: 16),
+                  title: Text(
+                    LocaleData.moreThanSixMonth.getString(context),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   value: "More than 6 months",
                   dense: true,
@@ -196,9 +199,10 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Students needed",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                Text(
+                  LocaleData.studentNeeded.getString(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(
                   height: 10,
@@ -213,7 +217,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .setNumberOfStudents(amountStudentNeedController.text);
                   },
                   fillColor: kWhiteColor,
-                  labelText: 'Enter students needed',
+                  hint: LocaleData.studentNeededPlaholder.getString(context),
                 )
               ],
             ),
@@ -223,9 +227,10 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Proposals less than",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                Text(
+                  LocaleData.proposalsLessThan.getString(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(
                   height: 10,
@@ -240,7 +245,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .setProposalsLessThan(proposalsController.text);
                   },
                   fillColor: kWhiteColor,
-                  labelText: 'Enter proposals less than',
+                  hint: LocaleData.proposalLessThanPlaholder.getString(context),
                 )
               ],
             ),
@@ -288,7 +293,8 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                               ),
                               backgroundColor: kWhiteColor,
                               foregroundColor: kBlueGray600),
-                          child: const Text('Clear filters'),
+                          child:
+                              Text(LocaleData.clearFilter.getString(context)),
                         ),
                       ),
                       const SizedBox(
@@ -315,7 +321,8 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                               ),
                               backgroundColor: kBlue50,
                               foregroundColor: kBlueGray600),
-                          child: const Text('Apply'),
+                          child:
+                              Text(LocaleData.applyProject.getString(context)),
                         ),
                       ),
                     ],

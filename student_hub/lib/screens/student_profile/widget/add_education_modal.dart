@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class AddEducationModal extends StatefulWidget {
   final String initialEducationName;
@@ -34,9 +36,7 @@ class AddEducationModalState extends State<AddEducationModal> {
         TextEditingController(text: widget.initialEducationName);
     _selectedEducationStartYear = widget.initialSelectedEducationStartYear;
     _selectedEducationEndYear = widget.initialSelectedEducationEndYear;
-    title = widget.initialEducationName != ''
-        ? 'Update Education'
-        : 'Add Education';
+    title = widget.initialEducationName != '' ? 'Update' : 'Add';
   }
 
   @override
@@ -44,12 +44,13 @@ class AddEducationModalState extends State<AddEducationModal> {
     return AlertDialog(
       contentPadding:
           const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
       title: Text(
-        title,
+        title == 'Add'
+            ? LocaleData.addEducation.getString(context)
+            : LocaleData.updateEducation.getString(context),
         style: const TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
         textAlign: TextAlign.center,
@@ -60,30 +61,32 @@ class AddEducationModalState extends State<AddEducationModal> {
         children: [
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.black),
-                color: Colors.white),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: Colors.black),
+            ),
             child: TextField(
               controller: _educationNameController,
               style: const TextStyle(fontSize: 13),
-              decoration: const InputDecoration(
-                hintText: 'Education Name',
+              decoration: InputDecoration(
+                hintText: LocaleData.hintEducationName.getString(context),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.all(10),
-                hintStyle: TextStyle(fontSize: 13),
+                contentPadding: const EdgeInsets.all(10),
+                hintStyle: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Start year',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          Text(
+            LocaleData.startYear.getString(context),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: Colors.black),
             ),
@@ -103,7 +106,6 @@ class AddEducationModalState extends State<AddEducationModal> {
                   value: value,
                   child: Text(
                     value,
-                    style: const TextStyle(color: Colors.black),
                   ),
                 );
               }).toList(),
@@ -111,15 +113,17 @@ class AddEducationModalState extends State<AddEducationModal> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'End year',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          Text(
+            LocaleData.endYear.getString(context),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: Colors.black),
             ),
@@ -139,7 +143,6 @@ class AddEducationModalState extends State<AddEducationModal> {
                   value: value,
                   child: Text(
                     value,
-                    style: const TextStyle(color: Colors.black),
                   ),
                 );
               }).toList(),
@@ -165,8 +168,8 @@ class AddEducationModalState extends State<AddEducationModal> {
                     ),
                   ),
                 ),
-                child: const Text('Cancel',
-                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                child: Text(LocaleData.cancel.getString(context),
+                    style: const TextStyle(fontSize: 13, color: Colors.white)),
               ),
             ),
             const SizedBox(width: 10),
@@ -195,8 +198,8 @@ class AddEducationModalState extends State<AddEducationModal> {
                     ),
                   ),
                 ),
-                child: const Text('Accept',
-                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                child: Text(LocaleData.accept.getString(context),
+                    style: const TextStyle(fontSize: 13, color: Colors.white)),
               ),
             ),
           ],

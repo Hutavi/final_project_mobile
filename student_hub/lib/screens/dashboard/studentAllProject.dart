@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/constants/colors.dart';
 
 class StudentAllProject extends StatefulWidget {
   const StudentAllProject({super.key});
@@ -15,7 +19,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
   var created = false;
   var idStudent = -1;
   List<dynamic> projects = [];
-  List<dynamic> projectsWorking = [];
+  List<dynamic> submittedProposal = [];
+  List<dynamic> activeProposal = [];    //statusFlag = 1
+  List<dynamic> projectsWorking = [];   //typeFlag = 0
+  List<dynamic> projectsArchieved = []; //typeFlag = 1
 
   @override
   void initState() {
@@ -38,8 +45,14 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
     setState(() {
       projects = project;
-      projectsWorking =
-          project.where((item) => item['project']['typeFlag'] == 0).toList();
+      submittedProposal = 
+                        project.where((item) => item['statusFlag'] == 0).toList();
+      activeProposal = 
+                        project.where((item) => item['statusFlag'] == 1).toList();
+      projectsWorking = 
+                        project.where((item) => item['project']['typeFlag'] == 0).toList();
+      projectsArchieved = 
+                        project.where((item) => item['project']['typeFlag'] == 1).toList();
     });
   }
 
@@ -68,8 +81,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
       });
     } catch (e) {
       if (e is DioException && e.response != null) {
+        // ignore: avoid_print
         print(e);
       } else {
+        // ignore: avoid_print
         print('Have Error: $e');
       }
     }
@@ -81,27 +96,27 @@ class _StudentAllProjectState extends State<StudentAllProject>
     Duration difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
     } else {
       if (difference.inHours < 1) {
         int minutesDifference = difference.inMinutes;
-        return '$minutesDifference minutes ago';
+        return '$minutesDifference ${LocaleData.minutesAgo.getString(context)}';
       } else {
         int hoursDifference = difference.inHours;
-        return '$hoursDifference hours ago';
+        return '$hoursDifference ${LocaleData.hoursAgo.getString(context)}';
       }
     }
   }
 
   String? formatTimeProject(int type) {
     if (type == 0) {
-      return '• Less than 1 month';
+      return '• ${LocaleData.lessThanOneMonth.getString(context)}';
     } else if (type == 1) {
-      return '• 1 to 3 months';
+      return '• ${LocaleData.oneToThreeMonths.getString(context)}';
     } else if (type == 2) {
-      return '• 3 to 6 months';
+      return '• ${LocaleData.threeToSixMonths.getString(context)}';
     } else if (type == 3) {
-      return '• More than 6 months';
+      return '• ${LocaleData.moreThanSixMonths.getString(context)}';
     }
     return null;
   }
@@ -127,7 +142,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
                 children: [
                   _allProject(),
                   _working(),
-                  const Center(child: Text('Archieved')),
+                  _archieved(),
                 ],
               ),
             ),
@@ -139,12 +154,23 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildTabBar() {
     return TabBar(
+      labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       controller: _tabController,
-      tabs: const [
-        Tab(text: 'All projects'),
-        Tab(text: 'Working'),
-        Tab(text: 'Archieved'),
+      tabs: [
+        Tab(text: LocaleData.allProject.getString(context)),
+        Tab(text: LocaleData.working.getString(context)),
+        Tab(text: LocaleData.archieved.getString(context)),
       ],
+      indicatorColor: Colors.blue,
+      labelColor: Colors.blue,
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.hovered) ||
+            states.contains(MaterialState.focused)) {
+          return Colors.blue.withOpacity(0.1);
+        }
+        return null;
+      }),
     );
   }
 
@@ -152,7 +178,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
   Widget _allProject() {
     return Column(
       children: [
-        Container(
+        Expanded(
           child: _activeProposal(),
         ),
         Expanded(
@@ -163,67 +189,84 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
 
   Widget _activeProposal() {
-    return Card(
-      color: Colors.grey[200],
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          width: double.infinity,
-          child: const Text(
-            "Active Proposal (0)",
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _submittedProposal() {
-    return Expanded(
-      child: Card(
-        color: Colors.grey[200],
+    if(activeProposal.isEmpty){
+      return Card(
+        // color: const Color.fromRGBO(247, 242, 249, 1),
+        color: Theme.of(context).colorScheme.background,
         child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+              Padding(
+                padding: const EdgeInsets.all(0.0),
                 child: Row(
                   children: [
                     Text(
-                      "Submitted Proposal (0)",
-                      style: TextStyle(
+                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
+                  ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                LocaleData.noActiveProposal.getString(context),
+                style: const TextStyle(
+                  fontSize: 13.0,
                 ),
+              ),
+            ]
+          ),
+        ),
+      );
+    }
+    else {
+      return Card(
+        color: Theme.of(context).colorScheme.background,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                  ),
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: projects.length,
+                  itemCount: activeProposal.length,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return _buildProjectItem(index);
+                    return _buildActivityProposalItem(index);
                   },
                 ),
               ),
-            ],
+            ]
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
-  Widget _buildProjectItem(int index) {
+  Widget _buildActivityProposalItem(int index){
     return Card(
+      color: Theme.of(context).colorScheme.secondary,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -235,14 +278,14 @@ class _StudentAllProjectState extends State<StudentAllProject>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      projects[index]['project']['title'],
+                      activeProposal[index]['project']['title'],
                       style: const TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      'Submitted ${formatTimeAgo(projects[index]['createdAt'])}',
+                      '${LocaleData.submitted.getString(context)} ${formatTimeAgo(activeProposal[index]['createdAt'])}',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
@@ -253,8 +296,8 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
               style: TextStyle(
                 fontSize: 13.0,
               ),
@@ -273,7 +316,110 @@ class _StudentAllProjectState extends State<StudentAllProject>
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      projects[index]['project']['description'],
+                      activeProposal[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _submittedProposal() {
+    return Card(
+        color: Theme.of(context).colorScheme.background,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "${LocaleData.submittedProposal.getString(context)} (${submittedProposal.length})",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: submittedProposal.length,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return _buildProjectItem(index);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
+  }
+
+  Widget _buildProjectItem(int index) {
+    return Card(
+      color: Theme.of(context).colorScheme.secondary,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      submittedProposal[index]['project']['title'],
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '${LocaleData.submitted.getString(context)} ${formatTimeAgo(submittedProposal[index]['createdAt'])}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
+                fontSize: 13.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    '•',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      submittedProposal[index]['project']['description'],
                       style: const TextStyle(fontSize: 13.0),
                     ),
                   ),
@@ -288,14 +434,12 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   //working
   Widget _working() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: projectsWorking.length,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return _buildWorkingProjectItem(index);
-        },
-      ),
+    return ListView.builder(
+      itemCount: projectsWorking.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return _buildWorkingProjectItem(index);
+      },
     );
   }
 
@@ -332,9 +476,9 @@ class _StudentAllProjectState extends State<StudentAllProject>
               ],
             ),
             const SizedBox(height: 8.0),
-            const Text(
-              'Students are looking for',
-              style: TextStyle(
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
                 fontSize: 13.0,
               ),
             ),
@@ -353,6 +497,82 @@ class _StudentAllProjectState extends State<StudentAllProject>
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       projectsWorking[index]['project']['description'],
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _archieved() {
+    return ListView.builder(
+      itemCount: projectsArchieved.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return _buildArchievedProjectItem(index);
+      },
+    );
+  }
+
+  Widget _buildArchievedProjectItem(int index){
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      projectsArchieved[index]['project']['title'],
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '${formatTimeProject(projectsArchieved[index]['project']['projectScopeFlag'])}, ${projectsArchieved[index]['project']['numberOfStudents']} students',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              LocaleData.studentsAreLookingFor.getString(context),
+              style: const TextStyle(
+                fontSize: 13.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Text(
+                    '•',
+                    style: TextStyle(fontSize: 13.0),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      projectsArchieved[index]['project']['description'],
                       style: const TextStyle(fontSize: 13.0),
                     ),
                   ),

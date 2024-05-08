@@ -1,10 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class SendHired extends StatefulWidget {
   final int idProject;
@@ -27,7 +31,10 @@ class SendHiredState extends State<SendHired>
   String titleIcon = 'Hired';
   int? _idProject;
   List<dynamic> proposals = [];
+  List<dynamic> listMessage = [];
   Map? _projectDetaild;
+  var isLoading = true;
+  var idUser = -1;
 
   @override
   void initState() {
@@ -39,11 +46,11 @@ class SendHiredState extends State<SendHired>
     getDataProposalIdProject();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _tabController.dispose();
+  //   super.dispose();
+  // }
 
   void getDataProposalIdProject() async {
     final dioPrivate = DioClient();
@@ -55,24 +62,83 @@ class SendHiredState extends State<SendHired>
       ),
     );
 
+    final responseMessageProppsal = await dioPrivate.request(
+      '/message/$_idProject',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final responseIdUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
     final proposal = responseProppsal.data['result']['items'];
+    final message = responseMessageProppsal.data['result'];
+    final user = responseIdUser.data['result'];
 
     setState(() {
+      if (user['roles'][0] == 0) {
+        idUser = user['student']['userId'];
+      } else {
+        idUser = user['company']['userId'];
+      }
       proposals = proposal;
+      listMessage = message;
+      isLoading = false;
     });
   }
 
   String? formatTimeProject(int type) {
     if (type == 0) {
-      return '• Less than 1 month';
+      return '• ${LocaleData.lessThanOneMonth.getString(context)}';
     } else if (type == 1) {
-      return '• 1 to 3 months';
+      return '• ${LocaleData.oneToThreeMonths.getString(context)}';
     } else if (type == 2) {
-      return '• 3 to 6 months';
+      return '• ${LocaleData.threeToSixMonths.getString(context)}';
     } else if (type == 3) {
-      return '• More than 6 months';
+      return '• ${LocaleData.moreThanSixMonths.getString(context)}';
     }
     return null;
+  }
+
+  String findMaxYearAndCalculate(List<dynamic> data) {
+    int maxYear = 0;
+    dynamic maxYearElement;
+
+    for (var element in data) {
+      int currentMaxYear = element['startYear'] > element['endYear']
+          ? element['startYear']
+          : element['endYear'];
+
+      if (currentMaxYear > maxYear) {
+        maxYear = currentMaxYear;
+        maxYearElement = element;
+      }
+    }
+
+    int currentYear = DateTime.now().year;
+    int difference = currentYear - maxYear;
+
+    if (maxYearElement != null) {
+      String result;
+
+      if (difference == 0) {
+        result = LocaleData.fourthYearStudent.getString(context);
+      } else if (difference == 1) {
+        result = LocaleData.thirdYearStudent.getString(context);
+      } else if (difference == 2) {
+        result = LocaleData.secondYearStudent.getString(context);
+      } else {
+        result = LocaleData.firstYearStudent.getString(context);
+      }
+      return result;
+    } else {
+      return LocaleData.noDataToProcess.getString(context);
+    }
   }
 
   @override
@@ -105,8 +171,9 @@ class SendHiredState extends State<SendHired>
                       children: [
                         _buildProjectList(),
                         _buildProjectDetails(),
-                        const Center(child: Text('Message')),
-                        const Center(child: Text('Hired')),
+                        _buildProjectMessage(),
+                        Center(
+                            child: Text(LocaleData.hired.getString(context))),
                       ],
                     ),
                   ),
@@ -125,27 +192,53 @@ class SendHiredState extends State<SendHired>
       controller: _tabController,
       indicatorColor: kBlue600,
       labelColor: kBlue600,
-      tabs: const [
-        Tab(text: 'Proposals'),
-        Tab(text: 'Detail'),
-        Tab(text: 'Message'),
-        Tab(text: 'Hired'),
+      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        if (states.contains(MaterialState.hovered) ||
+            states.contains(MaterialState.focused)) {
+          return Colors.blue.withOpacity(0.1);
+        }
+        return null;
+      }),
+      tabs: [
+        Tab(text: LocaleData.proposals.getString(context)),
+        Tab(text: LocaleData.detail.getString(context)),
+        Tab(text: LocaleData.message.getString(context)),
+        Tab(text: LocaleData.hired.getString(context)),
       ],
     );
   }
 
   Widget _buildProjectList() {
-    return proposals.isNotEmpty
-        ? ListView.builder(
-            itemCount: proposals.length,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return _buildProjectItem(context, index);
-            },
-          )
-        : const Center(
-            child: Text('Không có Proposal'),
-          );
+    return isLoading
+        ? const LoadingWidget()
+        : proposals.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposals.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectItem(context, index);
+                },
+              )
+            : Center(
+                child: Text(LocaleData.noHaveProposal.getString(context)),
+              );
+  }
+
+  Widget _buildProjectMessage() {
+    return isLoading
+        ? const LoadingWidget()
+        : listMessage.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposals.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectMessageItem(context, index);
+                },
+              )
+            : Center(
+                child: Text(LocaleData.noHaveMessage.getString(context)),
+              );
   }
 
   void _showHiredConfirmationDialog(BuildContext context) {
@@ -168,18 +261,18 @@ class SendHiredState extends State<SendHired>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Hired offer',
-                  style: TextStyle(
+                Text(
+                  LocaleData.hiredOffer.getString(context),
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Do you really want to send hired offer for student to do this project?',
+                Text(
+                  LocaleData.confirmSendOffer.getString(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
@@ -199,8 +292,8 @@ class SendHiredState extends State<SendHired>
                       onPressed: () {
                         Navigator.of(context).pop(); // Đóng dialog
                       },
-                      child: const Text(
-                        'Cancel',
+                      child: Text(
+                        LocaleData.cancel.getString(context),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -220,8 +313,8 @@ class SendHiredState extends State<SendHired>
                         });
                         Navigator.of(context).pop(); // Đóng dialog
                       },
-                      child: const Text(
-                        'Send',
+                      child: Text(
+                        LocaleData.send.getString(context),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -236,89 +329,210 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectDetails() {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10),
+    return isLoading
+        ? const LoadingWidget()
+        : Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        LocaleData.studentsAreLookingFor.getString(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          DescribeItem(
+                            itemDescribe: _projectDetaild!['description'],
+                          ),
+                          // DescribeItem(
+                          //   itemDescribe: 'The skills required for your project',
+                          // ),
+                          // DescribeItem(
+                          //   itemDescribe: 'Detail about your project',
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.alarm),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleData.projectScope.getString(context),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          ),
+                          Text(
+                            formatTimeProject(
+                                    _projectDetaild!['projectScopeFlag'])
+                                .toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.people),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            LocaleData.teamSize.getString(context),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 14),
+                            overflow: TextOverflow.clip,
+                          ),
+                          Text(
+                            '• ${_projectDetaild!['numberOfStudents'].toString()} ${LocaleData.student.getString(context)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.clip,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+  }
+
+  Widget _buildProjectItem(BuildContext context, int index) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                const Text(
-                  'Students are looking for',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kBlackColor,
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(ImageManagent.imgAvatar),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DescribeItem(
-                      itemDescribe: _projectDetaild!['description'],
+                    Text(
+                      proposals[index]['student']['user']['fullname'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    // DescribeItem(
-                    //   itemDescribe: 'The skills required for your project',
-                    // ),
-                    // DescribeItem(
-                    //   itemDescribe: 'Detail about your project',
-                    // ),
+                    const SizedBox(height: 2),
+                    Text(
+                      findMaxYearAndCalculate(
+                          proposals[index]['student']['educations']),
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.alarm),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Project scope',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    ),
-                    Text(
-                      formatTimeProject(_projectDetaild!['projectScopeFlag'])
-                          .toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    )
-                  ],
-                )
+                Text(
+                  proposals[index]['student']['techStack']['name'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                Text(
+                  LocaleData.excellent.getString(context),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              proposals[index]['coverLetter'],
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.people),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Team size',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                      overflow: TextOverflow.clip,
-                    ),
-                    Text(
-                      '• ${_projectDetaild!['numberOfStudents'].toString()} students',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(AppRouterName.chatScreen, arguments: {
+                        'idProject': widget.idProject,
+                        'idThisUser': idUser,
+                        'idAnyUser': proposals[index]['student']['userId'],
+                        'name': proposals[index]['student']['user']['fullname'],
+                      });
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
                       ),
-                      overflow: TextOverflow.clip,
-                    )
-                  ],
-                )
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                    ),
+                    child: Text(
+                      LocaleData.message.getString(context),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                Expanded(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showHiredConfirmationDialog(context);
+                    },
+                    child: Text(
+                      titleIcon,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
@@ -327,25 +541,7 @@ class SendHiredState extends State<SendHired>
     );
   }
 
-  // Widget _buildListText(String text) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 4),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         const SizedBox(
-  //             width: 40, child: Icon(Icons.fiber_manual_record, size: 6)),
-  //         Expanded(
-  //             child: Text(
-  //           text,
-  //           style: const TextStyle(fontSize: 13),
-  //         )),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget _buildProjectItem(BuildContext context, int index) {
+  Widget _buildProjectMessageItem(BuildContext context, int index) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -370,14 +566,14 @@ class SendHiredState extends State<SendHired>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tran Huu Chinh',
+                      '1',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 2),
                     Text(
-                      '4th year student',
+                      'cc',
                       style: TextStyle(fontSize: 12),
                     ),
                   ],
@@ -385,16 +581,16 @@ class SendHiredState extends State<SendHired>
               ],
             ),
             const SizedBox(height: 10),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  proposals[index]['student']['techStack']['name'],
-                  style: const TextStyle(
+                  'hii',
+                  style: TextStyle(
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                const Text(
+                Text(
                   'Excellent',
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
@@ -403,8 +599,8 @@ class SendHiredState extends State<SendHired>
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              proposals[index]['coverLetter'],
+            const Text(
+              'haha',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

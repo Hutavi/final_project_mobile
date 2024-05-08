@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/project_list.dart';
-import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_search.dart';
+import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectListScreen extends StatefulWidget {
@@ -19,8 +19,8 @@ class ProjectListScreen extends StatefulWidget {
 
 class _ProjectListScreenState extends State<ProjectListScreen> {
   TextEditingController projectSearchController = TextEditingController();
-  List<ProjectModel> projectLists = allProject;
   List<ProjectForListModel> listProject = [];
+  var isLoading = true;
 
   @override
   void initState() {
@@ -50,6 +50,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
         setState(() {
           listProject = projects;
+          isLoading = false;
         });
       }
     } catch (e) {
@@ -59,123 +60,144 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const AppBarCustom(
-        title: 'Student Hub',
-        showBackButton: false,
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: projectSearchController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: "Search for project",
-                        hintStyle:
-                            const TextStyle(fontWeight: FontWeight.normal),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(color: Colors.blue),
-                        ),
-                        disabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 0, color: kBlue600),
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 0, color: kGrey1),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          borderSide: BorderSide(width: 1, color: kBlue600),
-                        ),
-                        focusedErrorBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            borderSide: BorderSide(width: 1, color: kGrey1)),
-                      ),
-                      // onChanged: searchProject,
-                      onTap: () {
-                        _showSearchBottomSheet(
-                            context); // Call function to show BottomSheet
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, AppRouterName.projectSaved)
-                          .then((_) => {
-                                setState(() {
-                                  fecthData();
-                                })
-                              });
-                      // Navigator.pushNamed(context, AppRouterName.projectSaved)
-                      //     .then((val) => {_getRequests()});
-                    },
-                    child: const Icon(
-                      Icons.favorite,
-                      color: kRed,
-                    ),
-                  )
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: listProject.length,
-                  itemBuilder: (context, index) {
-                    final project = listProject[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, AppRouterName.projectDetail,
-                            arguments: project);
-                      },
-                      child: ProjectItem(
-                        projectForListModel: listProject[index],
-                      ),
-                    );
-                  },
+    // final Brightness brightness = Theme.of(context).brightness;
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: null,
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: projectSearchController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          filled: true,
+                          // fillColor: Theme.of(context).colorScheme.surface,
+                          fillColor: kWhiteColor,
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: kGrey0,
+                          ),
+                          hintText: LocaleData.searchProject.getString(context),
+                          hintStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: kGrey0,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(color: Colors.blue),
+                          ),
+                          disabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 0, color: kBlue600),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 0, color: kGrey1),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(width: 1, color: kBlue600),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              borderSide: BorderSide(width: 1, color: kGrey1)),
+                        ),
+                        // onChanged: searchProject,
+                        onTap: () {
+                          _showSearchBottomSheet(
+                              context); // Call function to show BottomSheet
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRouterName.projectSaved)
+                            .then((_) => {
+                                  setState(() {
+                                    fecthData();
+                                  })
+                                });
+                      },
+                      child: const Icon(
+                        Icons.favorite,
+                        color: kRed,
+                      ),
+                    )
+                  ],
+                ),
+                isLoading
+                    ? const Expanded(
+                        child: Center(
+                          child: LoadingWidget(),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          itemCount: listProject.length,
+                          itemBuilder: (context, index) {
+                            final project = listProject[index];
+                            // Chuyển đổi màu nền xen kẽ
+                            final backgroundColor =
+                                index % 2 == 0 ? true : false;
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRouterName.projectDetail,
+                                    arguments: project,
+                                  );
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Column(
+                                    children: [
+                                      ProjectItem(
+                                        isEven: backgroundColor,
+                                        projectForListModel: listProject[index],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          },
+                        ),
+                      ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void searchProject(String query) {
-    final suggestions = allProject.where((project) {
-      final projectTitle = project.title!.toLowerCase();
-      final input = query.toLowerCase();
-
-      return projectTitle.contains(input);
-    }).toList();
-    setState(() => projectLists = suggestions);
-  }
-
   void _showSearchBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: false,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -9,7 +11,9 @@ import 'package:student_hub/widgets/describe_item.dart';
 
 class ProjectItem extends StatefulWidget {
   final ProjectForListModel projectForListModel;
-  const ProjectItem({super.key, required this.projectForListModel});
+  final bool? isEven;
+  const ProjectItem(
+      {super.key, required this.projectForListModel, this.isEven});
 
   @override
   State<ProjectItem> createState() => _ProjectItemState();
@@ -18,6 +22,7 @@ class ProjectItem extends StatefulWidget {
 class _ProjectItemState extends State<ProjectItem> {
   late bool isFavoriteUpdate = false;
   int? idStudent;
+  int? idCompany;
   @override
   void initState() {
     isFavoriteUpdate = widget.projectForListModel.isFavorite ?? false;
@@ -37,8 +42,18 @@ class _ProjectItemState extends State<ProjectItem> {
       final response =
           await dioClient.request('/auth/me', options: Options(method: 'GET'));
       if (response.statusCode == 200) {
-        idStudent = response.data['result']['student']['id'];
-        // print(response.data['result']['student']['id']);
+        final result = response.data['result'];
+        final roles = result['roles'];
+        final student = result['student'];
+        final company = result['company'];
+
+        if (roles.contains(0)) {
+          idStudent = student != null ? student['id'] : null;
+          idCompany = null;
+        } else {
+          idStudent = null;
+          idCompany = company != null ? company['id'] : null;
+        }
       }
     } catch (e) {
       print(e);
@@ -56,11 +71,13 @@ class _ProjectItemState extends State<ProjectItem> {
     int daysAgo = difference.inDays;
 
     if (daysAgo == 0) {
-      return 'Created today';
+      return LocaleData.createdToday.getString(context);
     } else if (daysAgo == 1) {
-      return 'Created yesterday';
+      return LocaleData.createdYesterday.getString(context);
     } else {
-      return 'Created $daysAgo days ago';
+      return LocaleData.createdDayAgo
+          .getString(context)
+          .replaceFirst('%a', daysAgo.toString());
     }
   }
 
@@ -70,7 +87,7 @@ class _ProjectItemState extends State<ProjectItem> {
     });
 
     var data = json.encode({
-      "projectId": widget.projectForListModel.projectId,
+      "projectId": widget.projectForListModel.id,
       "disableFlag": !isFavoriteUpdate == true ? 1 : 0,
     });
     print(data);
@@ -99,18 +116,27 @@ class _ProjectItemState extends State<ProjectItem> {
   @override
   Widget build(BuildContext context) {
     String timeAgo = calculateTimeAgo(widget.projectForListModel.createdAt);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final Brightness brightness = Theme.of(context).brightness;
+    Color backgroundColor;
+
+    if (brightness == Brightness.light) {
+      backgroundColor = widget.isEven! ? kWhiteColor : kBlueGray50;
+    } else {
+      backgroundColor =
+          widget.isEven! ? colorScheme.surface : colorScheme.background;
+    }
     return Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: const BoxDecoration(
-        color: kWhiteColor,
-        border: Border(
-          top: BorderSide(
-            color: kBlueGray200,
-            width: 1.0,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+              blurRadius: 5.0,
+            ),
+          ]),
       child: Row(
         children: [
           Expanded(
@@ -120,22 +146,23 @@ class _ProjectItemState extends State<ProjectItem> {
                 Text(
                   timeAgo,
                   style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w400, fontSize: 13),
                 ),
                 Text(widget.projectForListModel.title ?? '',
                     style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: kBlue800)),
+                      fontSize: 16,
+                      color: kBlue600,
+                      fontWeight: FontWeight.bold,
+                    )),
                 Text(
                   widget.projectForListModel.projectScopeFlag == 0
-                      ? 'Time: 1-3 months'
-                      : 'Time: 3-6 months',
-                  style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                      ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonths.getString(context)}'
+                      : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonths.getString(context)}',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
-                const Text('Students are looking for',
+                Text(
+                    LocaleData.studentsAreLookingFor.getString(context),
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ListView(
@@ -152,15 +179,14 @@ class _ProjectItemState extends State<ProjectItem> {
                   height: 10,
                 ),
                 Text(
-                  'Proposals: ${widget.projectForListModel.numberOfStudents} students',
-                  style: const TextStyle(
-                      color: kBlueGray800, fontWeight: FontWeight.w600),
+                  '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} ${LocaleData.student.getString(context)}',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
           ),
           GestureDetector(
-            onTap: toggleTypeFlag,
+            onTap: idStudent != null ? toggleTypeFlag : null,
             child: isFavoriteUpdate == true
                 ? const Icon(
                     Icons.favorite_rounded,

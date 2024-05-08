@@ -1,26 +1,28 @@
-import 'dart:convert';
-
+import 'dart:convert'; 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class ReviewPost extends ConsumerStatefulWidget {
   final int? projectID;
-  // const ReviewPost({super.key});
   const ReviewPost({Key? key, this.projectID}) : super(key: key);
   @override
   ConsumerState<ReviewPost> createState() => _ReviewPostState();
 }
 
 class _ReviewPostState extends ConsumerState<ReviewPost> {
+  ProjectModelNew project = ProjectModelNew();
   Future<void> getProject()async{
     try{
-      print('projectID: ${widget.projectID}');
       final dioPrivate = DioClient();
       final response = await dioPrivate.request(
         '/project/${widget.projectID}',
@@ -28,67 +30,28 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
           method: 'GET',
         ),
       );
-      ref.read(postProjectProvider.notifier).setProjectScopeFlag(response.data['result']['projectScopeFlag']);
-      ref.read(postProjectProvider.notifier).setProjectTitle(response.data['result']['title']);
-      ref.read(postProjectProvider.notifier).setNumberOfStudents(response.data['result']['numberOfStudents']);
-      ref.read(postProjectProvider.notifier).setProjectDescription(response.data['result']['description']);
-      ref.read(postProjectProvider.notifier).setTypeFlag(response.data['result']['typeFlag']);
+      project.projectScopeFlag = response.data['result']['projectScopeFlag'];
+      project.title = response.data['result']['title'];
+      project.numberOfStudents = response.data['result']['numberOfStudents'];
+      project.description = response.data['result']['description'];
+      project.typeFlag = response.data['result']['typeFlag'];
     }
     catch(e){
       print('Error: $e');
     }
   }
 
-  void editPoject() async {
-    try{
-      var requestData = json.encode({
-          'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
-          'title': ref.watch(postProjectProvider).title,
-          'numberOfStudents': ref.watch(postProjectProvider).numberOfStudents,
-          'description': ref.watch(postProjectProvider).description,
-          'typeFlag': ref.watch(postProjectProvider).typeFlag,
-        });
-      print('Request data1: $requestData');
-      final dioPrivate = DioClient();
-      final response = await dioPrivate.request(
-        '/project/${widget.projectID}',
-        data: requestData,
-        options: Options(
-          method: 'PATCH',
-        ),
-      );
-      print('Request data2: $requestData');
-      if(response.statusCode == 201){
-        print('Post project success');
-      }
-      if(response.statusCode == 400){
-        // if(requestData get companyId){
-          if(response.data['projectScopeFlag'] == null){
-            print('projectScopeFlag should not be empty, projectScopeFlag must be one of the following values: 0, 1, 2, 3');
-          }
-          if(response.data['numberOfStudents'] == null){
-            print('numberOfStudents must be a number conforming to the specified constraints, numberOfStudents should not be empty');
-          }
-          if(response.data['description'] == null){
-            print('description should not be empty, description must be a string');
-          }
-          if(response.data['typeFlag'] == ""){
-            print('description should not be empty');
-          }
-      }
-    }catch(e){
-      print('Error: $e');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     getProject();
-    final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
+    final scopeProject = project.projectScopeFlag == 0
         ? '1 to 3 months'
         : '3 to 6 months';
-    print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
-      appBar: const _AppBar(),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         padding: const EdgeInsets.only(
             left: 16.0, right: 16.0, top: 10.0, bottom: 0.0),
@@ -96,8 +59,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Project details",
+              Text(
+                LocaleData.projectDetail.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -105,24 +68,24 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              Text("${ref.watch(postProjectProvider).title}",
+              Text("${project.title}",
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+                      color: kBlue600)),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
               ),
               const SizedBox(height: 5),
-              Text("${ref.watch(postProjectProvider).description}",
+              Text("${project.description}",
                   style: const TextStyle(
                       fontSize: 14,
                       // fontWeight: FontWeight.w300,
-                      color: Colors.black)),
+                      color: kBlue600)),
               
               const Divider(),
               SizedBox(
@@ -139,8 +102,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.projectScope.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -169,14 +132,14 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Student required:',
+                      Text(
+                        LocaleData.studentRequired.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${ref.watch(postProjectProvider).numberOfStudents}',
+                        '• ' '${project.numberOfStudents}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -195,21 +158,45 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                onPressed: (){
-                  setState(() async {
-                    Navigator.pushNamed(context, AppRouterName.editPoject,
-                    arguments: widget.projectID);
-                  });
-                  
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kBlue400,
-                  foregroundColor: kWhiteColor,
+              Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: ElevatedButton(
+                  onPressed: (){
+                    setState(() async {
+                      Navigator.pushNamed(context, AppRouterName.editPoject,
+                      arguments: widget.projectID);
+                    });
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kBlue400,
+                    foregroundColor: kWhiteColor,
+                    padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                  ),
+                  child: Text(LocaleData.editProject.getString(context)),
                 ),
-                child: const Text('Edit project'),
+              ),
+              // SizedBox(width: 10,),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: ElevatedButton(
+                  onPressed: (){
+                    setState(() async {
+                      Navigator.pop(context);
+                    });
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kRed,
+                    foregroundColor: kWhiteColor,
+                    padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                  ),
+                  child: Text(LocaleData.cancel.getString(context)),
+                ),
               ),
             ],
           ),
@@ -217,33 +204,4 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

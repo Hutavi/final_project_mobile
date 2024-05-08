@@ -4,8 +4,13 @@ import 'package:student_hub/routers/route_name.dart';
 class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final bool showAction;
+
   const AppBarCustom(
-      {Key? key, required this.title, this.showBackButton = true})
+      {Key? key,
+      required this.title,
+      this.showBackButton = true,
+      this.showAction = true})
       : super(key: key);
 
   @override
@@ -22,7 +27,8 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Theme.of(context).bottomAppBarTheme.color,
+      automaticallyImplyLeading: false,
       leading: showBackButton
           ? IconButton(
               icon: const Icon(
@@ -34,17 +40,20 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
               },
             )
           : null,
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(
-            Icons.person,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, AppRouterName.switchAccount);
-          },
-        ),
-      ],
+      actions: showAction
+          ? <Widget>[
+              IconButton(
+                icon: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                      context, AppRouterName.switchAccount);
+                },
+              ),
+            ]
+          : null,
     );
   }
 }

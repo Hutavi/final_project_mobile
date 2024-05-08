@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarCustom(
-        title: 'Student Hub',
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(10.0),
-        children: const [
-          NotificationCard(
-            icon: Icons.notifications,
-            text: 'You have a new message',
-            time: '10:00 AM',
-          ),
-          SizedBox(height: 8.0),
-          NotificationCard(
-            icon: Icons.event_available,
-            text: 'Your event starts soon',
-            time: '12:00 PM',
-            showButton: true,
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: null,
+        body: ListView(
+          padding: const EdgeInsets.all(10.0),
+          children: [
+            NotificationCard(
+              icon: Icons.notifications,
+              text: LocaleData.notificationMessage.getString(context),
+              time: '10:00 AM',
+            ),
+            const SizedBox(height: 8.0),
+            NotificationCard(
+              icon: Icons.event_available,
+              text: LocaleData.notificationEventStart.getString(context),
+              time: '12:00 PM',
+              showButton: true,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -48,6 +49,7 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Theme.of(context).cardColor,
       elevation: 2.0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -77,7 +79,7 @@ class NotificationCard extends StatelessWidget {
                 onPressed: () {
                   // Handle button press
                 },
-                child: const Text('Join'),
+                child:  Text(LocaleData.joinBtn.getString(context)),
               ),
             ],
           ],

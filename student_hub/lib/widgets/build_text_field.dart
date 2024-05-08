@@ -52,7 +52,7 @@ class BuildTextField extends StatelessWidget {
       // enabled: enabled,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: const TextStyle(color: kGrey0, fontSize: 14),
+        labelStyle: const TextStyle(fontSize: 14),
         counterText: '',
         fillColor: fillColor,
         filled: true,
@@ -62,9 +62,9 @@ class BuildTextField extends StatelessWidget {
         hintText: hint,
         // floatingLabelBehavior: FloatingLabelBehavior.always,
         hintStyle: TextStyle(
-          fontSize: textMedium,
-          color: hintColor,
-        ),
+            fontSize: textMedium,
+            color: hintColor,
+            fontWeight: FontWeight.w400),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         errorStyle: const TextStyle(
@@ -95,11 +95,10 @@ class BuildTextField extends StatelessWidget {
         focusColor: kWhiteColor,
         hoverColor: kWhiteColor,
       ),
-      cursorColor: kBlackColor,
+      cursorColor: kGrey1,
       style: const TextStyle(
         fontSize: textMedium,
         fontWeight: FontWeight.w500,
-        color: kBlackColor,
       ),
     );
   }

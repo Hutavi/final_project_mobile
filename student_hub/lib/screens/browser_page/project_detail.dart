@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -17,7 +19,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
@@ -32,12 +34,12 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Project detail',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: kBlueGray900),
+              Text(
+                LocaleData.projectDetailTilte.getString(context),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -45,9 +47,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
               Text(
                 widget.projectItem.title as String,
                 style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: kBlackColor),
+                    fontSize: 18, fontWeight: FontWeight.w600, color: kBlue600),
               ),
               const SizedBox(
                 height: 20,
@@ -63,12 +63,11 @@ class _ProjectDetailState extends State<ProjectDetail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Students are looking for',
-                      style: TextStyle(
+                    Text(
+                      LocaleData.studentLookingFor.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: kBlackColor,
                       ),
                     ),
                     ListView(
@@ -78,12 +77,6 @@ class _ProjectDetailState extends State<ProjectDetail> {
                         DescribeItem(
                           itemDescribe: widget.projectItem.description,
                         ),
-                        // DescribeItem(
-                        //   itemDescribe: 'The skills required for your project',
-                        // ),
-                        // DescribeItem(
-                        //   itemDescribe: 'Detail about your project',
-                        // ),
                       ],
                     ),
                   ],
@@ -101,16 +94,20 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                      Text(
+                        LocaleData.projectScope.getString(context),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? '1-3 months' : '3-6 months'}',
+                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonth.getString(context) : LocaleData.threeToSixMonth.getString(context)}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 14),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -129,16 +126,21 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                      Text(
+                        LocaleData.studentNeeded.getString(context),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ' '${widget.projectItem.numberOfStudents} students',
+                        '• '
+                        '${widget.projectItem.numberOfStudents} ${LocaleData.student.getString(context)}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 14),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -157,7 +159,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.submitProposal);
+                  Navigator.pushNamed(context, AppRouterName.submitProposal,
+                      arguments: widget.projectItem);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -165,7 +168,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                     ),
                     backgroundColor: kWhiteColor,
                     foregroundColor: kBlue700),
-                child: const Text('Apply Now'),
+                child: Text(LocaleData.applyNow.getString(context)),
               ),
             ),
             const SizedBox(width: 10),
@@ -173,12 +176,13 @@ class _ProjectDetailState extends State<ProjectDetail> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    backgroundColor: kWhiteColor,
-                    foregroundColor: kBlueGray600),
-                child: const Text('Saved'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  backgroundColor: kWhiteColor,
+                  foregroundColor: Colors.green,
+                ),
+                child: Text(LocaleData.save.getString(context)),
               ),
             ),
           ],

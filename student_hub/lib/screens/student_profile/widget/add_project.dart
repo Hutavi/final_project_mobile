@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/screens/student_profile/widget/tags.dart';
 import 'package:student_hub/services/dio_public.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class AddProjectScreen extends StatefulWidget {
   final String? defaultTitle;
@@ -177,57 +178,12 @@ class AddProjectScreenState extends State<AddProjectScreen> {
   void _showError() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thất bại',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'Cancle',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Fail",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 2,
+      ),
     );
   }
 
@@ -238,12 +194,11 @@ class AddProjectScreenState extends State<AddProjectScreen> {
           title: Text(
             widget.type == 'add' ? 'Add Project' : 'Update Project',
             style: const TextStyle(
-              color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -270,7 +225,7 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: Colors.black, width: 0.5),
-                    color: Colors.white),
+                    color: Theme.of(context).cardColor),
                 child: TextField(
                   controller: _titleController,
                   onChanged: (value) {
@@ -305,8 +260,8 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                       style: ButtonStyle(
                         side: MaterialStateProperty.all(
                             const BorderSide(color: Colors.blue)),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).cardColor),
                       ),
                       child: Text(
                         'Start Date: ${_startDate.month}/${_startDate.year}',
@@ -322,8 +277,8 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                       style: ButtonStyle(
                         side: MaterialStateProperty.all(
                             const BorderSide(color: Colors.red)),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).cardColor),
                       ),
                       child: Text(
                         'End Date: ${_endDate.month}/${_endDate.year}',
@@ -345,10 +300,10 @@ class AddProjectScreenState extends State<AddProjectScreen> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: Colors.black, width: 0.5),
-                    color: Colors.white),
+                    color: Theme.of(context).cardColor),
                 child: TextField(
                   controller: _descriptionController,
-                  maxLines: 3,
+                  maxLines: 6,
                   onChanged: (value) {
                     setState(() {
                       _descriptionController.text = value;
@@ -382,7 +337,7 @@ class AddProjectScreenState extends State<AddProjectScreen> {
               const SizedBox(height: 2),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   border: Border.all(color: Colors.black, width: 0.5),
                   borderRadius: BorderRadius.circular(6),
                 ),
@@ -419,15 +374,16 @@ class AddProjectScreenState extends State<AddProjectScreen> {
           ),
         ),
         bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(10), // Padding của bottomNavigationBar
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white, // Màu nền của bottomNavigationBar
+            color: Theme.of(context).colorScheme.background,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-                spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-                blurRadius: 4, // Độ mờ của đổ bóng
-                offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+                color:
+                    Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
               ),
             ],
           ),

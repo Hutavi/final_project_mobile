@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/providers/search_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -36,14 +38,13 @@ class _BottomSheetSearchState extends ConsumerState<BottomSheetSearch> {
     return Consumer(
       builder: (context, ref, _) {
         final searchHistory = ref.watch(searchHistoryProvider);
-
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          height: screenHeight * 0.6,
+          height: screenHeight * 0.5,
           width: double.infinity,
-          decoration: const BoxDecoration(
-            color: kWhiteColor,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
             ),
@@ -52,15 +53,11 @@ class _BottomSheetSearchState extends ConsumerState<BottomSheetSearch> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 10),
               GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.cancel)),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -69,7 +66,7 @@ class _BottomSheetSearchState extends ConsumerState<BottomSheetSearch> {
                       cursorColor: kBlue700,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search),
-                        hintText: "Search for project",
+                        hintText: LocaleData.searchProject.getString(context),
                         hintStyle:
                             const TextStyle(fontWeight: FontWeight.normal),
                         contentPadding: const EdgeInsets.symmetric(

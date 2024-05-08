@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -46,7 +48,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
@@ -61,10 +63,13 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
               const SizedBox(
                 height: 30,
               ),
-              const Center(
+              Center(
                 child: Text(
-                  'Join as company or Student',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  LocaleData.titleRegister.getString(context),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -80,11 +85,15 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.person_2_rounded),
-                        Text('I am a student, find jobs for me')
+                        const Icon(
+                          Icons.person_2_rounded,
+                        ),
+                        Text(
+                          LocaleData.studentRegister.getString(context),
+                        )
                       ],
                     ),
                     Column(
@@ -93,6 +102,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: true,
                           groupValue: isStudent,
+                          activeColor: kBlue600,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -111,11 +121,15 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.person_2_rounded),
-                        Text('I am a company, find engineer for project')
+                        const Icon(
+                          Icons.person_2_rounded,
+                        ),
+                        Text(
+                          LocaleData.companyRegister.getString(context),
+                        )
                       ],
                     ),
                     Column(
@@ -124,6 +138,7 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                         Radio(
                           value: false,
                           groupValue: isStudent,
+                          activeColor: kBlue600,
                           onChanged: handleRadioValueChanged,
                         )
                       ],
@@ -146,11 +161,12 @@ class _RegisterChoiceRoleScreenState extends State<RegisterChoiceRoleScreen> {
                   backgroundColor: kGrey3,
                   elevation: 0.5,
                 ),
-                child: const Text(
-                  'Create account',
-                  style: TextStyle(
+                child: Text(
+                  LocaleData.registerAcc.getString(context),
+                  style: const TextStyle(
                     color: kGrey0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),

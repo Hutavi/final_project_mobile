@@ -1,5 +1,5 @@
 class ProjectForListModel {
-  int? projectId;
+  int? id; //projectId
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -13,7 +13,7 @@ class ProjectForListModel {
   bool? isFavorite;
 
   ProjectForListModel({
-    this.projectId,
+    this.id,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -29,7 +29,7 @@ class ProjectForListModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'projectId': projectId,
+      'id': id,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'deletedAt': deletedAt,
@@ -46,7 +46,7 @@ class ProjectForListModel {
 
   factory ProjectForListModel.fromJson(Map<String, dynamic> json) {
     return ProjectForListModel(
-      projectId: json['projectId'],
+      id: json['id'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],

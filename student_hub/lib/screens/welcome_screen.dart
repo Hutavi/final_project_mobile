@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/company_user.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -27,8 +28,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       backgroundColor: Colors.grey[200],
       actions: <Widget>[
         IconButton(
@@ -72,48 +72,45 @@ class _Content extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "Welcome to Student Hub!",
-              style: TextStyle(
-                color: Colors.black,
+              LocaleData.edtProfileCompanyTitle.getString(context),
+              style: const TextStyle(
+                // color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
           const SizedBox(height: 10),
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "Let's start with your first project post!",
-              style: TextStyle(
-                color: Colors.black,
+              LocaleData.welcomeLine1.getString(context),
+              style: const TextStyle(
+                // color: Colors.black,
                 fontSize: 15,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           // button get started
 
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => NavigationMenu(
-                        )),
+                MaterialPageRoute(builder: (context) => const NavigationMenu()),
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: kBlue400, // Đặt màu nền của nút thành màu xanh
+              backgroundColor: kBlue400,
             ),
-            child: const Text(
-              'Get Started',
-              style: TextStyle(color: kWhiteColor),
-              
+            child: Text(
+              LocaleData.getStarted.getString(context),
+              style: const TextStyle(color: kWhiteColor),
             ),
           ),
         ]);

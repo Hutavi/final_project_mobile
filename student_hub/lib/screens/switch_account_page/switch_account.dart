@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
 import "package:flutter/material.dart";
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
+import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/switch_account_page/account_list.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/screens/switch_account_page/add_account.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
+import 'package:student_hub/models/account_models.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -18,36 +19,80 @@ class SwitchAccount extends StatefulWidget {
 }
 
 class _SwitchAccountState extends State<SwitchAccount> {
-  //account đã từng đăng nhập
   User? userCurr;
+  int companyData = -1 ;
+  int studentData = -1;
+
+  List<AccountModel> accountList =
+      []; //danh sách tất cả tài khoản đã từng đăng nhập
+  List<AccountModel> inactiveAccountList =
+      []; //danh sách tài khoản đã từng đăng nhập nhưng hiện tại không đăng nhập
+  // Lấy danh sách tài khoản từ SharedPreferences khi widget được tạo
+
+  late FlutterLocalization _flutterLocalization;
+  late String _currentLocale;
+  int role = -1;
+
+  void getRole() async {
+    role = await RoleUser.getRole();
+  }
 
   @override
   void initState() {
     super.initState();
-    // Gọi phương thức để lấy thông tin user từ token khi widget được tạo
+    _flutterLocalization = FlutterLocalization.instance;
+    _currentLocale = _flutterLocalization.currentLocale!.languageCode;
+    // print(_currentLocale);
     getUserInfoFromToken();
+    getAccounts();
+    getRole();
+  }
+
+  @override
+  void dispose() {
+    _currentLocale = _flutterLocalization.currentLocale!.languageCode;
+    _flutterLocalization.currentLocale!.languageCode;
+    super.dispose();
   }
 
   // Phương thức để lấy thông tin user từ token
   Future<void> getUserInfoFromToken() async {
-    // Lấy token từ local storage
-    String? token = await TokenManager.getTokenFromLocal();
-    print(token);
-    if (token != null) {
-      // Gọi API để lấy thông tin user
-      User? userInfo = await ApiManager.getUserInfo(token);
+    try {
+      final dioPrivate = DioClient();
+
+      final respondData = await dioPrivate.request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+
+      final studentDataAPI = respondData.data['result']['student']['id'];
+      final companyDataAPI = respondData.data['result']['company']['id'];
+      final user = (respondData.data['result']);
+      
       setState(() {
-        print(userInfo);
-        // Cập nhật userCurr với thông tin user được trả về từ API
-        userCurr = userInfo;
+        studentData = studentDataAPI;
+        print('studentData: $studentData');
+        companyData = companyDataAPI;
+        print('companyData: $companyData');
       });
+    } catch (e) {
+      print(e);
     }
   }
 
-  void logout() async {
-    //getToken
+  void getAccounts() async {
+    List<AccountModel> inactiveAccounts =
+        await AccountManager.getInactiveAccounts();
+    List<AccountModel> accounts = await AccountManager.getAccounts();
+    setState(() {
+      accountList = accounts;
+      inactiveAccountList = inactiveAccounts;
+    });
+  }
 
-    // Gọi API để logout
+  void logout() async {
     try {
       final dio = DioClient();
       final response = await dio.request('/auth/logout',
@@ -57,10 +102,9 @@ class _SwitchAccountState extends State<SwitchAccount> {
       if (response.statusCode == 201) {
         // Xóa token từ local storage
         await TokenManager.removeTokenFromLocal();
-        String? token = await TokenManager.getTokenFromLocal();
-        print(token);
+
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, AppRouterName.login);
+        Navigator.pushReplacementNamed(context, AppRouterName.homePage);
       }
     } catch (e) {
       print(e);
@@ -68,269 +112,381 @@ class _SwitchAccountState extends State<SwitchAccount> {
   }
 
   void reloadScreen() {
-    //reload account
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const SwitchAccount()));
+    accountList = [];
+    Navigator.pushReplacementNamed(context, AppRouterName.switchAccount);
   }
 
-  AccountManager accountManager = AccountManager();
+  AccountController accountManager = AccountController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
-      body: Column(
-        children: <Widget>[
-          accountList.isEmpty
-              ? const AddAccount()
-              : ExpansionTile(
-                  title: Row(
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset('lib/assets/images/avatar.png'),
+      appBar: const AppBarCustom(
+        title: 'Student Hub',
+        showBackButton: false,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: <Widget>[
+            accountList.isEmpty
+                ? const SizedBox()
+                : ExpansionTile(
+                    title: Row(
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child:
+                                  Image.asset('lib/assets/images/avatar.png'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 ? 'Company' : 'Student'})',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
                           ),
+                        ),
+                      ],
+                    ),
+
+                    //khi mở rộng
+                    onExpansionChanged: (bool expanded) {
+                      if (expanded) {}
+                    },
+                    children: accountList
+                        .where((element) => element.isLogin == true)
+                        .map((accountCurr) {
+                      return GestureDetector(
+                        onTap: () {},
+                        child: AccountTile(
+                          accountModel: accountCurr,
+                          accountManager: accountManager,
+                          role: role,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+            Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, AppRouterName.navigation);
+                    },
+                    icon: const Icon(Icons.home, color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.home.getString(context),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      if (role == 1 && companyData == -1) {
+                        print('chưa có profile company');
+                        Navigator.pushNamed(
+                            context, AppRouterName.profileInput);
+                      } else if (role == 1 &&
+                          companyData != -1) {
+                        print("(đã có) edit profile company");
+                        Navigator.pushNamed(
+                            context, AppRouterName.editProfileCompany,
+                            arguments: companyData);
+                      } else if(role == 0 && studentData == -1){
+                        print('student');
+                        Navigator.pushNamed(context, AppRouterName.profileS1);
+                      } else if(role == 0 && studentData != -1){
+                        print('edit student');
+                        Navigator.pushNamed(context, AppRouterName.profileS1);
+                      }
+                    },
+                    icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.profile.getString(context),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, AppRouterName.changePassword);
+                    },
+                    icon: const Icon(Icons.change_circle,
+                        color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.changePassBtn.getString(context),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.language,
+                              color: kBlue400, size: 25.0),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            '${LocaleData.language.getString(context)}:',
+                            style: const TextStyle(fontSize: 16),
+                          )
                         ],
                       ),
-                      const SizedBox(
-                        //khoảng cách giữa ảnh và tên
-                        width: 10,
-                      ),
-                      Text(
-                        // accountList
-                        //     .where((element) => element.isLogin == true)
-                        //     .first
-                        //     .getFullName(),
-                        userCurr?.fullname ?? '',
-
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: DropdownButton(
+                          elevation: 0,
+                          isDense: true,
+                          value: _currentLocale,
+                          borderRadius: BorderRadius.circular(10),
+                          items: [
+                            DropdownMenuItem(
+                              value: 'en',
+                              child: Text('English',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .color)),
+                            ),
+                            const DropdownMenuItem(
+                              value: 'vi',
+                              child: Text(
+                                'Vietnamese',
+                                style: TextStyle(),
+                              ),
+                            ),
+                          ],
+                          onChanged: (String? newValue) {
+                            _setLocale(newValue);
+                          },
                         ),
-                      ),
+                      )
                     ],
                   ),
-
-                  //khi mở rộng
-                  onExpansionChanged: (bool expanded) {
-                    if (expanded) {
-                      // showAccountList(context);
-                    }
-                  },
-
-                  children: accountList
-                      .where((account) => account.signedIn && !account.isLogin)
-                      .map((account) {
-                    return GestureDetector(
-                      onTap: () {
-                        for (var i = 0; i < accountList.length; i++) {
-                          accountList[i].isLogin = false;
-                          if (accountList[i].userId == account.userId) {
-                            accountList[i].isLogin = true;
-                          }
-                        }
-                        reloadScreen();
-                      },
-                      child: AccountTile(
-                        account: account,
-                        accountManager: accountManager,
-                      ),
-                    );
-                  }).toList(),
                 ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Divider(
-              color: Colors.black,
-              thickness: 0.34,
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      logout();
+                    },
+                    icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
+                    label: Text(LocaleData.logOut.getString(context),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.labelMedium!.color,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal)),
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      minimumSize: const Size(double.infinity, 0),
+                      disabledBackgroundColor: Colors.white,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).dividerColor,
+                  thickness: 0.34,
+                ),
+              ],
             ),
-          ),
-          Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    print(userCurr?.printAll());
-                    print(userCurr?.companyUser?.printAll());
-                    if (userCurr?.role?[0] == 1 &&
-                        userCurr?.companyUser == null) {
-                      print('chưa có profile company');
-                      Navigator.pushNamed(context, AppRouterName.profileInput);
-                    } else if (userCurr?.role?[0] == 1 &&
-                        userCurr?.companyUser != null) {
-                      print("(đã có) edit profile company");
-                      Navigator.pushNamed(
-                          context, AppRouterName.editProfileCompany,
-                          arguments: userCurr?.companyUser);
-                    } else {
-                      print('student');
-                      Navigator.pushNamed(context, AppRouterName.profileS1);
-                    }
-                  },
-                  icon:
-                      const Icon(Icons.person, color: Colors.black, size: 28.0),
-                  label: const Text('Profiles',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    // Settings button pressed
-                  },
-                  icon: const Icon(Icons.settings,
-                      color: Colors.black, size: 28.0),
-                  label: const Text('Settings',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () {
-                    logout();
-                  },
-                  icon:
-                      const Icon(Icons.logout, color: Colors.black, size: 28.0),
-                  label: const Text('Log out',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal)),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width *
-                        0.8, // Chiều rộng là 80% của chiều rộng màn hình
-                    child: const Divider(
-                      color: Colors.black,
-                      thickness: 0.34,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  void _setLocale(String? value) {
+    if (value == null) return;
+    if (value == 'en') {
+      _flutterLocalization.translate('en');
+    } else if (value == 'vi') {
+      _flutterLocalization.translate('vi');
+    } else {
+      return;
+    }
+
+    setState(() {
+      _currentLocale = value;
+    });
+  }
 }
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text(
-        'Student Hub',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const AddAccount()),
-            // );
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class AccountManager {
-  String currentAccountName = '';
-
-  void updateAccountName(String name) {
-    currentAccountName = name;
-  }
-
+class AccountController {
   void reloadScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const SwitchAccount()),
     );
   }
+
+  void toCreateProfileStudent(BuildContext context) {
+    Navigator.pushNamed(context, AppRouterName.profileS1);
+  }
+
+  void toCreateProfileCompany(BuildContext context) {
+    Navigator.pushNamed(context, AppRouterName.profileInput);
+  }
 }
 
+// ignore: must_be_immutable
 class AccountTile extends StatelessWidget {
-  final CompanyUser account;
-  final AccountManager accountManager;
-
-  const AccountTile({
+  AccountModel accountModel;
+  AccountController accountManager;
+  int role;
+  AccountTile({
     Key? key,
-    required this.account,
+    required this.accountModel,
     required this.accountManager,
+    required this.role,
   }) : super(key: key);
+
+  List<dynamic> rolesList = [];
+
+  Future<void> getRoleList() async {
+    try {
+      final dio = DioClient();
+      final response = await dio.request('/auth/me',
+          options: Options(
+            method: 'GET',
+          ));
+      if (response.statusCode == 200) {
+        final roles = response.data['result']['roles'];
+        rolesList = roles;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> setRole(int role) async {
+    await RoleUser.saveRole(role);
+  }
+
+  void changeRole() async {
+    if (role == 1) {
+      await setRole(0);
+    } else if (role == 0) {
+      await setRole(1);
+    }
+    int x = await RoleUser.getRole();
+    print('role after = $x');
+  }
+
+  void selectAccount(context) async {
+    await getRoleList();
+    int count = 0;
+    print('roleBefore: $role');
+    print('rolesList: $rolesList');
+    for (int i = 0; i < rolesList.length; i++) {
+      if (rolesList[i] == 1) {
+        count += 1;
+      }
+      if (rolesList[i] == 0) {
+        count += 2;
+      }
+    }
+    if (count == 1) {
+      print('only company');
+      accountManager.toCreateProfileStudent(context);
+    }
+    if (count == 2) {
+      print('only student');
+      accountManager.toCreateProfileCompany(context);
+    }
+    if (count == 3) {
+      print('both student and company');
+      accountManager.reloadScreen(context);
+    }
+    changeRole();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const CircleAvatar(
-        // backgroundImage: AssetImage('lib/assets/images/avatar_${account.userId}.png'),
-        backgroundImage: const AssetImage('lib/assets/images/avatar.png'),
+        backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
-      title: Text(account.getFullName()),
+      title: Text(
+          '${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
       onTap: () {
-        for (var i = 0; i < accountList.length; i++) {
-          accountList[i].isLogin = false;
-        }
-        account.isLogin = true;
-        accountManager.updateAccountName(account.getFullName());
-        accountManager.reloadScreen(context);
+        selectAccount(context);
       },
     );
   }

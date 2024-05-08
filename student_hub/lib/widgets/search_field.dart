@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-// import 'package:student_hub/constants/theme.dart';
 
 class SearchBox extends StatefulWidget {
   final TextEditingController controller;
+  final void Function(String query) handleSearch; // Thêm tham số handleSearch
 
-  const SearchBox({super.key, required this.controller});
+  const SearchBox({
+    Key? key,
+    required this.controller,
+    required this.handleSearch, // Thêm tham số handleSearch vào constructor
+  }) : super(key: key);
 
   @override
   State<SearchBox> createState() => _SearchBoxState();
@@ -20,8 +24,16 @@ class _SearchBoxState extends State<SearchBox> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.background,
               borderRadius: BorderRadius.circular(1000),
+              //đổ bóng
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             child: TextField(
               controller: widget.controller,
@@ -29,7 +41,7 @@ class _SearchBoxState extends State<SearchBox> {
                 contentPadding: EdgeInsets.all(0),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.grey,
+                  // color: Colors.grey,
                   size: 20,
                 ),
                 prefixIconConstraints: BoxConstraints(
@@ -39,12 +51,10 @@ class _SearchBoxState extends State<SearchBox> {
                 border: InputBorder.none,
                 hintText: 'Search',
                 hintStyle: TextStyle(
-                  color: Colors.grey,
+                  // color: Colors.grey,
                 ),
               ),
-              onChanged: (value) {
-                // Add your logic here if needed
-              },
+              onChanged: widget.handleSearch,
             ),
           ),
         ],

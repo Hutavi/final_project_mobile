@@ -2,15 +2,17 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
+import 'package:student_hub/screens/switch_account_page/account_manager.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,6 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   bool userNotFound = false;
   bool passwordWrong = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void sendRequestLogin() async {
     if (_formKey.currentState!.validate()) {
@@ -45,8 +52,43 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.statusCode == 201) {
           final token = response.data['result']['token'];
           await saveTokenToLocal(token);
-          // ignore: use_build_context_synchronously
-          Navigator.pushReplacementNamed(context, AppRouterName.navigation);
+
+          // await AccountManager.clearSharedPreferences();
+          List<dynamic> roles = await ApiManager.getRoles(token);
+          print(roles);
+
+          //get role from local
+          final roleLocal = await RoleUser.getRole();
+          print('roleLocal: $roleLocal');
+
+          for (int i = 0; i < roles.length; i++) {
+            print(roles[i]);
+            if (roles[i] == roleLocal) {
+              String fullname = await ApiManager.getFullname(token);
+              print(fullname);
+              await AccountManager.saveAccountToLocal(
+                  userNameController.text, passwordController.text, fullname);
+
+              // ignore: use_build_context_synchronously
+              Navigator.pushReplacementNamed(context, AppRouterName.navigation);
+              return;
+            }
+          }
+          //loop through roles to check if role isn't mapped with local role, then show dialog
+          showDialog(
+              // ignore: use_build_context_synchronously
+              context: context,
+              builder: (context) => DialogCustom(
+                    title: LocaleData.error.getString(context),
+                    description:
+                        'Account is not map with your choosen role. Please choose another role.',
+                    buttonText: LocaleData.confirm.getString(context),
+                    onConfirmPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, AppRouterName.homePage);
+                    },
+                    statusDialog: 2,
+                  ));
         } else {
           print("Login failed: ${response.data}");
         }
@@ -75,11 +117,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Lấy chiều cao của màn hình
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Tính toán khoảng cách 40% chiều cao của màn hình
+    final spacingHeight = screenHeight * 0.3;
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
         showBackButton: false,
+        showAction: true,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -88,132 +136,181 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Center(
-                      child: Text(
-                        'Login with StudentHub',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BuildTextField(
-                      controller: userNameController,
-                      inputType: TextInputType.text,
-                      fillColor: kWhiteColor,
-                      onChange: (value) {
-                        userNotFound = false;
-                        // validateFields();
-                      },
-                      labelText: 'Username or email',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Username or email is required';
-                        } else if (userNotFound) {
-                          return 'User not found';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    BuildTextField(
-                      controller: passwordController,
-                      inputType: TextInputType.text,
-                      obscureText: true,
-                      fillColor: kWhiteColor,
-                      onChange: (value) {
-                        // validateFields();
-                        passwordWrong = false;
-                      },
-                      labelText: 'Password',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Password is required';
-                        } else if (passwordWrong) {
-                          return 'Password is wrong';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Column(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            sendRequestLogin();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                            backgroundColor: kGrey3,
-                            elevation: 0.5,
+                      Center(
+                        child: Text(
+                          LocaleData.loginTitle.getString(context),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              color: kGrey0,
-                              fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(LocaleData.email.getString(context),
+                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      BuildTextField(
+                        controller: userNameController,
+                        inputType: TextInputType.text,
+                        fillColor: Theme.of(context).canvasColor,
+                        onChange: (value) {
+                          userNotFound = false;
+                          // validateFields();
+                        },
+                        hint: LocaleData.emailPlaholder.getString(context),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return LocaleData.userRequiered.getString(context);
+                          } else if (userNotFound) {
+                            return LocaleData.userNotFound.getString(context);
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(LocaleData.password.getString(context),
+                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      BuildTextField(
+                        controller: passwordController,
+                        inputType: TextInputType.text,
+                        obscureText: true,
+                        fillColor: Theme.of(context).canvasColor,
+                        onChange: (value) {
+                          // validateFields();
+                          passwordWrong = false;
+                        },
+                        hint: LocaleData.passwordPlaceholder.getString(context),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return LocaleData.passwordRequiered
+                                .getString(context);
+                          } else if (passwordWrong) {
+                            return LocaleData.passwordWrong.getString(context);
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {
+                              sendRequestLogin();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              backgroundColor: kGrey3,
+                              elevation: 0.5,
+                            ),
+                            child: Text(
+                              LocaleData.loginButton.getString(context),
+                              style: const TextStyle(
+                                color: kGrey0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (passwordWrong)
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRouterName.forgotPassword),
+                          child: Center(
+                            child: Text.rich(
+                              TextSpan(
+                                text: LocaleData.forgotPassword
+                                    .getString(context),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text:
+                                        LocaleData.clickHere.getString(context),
+                                    style: const TextStyle(
+                                      color: kRed,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Center(
-                      child: Text("Don't have an Student Hub account?"),
-                    ),
-                    Column(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, AppRouterName.register);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                            backgroundColor: kGrey3,
-                            elevation: 0.5,
-                          ),
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: kGrey0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: spacingHeight,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                          child: Text(
+                        LocaleData.dontHaveAccount.getString(context),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ],
+                      )),
+                      Column(
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRouterName.register);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              backgroundColor: kGrey3,
+                              elevation: 0.5,
+                            ),
+                            child: Text(
+                              LocaleData.registerButton.getString(context),
+                              style: const TextStyle(
+                                color: kGrey0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

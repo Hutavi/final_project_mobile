@@ -1,25 +1,82 @@
-import 'dart:ffi';
-
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
-import 'package:student_hub/models/project_models/project_model.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/constants/colors.dart';
 
-class submitProposal extends StatefulWidget {
-  // final ProjectModel projectItem;
-  const submitProposal({super.key});
-  // const submitProposal({super.key, required this.projectItem});
+class SubmitProposal extends StatefulWidget {
+  final ProjectForListModel projectId;
+  const SubmitProposal({super.key, required this.projectId});
 
   @override
-  State<submitProposal> createState() => _submitProposalState();
+  State<SubmitProposal> createState() => SubmitProposalState();
 }
 
-class _submitProposalState extends State<submitProposal> {
+class SubmitProposalState extends State<SubmitProposal> {
+  int idStudent = -1;
+  TextEditingController coverLetterController = TextEditingController();
+
+  Future<void> getStudentId() async {
+    try {
+      final response = await DioClient().request(
+        '/auth/me',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+      final user = response.data['result'];
+      setState(() {
+        if (user['student'] == null) {
+          print('Student not found');
+        } else {
+          final student = user['student'];
+          idStudent = student['id'];
+        }
+      });
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  void submitProposal() async {
+    try {
+      print('bắt đầu chạy hàm submitProposal()');
+      // print(idStudent);
+      final response = await DioClient().request(
+        '/proposal',
+        data: jsonEncode({
+          'projectId': widget.projectId.id,
+          'studentId': idStudent,
+          'coverLetter': (coverLetterController.text),
+          'statusFlag':
+              0, // {0: waiting -> submitted}, {1: offer(chat with company) -> activity}, {2: hired (accept offer from company) -> working flow}
+          'disableFlag': 1, // {0: disable}, {1: enable} |||
+        }),
+        options: Options(method: 'POST'),
+      );
+      print(response.data['result']);
+
+      if (response.statusCode == 201) {
+        print('Proposal submitted');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
@@ -27,40 +84,51 @@ class _submitProposalState extends State<submitProposal> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Cover letter',
+                  LocaleData.coverLetter.getString(context),
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                      // color: Colors.black
+                      ),
                 ),
               ],
             ),
             const SizedBox(
               height: 10,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Describe why do you fit to this project',
+                  LocaleData.submitProposalScript.getString(context),
                   style: TextStyle(
                       fontSize: 13,
                       // fontWeight: FontWeight.w500,
-                      color: Colors.black),
+                      // color: Colors.black
+                      ),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            const TextField(
+            TextField(
+              controller: coverLetterController,
               maxLines: 6,
-              decoration: InputDecoration(
+              style: const TextStyle(
+                color: kGrey0,
+              ),
+              decoration: const InputDecoration(
+                  fillColor: kWhiteColor,
+                  filled: true,
                   hintText: '',
+                  hintStyle: TextStyle(
+                    color: kGrey1,
+                  ),
                   enabledBorder: OutlineInputBorder(
                     // borderSide: BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.vertical(
@@ -73,35 +141,46 @@ class _submitProposalState extends State<submitProposal> {
                       borderRadius: BorderRadius.vertical(
                           top: Radius.circular(10.0),
                           bottom: Radius.circular(10.0)))),
+              onChanged: (value) {
+                coverLetterController.text;
+              },
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                         backgroundColor: kWhiteColor,
                         foregroundColor: kRed),
-                    child: const Text('Cancel'),
+                    child: Text(LocaleData.cancel.getString(context)),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      getStudentId().then((_) {
+                        // Sau khi getStudentId() hoàn thành, gọi submitProposal()
+                        submitProposal();
+                      });
+                      Navigator.pushNamed(context, AppRouterName.navigation);
+                    },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                         backgroundColor: kWhiteColor,
                         foregroundColor: kBlue700),
-                    child: const Text('Submit proposal'),
+                    child: Text(LocaleData.submitProposal.getString(context)),
                   ),
                 ),
               ],

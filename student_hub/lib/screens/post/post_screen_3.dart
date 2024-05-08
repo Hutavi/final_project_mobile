@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class PostScreen3 extends ConsumerStatefulWidget {
   const PostScreen3({super.key});
@@ -22,7 +25,10 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
       descriptionController.text = ref.watch(postProjectProvider).description!;
     }
     return Scaffold(
-      appBar: const _AppBar(),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: const AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         child: Padding(
           // padding: EdgeInsets.all(16),
@@ -32,13 +38,13 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('3/4    Next, provide project description',
+                Text(LocaleData.postingDescriptionTitle.getString(context),
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(
                   height: 8.0,
                 ),
-                const Text(
-                  'Students are looking for:',
+                Text(
+                  LocaleData.postingDescriptionDescribeItem.getString(context)
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,9 +60,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Clear expectations about your project or deliverables',
+                              LocaleData.postingDescriptionLine1.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -76,9 +82,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'The skills required for your project',
+                              LocaleData.postingDescriptionLine2.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -98,9 +104,9 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                           ),
                           SizedBox(
                               width: MediaQuery.of(context).size.width * 0.02),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Details about your project',
+                              LocaleData.postingDescriptionLine3.getString(context),
                               softWrap: true,
                               style: TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
@@ -117,8 +123,18 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                 TextField(
                   controller: descriptionController,
                   maxLines: 6,
-                  decoration: const InputDecoration(
-                      hintText: 'Project Description',
+                  style: TextStyle(
+                    color: kGrey0
+                  ),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: kWhiteColor,
+                      hintText: LocaleData.projectDescription.getString(context),
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: kGrey0,
+                      ),
+                      
                       enabledBorder: OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
@@ -168,7 +184,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                       backgroundColor: kBlue400,
                       foregroundColor: kWhiteColor,
                     ),
-                    child: const Text('Review your post'),
+                    child: Text(LocaleData.reviewYourPost.getString(context)),
                   ),
                 ),
               ],
@@ -178,33 +194,4 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

@@ -1,15 +1,16 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/models/chat/message.dart';
-import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
-import 'package:uuid/uuid.dart';
 
 class ScheduleInterview extends StatefulWidget {
-  final Function(Message) onSendMessage;
+  final Function(Map<String, String?>) onSendMessage;
 
-  const ScheduleInterview({super.key, required this.onSendMessage});
+  const ScheduleInterview({
+    super.key,
+    required this.onSendMessage,
+  });
 
   @override
   State<ScheduleInterview> createState() => _ScheduleInterviewState();
@@ -18,21 +19,33 @@ class ScheduleInterview extends StatefulWidget {
 class _ScheduleInterviewState extends State<ScheduleInterview> {
   TextEditingController projectSearchController = TextEditingController();
   TextEditingController titleSchedule = TextEditingController();
+  TextEditingController contentSchedule = TextEditingController();
 
   String? startDateTime;
   String? endDateTime;
   DateTime now = DateTime.now();
   late String currentTime;
+  late String conferencesID;
 
   @override
   void initState() {
     currentTime = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+    conferencesID = generateRandomNumber();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  String generateRandomNumber() {
+    // Tạo một số nguyên ngẫu nhiên từ 1000 đến 9999
+    var random = Random();
+    int randomNumber = random.nextInt(9000) + 1000;
+
+    // Chuyển số nguyên ngẫu nhiên thành chuỗi và trả về
+    return randomNumber.toString();
   }
 
   String formatDateTimeString(String inputString) {
@@ -64,15 +77,27 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+    Color? colorStart = (brightness == Brightness.light)
+        ? startDateTime != null && startDateTime!.isNotEmpty
+            ? Theme.of(context).colorScheme.onBackground
+            : Colors.grey
+        : Theme.of(context).colorScheme.onBackground;
+
+    Color? colorEnd = (brightness == Brightness.light)
+        ? endDateTime != null && endDateTime!.isNotEmpty
+            ? Theme.of(context).colorScheme.onBackground
+            : Colors.grey
+        : Theme.of(context).colorScheme.onBackground;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        height: MediaQuery.of(context).size.height * 0.6,
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: kWhiteColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -85,22 +110,48 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
             const SizedBox(
               height: 20,
             ),
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const Icon(Icons.cancel),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(bottom: 10),
-              decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(width: 1, color: kGrey0))),
               child: const Text(
                 "Schedule a video call interview",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue),
+                textAlign: TextAlign.center,
               ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Title",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                TextField(
+                  controller: titleSchedule,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).cardColor,
+                    hintText: 'Enter title',
+                    hintStyle: const TextStyle(
+                        color: kGrey1,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 10.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(color: kBlue50),
+                    ),
+                  ),
+                )
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -109,18 +160,33 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Title",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  "Content",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
-                BuildTextField(
-                  controller: titleSchedule,
-                  inputType: TextInputType.text,
-                  onChange: () {},
-                  fillColor: kWhiteColor,
-                  hint: "Enter title",
+                TextField(
+                  controller: contentSchedule,
+                  keyboardType: TextInputType.text,
+                  onChanged: (value) {
+                    // Xử lý thay đổi trong TextField ở đây
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).cardColor,
+                    hintText: 'Enter content',
+                    hintStyle: const TextStyle(
+                        color: kGrey1,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 10.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: const BorderSide(color: kBlue50),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -132,10 +198,10 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
               children: [
                 const Text(
                   "Start time",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -151,6 +217,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 1, color: kGrey1),
                     ),
@@ -162,10 +229,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 ? startDateTime!
                                 : "Select Date",
                             style: TextStyle(
-                              color: startDateTime != null &&
-                                      startDateTime!.isNotEmpty
-                                  ? Colors.black
-                                  : Colors.grey,
+                              color: colorStart,
                             ),
                           ),
                         ),
@@ -189,17 +253,17 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   "End Time",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -215,6 +279,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(width: 1, color: kGrey1),
                     ),
@@ -226,10 +291,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 ? endDateTime!
                                 : "Select Date",
                             style: TextStyle(
-                              color:
-                                  endDateTime != null && endDateTime!.isNotEmpty
-                                      ? Colors.black
-                                      : Colors.grey,
+                              color: colorEnd,
                             ),
                           ),
                         ),
@@ -255,9 +317,20 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              'Duration: ${calculateDurationInMinutes()} minutes',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            Row(
+              children: [
+                const Text(
+                  'Duration: ',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  '${calculateDurationInMinutes()} minutes',
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.red),
+                ),
+              ],
             ),
             Expanded(
               child: Column(
@@ -268,13 +341,13 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               backgroundColor: kWhiteColor,
-                              foregroundColor: kBlueGray600),
+                              foregroundColor: kRed),
                           child: const Text('Cancel'),
                         ),
                       ),
@@ -284,30 +357,20 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            Message newMessage = Message(
-                              id: const Uuid().v4(),
-                              chatRoomId: 'chatRoomId1',
-                              senderUserId: 'userId2',
-                              receiverUserId: 'userId1',
-                              title: 'Catch up meeting',
-                              createdAt: DateTime.now()
-                                  .add(const Duration(minutes: 60)),
-                              startTime: DateTime.now(),
-                              endTime: DateTime.now()
-                                  .add(const Duration(minutes: 15)),
-                              meeting: true,
-                            );
-                            // Gọi hàm callback để gửi tin nhắn mới
-                            widget.onSendMessage(newMessage);
-                            // Đóng modal
-                            Navigator.pop(context);
+                            final data = {
+                              'titleSchedule': titleSchedule.text,
+                              'startDateTime': startDateTime,
+                              'endDateTime': endDateTime,
+                              'conferencesID': conferencesID
+                            };
+                            widget.onSendMessage(data);
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              backgroundColor: kBlue50,
-                              foregroundColor: kBlueGray600),
+                              backgroundColor: kBlue600,
+                              foregroundColor: kWhiteColor),
                           child: const Text('Send Invite'),
                         ),
                       ),

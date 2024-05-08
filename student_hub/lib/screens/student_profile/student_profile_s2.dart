@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/student_profile/widget/add_project.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
 
 class StundentProfileS2 extends StatefulWidget {
@@ -107,114 +110,24 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
   void _showSuccess() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thành công',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Success",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
   void _showError() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Center(
-            child: Text(
-              'Thất bại',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red, // Màu của tiêu đề
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'Cancle',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: "Fail",
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
@@ -349,14 +262,14 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
 
     if (responseLanguage.statusCode == 200) {
       setState(() {
-        notify = 'Xóa Project thành công';
+        notify = LocaleData.deletedProjcetSuccess.getString(context);
 
         _showSuccess();
         projects.removeAt(index);
       });
     } else {
       setState(() {
-        notify = 'Xóa Project thất bại';
+        notify = LocaleData.deletedProjcetFailed.getString(context);
 
         _showError();
       });
@@ -374,12 +287,14 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
     if (startYear == endYear && startMonth == endMonth) {
       Duration difference = endDate.difference(startDate);
       int days = difference.inDays;
-      duration = '$startMonth/$startYear, $days days';
+      duration =
+          '$startMonth/$startYear, $days ${LocaleData.day.getString(context)}';
     } else {
       int months = (endDate.year - startDate.year) * 12 +
           endDate.month -
           startDate.month;
-      duration = '$startMonth/$startYear - $endMonth/$endYear, $months months';
+      duration =
+          '$startMonth/$startYear - $endMonth/$endYear, $months ${LocaleData.month.getString(context)}';
     }
 
     return duration;
@@ -396,11 +311,11 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
               child: Column(
                 children: <Widget>[
                   // Welcome message
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      'Experiences',
-                      style: TextStyle(
+                      LocaleData.experience.getString(context),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -408,12 +323,12 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     ),
                   ),
 
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 16.0),
                     child: Text(
-                      'Tell us about yourself and you will be on your way to connect with real-world projects.',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                      LocaleData.tellUs.getString(context),
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ),
 
@@ -424,9 +339,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Projects',
-                            style: TextStyle(
+                          Text(
+                            LocaleData.project.getString(context),
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 14),
                           ),
                           Row(
@@ -455,10 +370,13 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                                     color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.2),
                                         spreadRadius: 2,
                                         blurRadius: 4,
-                                        offset: const Offset(0, 2),
+                                        offset: const Offset(0, 0),
                                       ),
                                     ],
                                   ),
@@ -466,6 +384,7 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                                   child: const Icon(
                                     Icons.add,
                                     size: 16,
+                                    color: Colors.black,
                                   ),
                                 ),
                               )
@@ -483,9 +402,9 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                     child: ListView.builder(
                       itemCount: projects.length,
                       itemBuilder: (context, index) => Card(
-                        elevation: 4, // Độ nâng cao của thẻ
+                        elevation: 4,
                         margin: const EdgeInsets.only(bottom: 16),
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Column(
@@ -546,11 +465,13 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground
                                                     .withOpacity(0.2),
                                                 spreadRadius: 2,
                                                 blurRadius: 4,
-                                                offset: const Offset(0, 2),
+                                                offset: const Offset(0, 0),
                                               ),
                                             ],
                                           ),
@@ -574,11 +495,13 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground
                                                     .withOpacity(0.2),
                                                 spreadRadius: 2,
                                                 blurRadius: 4,
-                                                offset: const Offset(0, 2),
+                                                offset: const Offset(0, 0),
                                               ),
                                             ],
                                           ),
@@ -604,15 +527,14 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
 
                               const SizedBox(height: 8.0),
                               Text(projects[index]['description']!.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 13, color: Colors.black),
+                                  style: const TextStyle(fontSize: 13),
                                   maxLines: 4,
                                   overflow: TextOverflow.ellipsis),
                               const SizedBox(height: 8.0),
                               // Tiêu đề Skillset
-                              const Text(
-                                'Skillset',
-                                style: TextStyle(
+                              Text(
+                                LocaleData.skillSet.getString(context),
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -668,32 +590,34 @@ class _StundentProfileS2State extends State<StundentProfileS2> {
             ),
       bottomNavigationBar: !isLoading
           ? Container(
-              padding:
-                  const EdgeInsets.all(10), // Padding của bottomNavigationBar
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white, // Màu nền của bottomNavigationBar
+                color: Theme.of(context).colorScheme.background,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2), // Màu của đổ bóng
-                    spreadRadius: 2, // Bán kính lan rộng của đổ bóng
-                    blurRadius: 4, // Độ mờ của đổ bóng
-                    offset: const Offset(0, 2), // Độ dịch chuyển của đổ bóng
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.profileS3);
+                  Navigator.pushNamed(context, AppRouterName.profileS3Resume);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(10),
-                  backgroundColor: Colors.blue, // Màu nền của nút
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6), // Bo tròn cho nút
+                    borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                child: const Text('Continue',
-                    style: TextStyle(color: Colors.white)),
+                child: Text(LocaleData.continu.getString(context),
+                    style: const TextStyle(color: Colors.white)),
               ),
             )
           : const SizedBox(),

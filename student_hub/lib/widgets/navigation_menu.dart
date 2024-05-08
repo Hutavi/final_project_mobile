@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/data/company_user.dart';
-import 'package:student_hub/data/student_user.dart';
 import 'package:student_hub/screens/browser_page/project_list.dart';
 import 'package:student_hub/screens/dashboard/dashboard.dart';
 import 'package:student_hub/screens/notification/notification.dart';
 import 'package:student_hub/screens/chat/message_list.screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 
 class NavigationMenu extends StatefulWidget {
-  final CompanyUser? companyUser;
-  final StudentUser? studentUser;
   const NavigationMenu({
     Key? key,
-    this.companyUser,
-    this.studentUser,
   }) : super(key: key);
 
   @override
@@ -32,10 +29,17 @@ class _NavigationMenuState extends State<NavigationMenu> {
     super.initState();
     screens = [
       const ProjectListScreen(),
-      Dashboard(),
+      const Dashboard(),
       const MessageListScreen(),
       const NotificationPage(),
     ];
+  }
+
+  @override
+  void dispose() {
+    // controller.dispose();
+    screens.clear();
+    super.dispose();
   }
 
   @override
@@ -45,7 +49,10 @@ class _NavigationMenuState extends State<NavigationMenu> {
     return Scaffold(
       extendBodyBehindAppBar:
           true, //this is to extend the body behind the appbar
-      appBar: null,
+      appBar: const AppBarCustom(
+        title: "Student Hub",
+        showBackButton: false,
+      ),
       body: Obx(() => screens[controller.selectedIndex.value]),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(0.0),
@@ -56,39 +63,39 @@ class _NavigationMenuState extends State<NavigationMenu> {
             selectedIndex: controller.selectedIndex.value,
             onDestinationSelected: (index) =>
                 controller.selectedIndex.value = index,
-            backgroundColor: kWhiteColor,
+            // backgroundColor: kWhiteColor,
             indicatorColor: Colors.black.withOpacity(0.2),
-            destinations: const [
+            destinations:[
               NavigationDestination(
-                icon: Icon(Iconsax.document_text),
-                label: 'Projects',
-                selectedIcon: Icon(
+                icon: const Icon(Iconsax.document_text),
+                label: LocaleData.project.getString(context),
+                selectedIcon: const Icon(
                   Iconsax.document_text,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(Iconsax.folder_open),
-                label: 'Dashboard',
-                selectedIcon: Icon(
+                icon: const Icon(Iconsax.folder_open),
+                label: LocaleData.dashboard.getString(context),
+                selectedIcon: const Icon(
                   Iconsax.folder_open,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(
+                icon: const Icon(
                   Iconsax.message,
                 ),
-                label: 'Message',
-                selectedIcon: Icon(
+                label: LocaleData.message.getString(context),
+                selectedIcon: const Icon(
                   Iconsax.message,
                   color: kBlue700,
                 ),
               ),
               NavigationDestination(
-                icon: Icon(Iconsax.notification),
-                label: 'Alerts',
-                selectedIcon: Icon(
+                icon: const Icon(Iconsax.notification),
+                label: LocaleData.alerts.getString(context),
+                selectedIcon: const Icon(
                   Iconsax.notification,
                   color: kBlue700,
                 ),
@@ -103,10 +110,4 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: NavigationMenu(),
-  ));
 }

@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
+import 'package:student_hub/models/project_models/project_model_new.dart';
+import 'package:student_hub/models/user.dart';
+import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 enum ProjectDuration {
   oneToThreeMonths,
   threeToSixMonths,
@@ -22,20 +26,21 @@ class EditProject extends ConsumerStatefulWidget {
 }
 
 class _EditProjectState extends ConsumerState<EditProject> {
+  ProjectModelNew project = ProjectModelNew();
   final titleController = TextEditingController();
   bool _titlePost = false;
-  final _numberStudentsController = TextEditingController();
+  
   ProjectDuration _projectDuration = ProjectDuration.oneToThreeMonths;
-  int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   final descriptionController = TextEditingController();
+  int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   bool _descriptionPost = false;
   
   void onSelectedDuration(ProjectDuration? duration) {
     if(duration?.index == 0){
-      ref.read(postProjectProvider.notifier).setProjectScopeFlag(0);
+      project.projectScopeFlag = 0;
     }
     else{
-      ref.read(postProjectProvider.notifier).setProjectScopeFlag(1);
+      project.projectScopeFlag = 1;
     }
     setState(() {
       _projectDuration = duration!;
@@ -45,11 +50,11 @@ class _EditProjectState extends ConsumerState<EditProject> {
   void editPoject() async {
     try{
       var requestData = json.encode({
-          'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
-          'title': ref.watch(postProjectProvider).title,
-          'numberOfStudents': ref.watch(postProjectProvider).numberOfStudents,
-          'description': ref.watch(postProjectProvider).description,
-          'typeFlag': ref.watch(postProjectProvider).typeFlag,
+          'projectScopeFlag': project.projectScopeFlag,
+          'title': project.title,
+          'numberOfStudents': project.numberOfStudents,
+          'description': project.description,
+          'typeFlag': project.typeFlag,
         });
       print('Request data1: $requestData');
 
@@ -90,7 +95,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         padding: const EdgeInsets.only(
             left: 16.0, right: 16.0, top: 10.0, bottom: 0.0),
@@ -98,8 +106,20 @@ class _EditProjectState extends ConsumerState<EditProject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Project details",
+              Center(
+                child: Text(
+                  LocaleData.projectDetail.getString(context),
+                  style: TextStyle(fontWeight: FontWeight.bold,
+                  fontSize: 20,),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height < 600
+                    ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
+                    : 16,
+              ),
+              Text(
+                LocaleData.projectTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -109,8 +129,17 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                    hintText: "Write a title for your post",
+                style: TextStyle(
+                  color: kGrey0,
+                ),
+                decoration: InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
+                    hintText: LocaleData.postingPlaceholder.getString(context),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
@@ -123,16 +152,15 @@ class _EditProjectState extends ConsumerState<EditProject> {
                             top: Radius.circular(10.0),
                             bottom: Radius.circular(10.0)))),
                 onChanged: (value) {
-                  ref.read(postProjectProvider).projectScopeFlag=null;
-                  ref.read(postProjectProvider.notifier).setProjectTitle(value);
                   setState(() {
+                    project.title = value;
                     _titlePost = value.isNotEmpty;
                   });
                 },
               ),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
@@ -141,8 +169,17 @@ class _EditProjectState extends ConsumerState<EditProject> {
               TextField(
                   controller: descriptionController,
                   maxLines: 6,
-                  decoration: const InputDecoration(
-                      hintText: 'Project Description',
+                  style: TextStyle(
+                    color: kGrey0,
+                  ),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: kWhiteColor,
+                      hintText: LocaleData.projectDescription.getString(context),
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: kGrey0,
+                      ),
                       enabledBorder: OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
@@ -159,21 +196,15 @@ class _EditProjectState extends ConsumerState<EditProject> {
                       )
                   ),
                   onChanged: (value) {
-                  ref.read(postProjectProvider).description = null;
-                  ref.read(postProjectProvider.notifier).setProjectDescription(value);
+                  project.description = value;
                   setState(() {
                     _descriptionPost = value.isNotEmpty;
                   });
                 },
                 ),
               const Divider(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height < 600
-                    ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
-                    : 16,
-              ),
-              const Text(
-                'How many students do you want for this project?',
+              Text(
+                LocaleData.postingScopeHowManyStudents.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -182,9 +213,15 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     : 16,
               ),
               TextFormField(
-                controller: _numberStudentsController,
-                decoration: const InputDecoration(
-                    hintText: 'Number of students',
+                // controller: _numberStudentsController,
+                decoration: InputDecoration(
+                    fillColor: kWhiteColor,
+                    filled: true,
+                    hintText: LocaleData.numberOfStudents.getString(context),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
@@ -204,13 +241,13 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 ],
                 onChanged: (value){
                   setState(() {
-                    ref.read(postProjectProvider.notifier).setNumberOfStudents(int.tryParse(value) ?? 0);
-                    //onHandledButtonWithTextfield,
+                    project.numberOfStudents = int.tryParse(value) ?? 1;
                     _numberOfStudents = int.tryParse(value) ?? 0;
                     // _isDisabledNextButton = value != null? true : false;
                   });
                 },
                 style: TextStyle(
+                  color: kGrey0,
                   fontSize: MediaQuery.of(context).size.width < 300
                       ? 14 // Điều chỉnh kích thước chữ cho màn hình nhỏ hơn
                       : 16,
@@ -222,12 +259,12 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              const Text(
-                'How long will your project take?',
+              Text(
+                LocaleData.postingScopeHowLong.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
-                title: const Text('1 to 3 months'),
+                title: Text(LocaleData.oneToThreeMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.oneToThreeMonths,
                   groupValue: _projectDuration,
@@ -235,7 +272,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 ),
               ),
               ListTile(
-                title: const Text('3 to 6 months'),
+                title: Text(LocaleData.threeToSixMonths.getString(context)),
                 leading: Radio<ProjectDuration>(
                   value: ProjectDuration.threeToSixMonths,
                   groupValue: _projectDuration,
@@ -257,23 +294,19 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ElevatedButton(
                 onPressed: (){
                   setState(() async {
-                    print(ref.watch(postProjectProvider).projectScopeFlag);
-                    print(ref.watch(postProjectProvider).title);
                     editPoject();
-                    // Navigator.pushNamed(context, AppRouterName.navigation);
-                    ref.read(postProjectProvider).projectScopeFlag = null;
-                    ref.read(postProjectProvider).title = null;
-                    ref.read(postProjectProvider).numberOfStudents = null;
-                    ref.read(postProjectProvider).description = null;
-                    ref.read(postProjectProvider).typeFlag = null;
+                    Navigator.pushNamed(context, AppRouterName.navigation);
                   });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
-                  foregroundColor: _titlePost ? null : kWhiteColor,
-
+                  foregroundColor: _titlePost ? null : kWhiteColor, 
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 10.0,
+                  ),
                 ),
-                child: const Text('Edit project'),
+                child: Text(LocaleData.editProject.getString(context)),
               ),
             ],
           ),
@@ -281,33 +314,4 @@ class _EditProjectState extends ConsumerState<EditProject> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

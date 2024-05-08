@@ -8,26 +8,26 @@ class MessageChatBubble extends StatelessWidget {
     required this.userId1,
     required this.userId2,
   });
-  final String userId1;
-  final String userId2;
+  final int userId1;
+  final int userId2;
 
   final Message message;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final Brightness brightness = Theme.of(context).brightness;
+    Color? color = (brightness == Brightness.light)
+        ? (message.senderUserId == userId1
+            ? Colors.blue[300]
+            : Colors.grey[300])
+        : (message.senderUserId == userId1
+            ? Colors.blue[700]
+            : Colors.grey[700]);
 
-    final alignment = (message.senderUserId != userId1)
+    final alignment = (message.senderUserId == userId1)
         ? Alignment.centerRight
         : Alignment.centerLeft;
-
-    final color = (message.senderUserId == userId1)
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.secondary;
-
-    final textColor = (message.senderUserId == userId1)
-        ? Theme.of(context).colorScheme.onPrimary
-        : Theme.of(context).colorScheme.onSecondary;
 
     return Align(
       alignment: alignment,
@@ -44,8 +44,7 @@ class MessageChatBubble extends StatelessWidget {
         child: Text(
           message.content ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: textColor,
-                fontSize: MediaQuery.of(context).size.width * 0.04, //
+                fontSize: MediaQuery.of(context).size.width * 0.04,
               ),
         ),
       ),

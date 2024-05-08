@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
-import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -74,27 +75,43 @@ class _SavedProjectState extends State<SavedProject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(
-        title: 'Saved projects',
+      appBar: AppBarCustom(
+        title: LocaleData.savedProjectTitle.getString(context),
+        showBackButton: true,
       ),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 itemCount: favoriteProjects.length,
                 itemBuilder: (context, index) {
                   final project = favoriteProjects[index];
+                  final backgroundColor = index % 2 == 0 ? true : false;
                   return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(
                           context, AppRouterName.projectDetailFavorite,
                           arguments: project);
                     },
-                    child: ProjectItemFavourite(
-                      projectForListModel: project,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          ProjectItemFavourite(
+                            isEven: backgroundColor,
+                            projectForListModel: project,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class PostScreen4 extends ConsumerStatefulWidget {
   const PostScreen4({super.key});
@@ -29,7 +32,6 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
     );
 
     final companyId = responseProject.data['result']['company']['id'];
-    print('Company id: $companyId');
     return companyId;
   }
   
@@ -79,11 +81,14 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
   Widget build(BuildContext context) {
     
     final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
-        ? '1 to 3 months'
-        : '3 to 6 months';
+        ? LocaleData.oneToThreeMonths.getString(context)
+        : LocaleData.threeToSixMonths.getString(context);
     print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
-      appBar: const _AppBar(),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: Container(
         padding: const EdgeInsets.only(
             left: 16.0, right: 16.0, top: 10.0, bottom: 0.0),
@@ -91,8 +96,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "4/4-Project details",
+              Text(
+                LocaleData.reviewTitle.getString(context),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -104,10 +109,10 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+                      color: kBlue600)),
               const Divider(),
-              const Text(
-                'Project description',
+              Text(
+                LocaleData.projectDescription.getString(context),
                 style: TextStyle(fontWeight: FontWeight.w500,
                 fontSize: 14,
                 )
@@ -117,7 +122,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   style: const TextStyle(
                       fontSize: 14,
                       // fontWeight: FontWeight.w300,
-                      color: Colors.black)),
+                      color: kBlue600)),
               
               const Divider(),
               SizedBox(
@@ -134,8 +139,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Project scope',
+                      Text(
+                        LocaleData.projectScope.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -164,8 +169,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Student required:',
+                      Text(
+                        LocaleData.studentRequired.getString(context),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -198,6 +203,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                     var companyID = await getDataIdCompany();
                     ref.read(postProjectProvider.notifier).setCompanyId(companyID);
                     postPoject();
+                    // ignore: use_build_context_synchronously
                     Navigator.pushNamed(context, AppRouterName.navigation);
                     ref.read(postProjectProvider).companyId = null;
                     ref.read(postProjectProvider).projectScopeFlag = null;
@@ -211,8 +217,10 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
                   foregroundColor: kWhiteColor,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15, vertical: 10),
                 ),
-                child: const Text('Post a job'),
+                child: Text(LocaleData.postJob.getString(context)),
               ),
             ],
           ),
@@ -220,33 +228,4 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
       ),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {
-            // tới profile);
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
