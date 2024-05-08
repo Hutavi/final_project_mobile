@@ -346,30 +346,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     }
   }
 
-  // void receiveMessageInterview(String? startDateTime, String? endDateTime,
-  //     String titleSchedule, String conferencesID) {
-  //   String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-  //       .format(parseDateTime(startDateTime!));
-  //   String endTimeISO =
-  //       DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
-
-  //   print(roomID);
-
-  //   socket!.emit('SCHEDULE_INTERVIEW', {
-  //     "title": titleSchedule,
-  //     "content": titleSchedule,
-  //     "startTime": startTimeISO,
-  //     "endTime": endTimeISO,
-  //     "projectId": widget.idProject,
-  //     "senderId": widget.idThisUser,
-  //     "receiverId": widget.idAnyUser,
-  //     "meeting_room_code": conferencesID,
-  //     "meeting_room_id": roomID
-  //   });
-
-  //   _scrollToBottom();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
@@ -531,20 +507,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                 ),
                                 builder: (BuildContext context) {
                                   return ScheduleInterview(
-                                      onSendMessage: (newMessage) {
-                                    setState(() {
-                                      createInvite(
-                                          newMessage['startDateTime'],
-                                          newMessage['endDateTime'],
-                                          newMessage['titleSchedule']!,
-                                          newMessage['conferencesID']!);
-                                      // receiveMessageInterview(
-                                      //     newMessage['startDateTime'],
-                                      //     newMessage['endDateTime'],
-                                      //     newMessage['titleSchedule']!,
-                                      //     newMessage['conferencesID']!);
-                                    });
-                                  });
+                                    onSendMessage: (newMessage) {
+                                      setState(
+                                        () {
+                                          createInvite(
+                                              newMessage['startDateTime'],
+                                              newMessage['endDateTime'],
+                                              newMessage['titleSchedule']!,
+                                              newMessage['conferencesID']!);
+                                        },
+                                      );
+                                    },
+                                  );
                                 },
                               );
                             },
