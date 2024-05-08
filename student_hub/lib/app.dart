@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
-import 'package:student_hub/constants/colors.dart';
+// import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route.dart';
-import 'package:student_hub/screens/auth_page/login_screen.dart';
+// import 'package:student_hub/screens/auth_page/login_screen.dart';
 import 'package:student_hub/screens/home_page/home_page.dart';
 import 'package:student_hub/utils/theme/theme.dart';
 // import 'package:student_hub/screens/browser_page/project_list.dart';

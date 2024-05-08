@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -15,36 +16,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: _AppBar(),
+      appBar: AppBarCustom(
+        title: 'Student Hub',
+      ),
       body: _Body(),
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Student Hub',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.grey[200],
-      actions: <Widget>[
-        IconButton(
-          icon: SizedBox(
-            width: 25,
-            height: 25,
-            child: Image.asset('lib/assets/images/avatar.png'),
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _Body extends StatelessWidget {
@@ -72,6 +49,9 @@ class _Content extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          const SizedBox(
+            height: 150
+          ),
           Align(
             alignment: Alignment.topCenter,
             child: Text(
@@ -110,7 +90,9 @@ class _Content extends StatelessWidget {
             ),
             child: Text(
               LocaleData.getStarted.getString(context),
-              style: const TextStyle(color: kWhiteColor),
+              style: const TextStyle(
+                color: kWhiteColor,
+                fontSize: 16,),
             ),
           ),
         ]);
