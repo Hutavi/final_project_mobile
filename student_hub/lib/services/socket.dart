@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:student_hub/services/message_queue.dart';
@@ -42,6 +44,8 @@ class SocketManager {
   }
 
   static void connect() {
+    if (socket != null) socket!.disconnect();
+
     socket!.connect();
 
     socket!.onConnect((data) {
@@ -59,6 +63,23 @@ class SocketManager {
         'project_id': projectId,
       };
     }
+  }
+
+  static void recieveNotify() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idUser = prefs.getInt('idUser');
+
+    socket!.on('NOTI_$idUser', (data) {
+      Fluttertoast.showToast(
+        msg: 'Bạn có 1 thông báo mới',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.grey[700],
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    });
   }
 
   static void recieveMessage() async {

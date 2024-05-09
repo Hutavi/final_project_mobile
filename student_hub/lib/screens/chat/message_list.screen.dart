@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:student_hub/screens/chat/widgets/chat.widgets.dart';
 import 'package:student_hub/services/dio_client.dart';
@@ -20,7 +21,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
   List<dynamic> displayedList = [];
   late bool isLoading;
   var idUser = -1;
-  static IO.Socket? socket;
+  IO.Socket? socket;
 
   @override
   void initState() {
@@ -29,7 +30,6 @@ class _MessageListScreenState extends State<MessageListScreen> {
     });
 
     getListMessage();
-    connectSocket();
     _searchController = TextEditingController();
     super.initState();
   }
@@ -40,16 +40,42 @@ class _MessageListScreenState extends State<MessageListScreen> {
   //   super.dispose();
   // }
 
-  void initSocket(int projectID) {
-    SocketManager.addQueryParameter(projectID);
-    SocketManager.connect();
+  void connectSocket(int idProject) async {
+    socket = IO.io(
+      'https://api.studenthub.dev',
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build(),
+    );
 
-    socket = SocketManager.socket;
-  }
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('accessToken');
 
-  void connectSocket() async {
+    socket!.io.options!['query'] = {
+      'project_id': idProject,
+    };
+
+    socket!.io.options!['extraHeaders'] = {
+      'Authorization': 'Bearer $token',
+    };
+
+    if (socket != null) {
+      socket!.disconnect();
+    }
+
+    socket!.connect();
+
+    socket!.onConnect((data) {
+      print('Connected List');
+    });
     if (socket != null && mounted) {
       socket!.on('RECEIVE_MESSAGE', (data) {
+        setState(() {
+          getListMessage();
+        });
+      });
+      socket!.on('RECEIVE_INTERVIEW', (data) {
         setState(() {
           getListMessage();
         });
@@ -134,7 +160,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
                           return MessageItem(
                               data: displayedList[index],
                               idUser: idUser,
-                              initSocket: initSocket);
+                              initSocket: connectSocket);
                         },
                       ),
                     ),

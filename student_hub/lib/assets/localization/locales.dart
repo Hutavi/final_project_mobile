@@ -146,6 +146,7 @@ mixin LocaleData {
   static const String hired = 'hired';
   static const String dayAgo = 'day_ago';
   static const String minutesAgo = 'minutes_ago';
+  static const String secondsAgo = 'seconds_ago';
   static const String hoursAgo = 'hours_ago';
 
   //dashboard->SendHired
@@ -487,6 +488,7 @@ mixin LocaleData {
     hired: 'Hired',
     dayAgo: 'day ago',
     minutesAgo: 'minutes ago',
+    secondsAgo: 'seconds ago',
     hoursAgo: 'hours ago',
 
     //dashboard->SendHired
@@ -634,8 +636,8 @@ mixin LocaleData {
     //
 
     //Notification page
-    notificationMessage: 'You have a new message from',
-    notificationEventStart: 'You have a new interview from',
+    notificationMessage: 'New message',
+    notificationEventStart: 'New interview',
     joinBtn: 'Join',
 
     //Modal
@@ -820,6 +822,7 @@ mixin LocaleData {
     hired: 'Đã thuê',
     dayAgo: 'ngày trước',
     minutesAgo: 'phút trước',
+    secondsAgo: 'giây trước',
     hoursAgo: 'giờ trước',
 
     //dashboard->SendHired
@@ -960,8 +963,8 @@ mixin LocaleData {
     next: 'Tiếp theo',
 
     //Notification page
-    notificationMessage: 'Bạn có một tin nhắn mới từ',
-    notificationEventStart: 'Bạn có 1 interview mới từ',
+    notificationMessage: 'Tin nhắn mới',
+    notificationEventStart: 'Interview mới',
     joinBtn: 'Tham gia',
 
     //Modal
