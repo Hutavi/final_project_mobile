@@ -66,19 +66,34 @@ class _SwitchAccountState extends State<SwitchAccount> {
           method: 'GET',
         ),
       );
+      late int studentDataAPI;
+      late int companyDataAPI;
+      if(respondData.statusCode == 200){
+        if(respondData.data['result']['student'] != null){
+          studentDataAPI = respondData.data!['result']['student']['id'];
+        }
+        else {
+          studentDataAPI = -1;
+        }
+        if(respondData.data['result']['company'] != null){
+          companyDataAPI = respondData.data!['result']['company']['id'];
+        }
+        else {
+          companyDataAPI = -1;
+        }
 
-      final studentDataAPI = respondData.data['result']['student']['id'];
-      final companyDataAPI = respondData.data['result']['company']['id'];
-      final user = (respondData.data['result']);
-      
-      setState(() {
-        studentData = studentDataAPI;
-        print('studentData: $studentData');
-        companyData = companyDataAPI;
-        print('companyData: $companyData');
-      });
+        // final user = (respondData.data['result']);
+        
+        setState(() {
+          studentData = studentDataAPI;
+          print('studentData: $studentData');
+          companyData = companyDataAPI;
+          print('companyData: $companyData');
+        }); 
+      }
     } catch (e) {
       print(e);
+      print('error');
     }
   }
 

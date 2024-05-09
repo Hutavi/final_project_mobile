@@ -142,6 +142,7 @@ class _EditProfileState extends State<EditProfile>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBarCustom(title: 'Edit Profile'),
         body: SingleChildScrollView(
           child: Padding(
@@ -157,7 +158,7 @@ class _EditProfileState extends State<EditProfile>
                     Text(
                       LocaleData.edtProfileCompanyTitle.getString(context),
                       style: const TextStyle(
-                        color: Colors.black,
+                        // color: Colors.black,
                         fontSize: 17.0,
                         fontWeight: FontWeight.w600,
                       ),
@@ -175,7 +176,7 @@ class _EditProfileState extends State<EditProfile>
                           LocaleData.companyName.getString(context),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                            color: Colors.black,
+                            // color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -185,8 +186,10 @@ class _EditProfileState extends State<EditProfile>
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _companyNameController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Your Company Name!',
                         hintStyle: const TextStyle(
@@ -200,7 +203,7 @@ class _EditProfileState extends State<EditProfile>
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              const BorderSide(color: Colors.black, width: 2),
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -227,7 +230,6 @@ class _EditProfileState extends State<EditProfile>
                           LocaleData.website.getString(context),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                            color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -237,8 +239,10 @@ class _EditProfileState extends State<EditProfile>
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _websiteController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Your Company Website!',
                         hintStyle: const TextStyle(
@@ -252,7 +256,7 @@ class _EditProfileState extends State<EditProfile>
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              const BorderSide(color: Colors.black, width: 2),
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -277,7 +281,6 @@ class _EditProfileState extends State<EditProfile>
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                            color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -287,8 +290,10 @@ class _EditProfileState extends State<EditProfile>
                     const SizedBox(height: 8), // Khoảng cách giữa các hàng
                     TextField(
                       controller: _descriptionController,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).colorScheme.onBackground,
                       decoration: InputDecoration(
+                        fillColor: Theme.of(context).cardColor,
+                        filled: true,
                         labelText: '',
                         hintText: 'Desciption about your company!',
                         hintStyle: const TextStyle(
@@ -302,7 +307,7 @@ class _EditProfileState extends State<EditProfile>
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                              const BorderSide(color: Colors.black, width: 2),
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
