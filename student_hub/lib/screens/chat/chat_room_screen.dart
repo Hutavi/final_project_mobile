@@ -158,12 +158,14 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 200,
-        duration: const Duration(milliseconds: 1),
-        curve: Curves.easeOut,
-      );
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + 10000,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
