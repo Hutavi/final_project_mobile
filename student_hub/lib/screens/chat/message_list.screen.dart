@@ -100,7 +100,9 @@ class _MessageListScreenState extends State<MessageListScreen> {
       } else {
         idUser = user['company']['userId'];
       }
-      originalList = listMessage.reversed.toList();
+      listMessage.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+      originalList = listMessage;
       displayedList = originalList;
       isLoading = false;
     });

@@ -6,10 +6,12 @@ import 'package:student_hub/widgets/show_date_picker_time.dart';
 
 class ScheduleInterview extends StatefulWidget {
   final Function(Map<String, String?>) onSendMessage;
+  final Map<String, String?>? initialData;
 
   const ScheduleInterview({
     super.key,
     required this.onSendMessage,
+    this.initialData,
   });
 
   @override
@@ -19,18 +21,27 @@ class ScheduleInterview extends StatefulWidget {
 class _ScheduleInterviewState extends State<ScheduleInterview> {
   TextEditingController projectSearchController = TextEditingController();
   TextEditingController titleSchedule = TextEditingController();
-  TextEditingController contentSchedule = TextEditingController();
 
   String? startDateTime;
   String? endDateTime;
   DateTime now = DateTime.now();
   late String currentTime;
   late String conferencesID;
+  late String meetingRoomId;
+  bool isEditing = false;
 
   @override
   void initState() {
     currentTime = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
-    conferencesID = generateRandomString(4);
+    conferencesID = generateRandomString(6);
+    meetingRoomId = generateRandomString(6);
+    // Nếu có dữ liệu khởi tạo, đánh dấu là đang cập nhật
+    if (widget.initialData != null) {
+      isEditing = true;
+      titleSchedule.text = widget.initialData!['title']!;
+      startDateTime = widget.initialData!['startDateTime'];
+      endDateTime = widget.initialData!['endDateTime'];
+    }
     super.initState();
   }
 
@@ -325,7 +336,8 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 'titleSchedule': titleSchedule.text,
                                 'startDateTime': startDateTime,
                                 'endDateTime': endDateTime,
-                                'conferencesID': conferencesID
+                                'conferencesID': conferencesID,
+                                'meetingRoomId': meetingRoomId,
                               };
                               widget.onSendMessage(data);
                             },

@@ -634,8 +634,8 @@ mixin LocaleData {
     //
 
     //Notification page
-    notificationMessage: 'You have a new message',
-    notificationEventStart: 'Your event starts soon',
+    notificationMessage: 'You have a new message from',
+    notificationEventStart: 'You have a new interview from',
     joinBtn: 'Join',
 
     //Modal
@@ -955,13 +955,13 @@ mixin LocaleData {
     chooseFile: 'Chọn file ở đây',
     chooseImage: 'Chọn ảnh',
     welcome: 'Chào mừng',
-    welcomeDescription: 'Chào mừng đến với StudentHub, nơi kết nối Sinh viên <> Dự án thực tế',
+    welcomeDescription:
+        'Chào mừng đến với StudentHub, nơi kết nối Sinh viên <> Dự án thực tế',
     next: 'Tiếp theo',
 
-
     //Notification page
-    notificationMessage: 'Bạn có một tin nhắn mới',
-    notificationEventStart: 'Sự kiện của bạn sắp bắt đầu',
+    notificationMessage: 'Bạn có một tin nhắn mới từ',
+    notificationEventStart: 'Bạn có 1 interview mới từ',
     joinBtn: 'Tham gia',
 
     //Modal
