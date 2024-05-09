@@ -104,6 +104,7 @@ mixin LocaleData {
       'proposal_less_than_placeholder';
   static const String clearFilter = 'clear_filter';
   static const String applyProject = 'apply_project';
+  static const String applyFilter = 'apply_filter';
   static const String notFoundProject = 'not_found_project';
 
   //Saved project
@@ -392,6 +393,7 @@ mixin LocaleData {
     proposalLessThanPlaholder: 'Enter proposals less than',
     clearFilter: 'Clear filter',
     applyProject: 'Apply',
+    applyFilter: 'Apply filter',
     notFoundProject: 'Not found project',
 
     //Saved project
@@ -740,6 +742,7 @@ mixin LocaleData {
     applyProject: 'Ứng tuyển',
     notFoundProject: 'Không tìm thấy dự án',
     projectScope: 'Phạm vi dự án',
+    applyFilter: 'Áp dụng bộ lọc',
 
     //Saved project
     savedProjectTitle: 'Dự án đã lưu',

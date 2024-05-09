@@ -113,6 +113,23 @@ class _ProjectItemState extends State<ProjectItem> {
     }
   }
 
+  String getProjectScopeText(BuildContext context, int flag) {
+    switch (flag) {
+      case 0:
+        return '${LocaleData.time.getString(context)}: ${LocaleData.lessThanOneMonth.getString(context)}';
+      case 1:
+        // Replace with your actual string for flag == 1
+        return '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonth.getString(context)}';
+      case 2:
+        return '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonths.getString(context)}';
+      case 3:
+        // Replace with your actual string for flag == 3
+        return '${LocaleData.time.getString(context)}: ${LocaleData.moreThanSixMonth.getString(context)}';
+      default:
+        return 'Unknown flag';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String timeAgo = calculateTimeAgo(widget.projectForListModel.createdAt);
@@ -155,16 +172,17 @@ class _ProjectItemState extends State<ProjectItem> {
                       fontWeight: FontWeight.bold,
                     )),
                 Text(
-                  widget.projectForListModel.projectScopeFlag == 0
-                      ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonths.getString(context)}'
-                      : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonths.getString(context)}',
+                  // widget.projectForListModel.projectScopeFlag == 0
+                  //     ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonth.getString(context)}'
+                  //     : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonth.getString(context)}',
+                  getProjectScopeText(context,
+                      widget.projectForListModel.projectScopeFlag ?? 0),
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                    LocaleData.studentsAreLookingFor.getString(context),
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(LocaleData.studentsAreLookingFor.getString(context),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold)),
                 ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

@@ -60,4 +60,22 @@ class ProjectForListModel {
       isFavorite: json['isFavorite'],
     );
   }
+
+  // fromMap
+  factory ProjectForListModel.fromMap(Map<String, dynamic> map) {
+    return ProjectForListModel(
+      id: map['id'],
+      createdAt: map['createdAt'],
+      updatedAt: map['updatedAt'],
+      deletedAt: map['deletedAt'],
+      companyId: map['companyId'],
+      projectScopeFlag: map['projectScopeFlag'],
+      title: map['title'],
+      description: map['description'],
+      typeFlag: map['typeFlag'],
+      numberOfStudents: map['numberOfStudents'],
+      countProposals: map['countProposals'],
+      isFavorite: map['isFavorite'],
+    );
+  }
 }

@@ -8,6 +8,7 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/bottom_sheet_filter.dart';
+import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item.dart';
 
 class ProjectSearch extends StatefulWidget {
@@ -22,38 +23,45 @@ class ProjectSearch extends StatefulWidget {
 class _ProjectSearchState extends State<ProjectSearch> {
   TextEditingController projectSearchController = TextEditingController();
   List<ProjectForListModel> listProject = [];
-  String queryData = '';
+  // String queryData = '';
   int? selectedLengthValue;
   int? amountStudentNeed;
   int? proposalsLessThan;
+  bool isLoading = true;
+
+  //Pagination
+  int page = 1;
+  final scrollController = ScrollController();
+  bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    queryData = widget.query;
-    // print('Abc ${widget.query}');
+    projectSearchController.text = widget.query;
+    scrollController.addListener(_scrollListener);
     fetchData();
   }
 
   void applyFilters(int? selectedLengthValue, int? amountStudentNeed,
       int? proposalsLessThan) {
+    listProject.clear();
     setState(() {
       this.selectedLengthValue = selectedLengthValue;
       this.amountStudentNeed = amountStudentNeed;
       this.proposalsLessThan = proposalsLessThan;
     });
-
     // Gọi lại fetchData khi nhận được dữ liệu mới
-    fetchData();
+    Future.microtask(() => fetchData());
   }
 
-  void fetchData() async {
-    // print("Fetch dataa");
+  Future<void> fetchData() async {
     try {
       final dioPulic = DioClient();
 
       Map<String, dynamic> queryParams = {
-        'title': queryData,
+        'title': projectSearchController.text,
+        'page': page,
+        'perPage': 10,
       };
 
       // Kiểm tra và thêm các tham số truy vấn khác nếu chúng không phải là null
@@ -72,21 +80,32 @@ class _ProjectSearchState extends State<ProjectSearch> {
         options: Options(method: 'GET'),
         queryParameters: queryParams,
       );
+      print("Re fetch data");
       if (response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
             parsed.map<ProjectForListModel>((item) {
-          // print(item);
           return ProjectForListModel.fromJson(item);
         }).toList();
 
         setState(() {
-          listProject = projects;
+          listProject = listProject + projects;
+          isLoading = false;
         });
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  void searchProject(String query) {
+    listProject.clear();
+    setState(() {
+      projectSearchController.text = query;
+      isLoading = true;
+    });
+    // Gọi lại fetchData khi nhận được dữ liệu mới
+    Future.microtask(() => fetchData());
   }
 
   @override
@@ -139,11 +158,8 @@ class _ProjectSearchState extends State<ProjectSearch> {
                           borderSide: BorderSide(width: 1, color: kGrey1)),
                     ),
                     onTap: () {},
-                    onChanged: (value) {
-                      setState(() {
-                        queryData = value;
-                      });
-                      fetchData();
+                    onSubmitted: (value) {
+                      searchProject(value);
                     },
                   ),
                 ),
@@ -152,7 +168,7 @@ class _ProjectSearchState extends State<ProjectSearch> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _showSearchBottomSheet(context);
+                    _showFilterBottomSheet(context);
                   },
                   child: const Icon(
                     Icons.filter_list_sharp,
@@ -160,45 +176,52 @@ class _ProjectSearchState extends State<ProjectSearch> {
                 )
               ],
             ),
-            Expanded(
-              child: listProject.isEmpty
-                  ? Center(
-                      child:
-                          Text(LocaleData.notFoundProject.getString(context)))
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      itemCount: listProject.length,
-                      itemBuilder: (context, index) {
-                        final project = listProject[index];
-                        final backgroundColor = index % 2 == 0 ? true : false;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, AppRouterName.projectDetail,
-                                arguments: project);
-                          },
-                          child: Column(
-                            children: [
-                              ProjectItem(
-                                isEven: backgroundColor,
-                                projectForListModel: project,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+            isLoading
+                ? const Expanded(
+                    child: Center(
+                      child: LoadingWidget(),
                     ),
-            ),
+                  )
+                : Expanded(
+                    child: listProject.isEmpty
+                        ? Center(
+                            child: Text(
+                                LocaleData.notFoundProject.getString(context)))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            itemCount: listProject.length,
+                            itemBuilder: (context, index) {
+                              final project = listProject[index];
+                              final backgroundColor =
+                                  index % 2 == 0 ? true : false;
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, AppRouterName.projectDetail,
+                                      arguments: project);
+                                },
+                                child: Column(
+                                  children: [
+                                    ProjectItem(
+                                      isEven: backgroundColor,
+                                      projectForListModel: project,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                  ),
           ]),
         ),
       ),
     );
   }
 
-  void _showSearchBottomSheet(BuildContext context) {
+  void _showFilterBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -211,5 +234,23 @@ class _ProjectSearchState extends State<ProjectSearch> {
         );
       },
     );
+  }
+
+  Future<void> _scrollListener() async {
+    if (isLoadingMore) {
+      return;
+    }
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      page = page + 1;
+      await fetchData();
+      setState(() {
+        isLoadingMore = false;
+      });
+      // print('Load more');
+    }
   }
 }

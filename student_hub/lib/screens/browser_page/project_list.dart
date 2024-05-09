@@ -24,10 +24,16 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   var isLoading = true;
   int role = -1;
 
+  //Pagination
+  int page = 1;
+  final scrollController = ScrollController();
+  bool isLoadingMore = false;
+
   @override
   void initState() {
     fecthData();
     getRole();
+    scrollController.addListener(_scrollListener);
     super.initState();
   }
 
@@ -38,16 +44,16 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
   void getRole() async {
     role = await RoleUser.getRole();
-    print(role);
   }
 
-  void fecthData() async {
+  Future<void> fecthData() async {
     // Call API to get data
     try {
       final dioPulic = DioClient();
 
-      final response =
-          await dioPulic.request('/project', options: Options(method: 'GET'));
+      final response = await dioPulic.request('/project',
+          queryParameters: {'page': page, 'perPage': 10},
+          options: Options(method: 'GET'));
       if (response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
         List<ProjectForListModel> projects =
@@ -57,7 +63,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         }).toList();
 
         setState(() {
-          listProject = projects;
+          listProject = listProject + projects;
           isLoading = false;
         });
       }
@@ -127,8 +133,10 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                   BorderRadius.all(Radius.circular(20)),
                               borderSide: BorderSide(width: 1, color: kGrey1)),
                         ),
+                        // onChanged: searchProject,
                         onTap: () {
-                          _showSearchBottomSheet(context);
+                          _showSearchBottomSheet(
+                              context); // Call function to show BottomSheet
                         },
                       ),
                     ),
@@ -164,14 +172,18 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                       )
                     : Expanded(
                         child: ListView.builder(
+                          controller: scrollController,
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          itemCount: listProject.length,
+                          itemCount: isLoadingMore
+                              ? listProject.length + 1
+                              : listProject.length,
                           itemBuilder: (context, index) {
-                            final project = listProject[index];
-                            // Chuyển đổi màu nền xen kẽ
-                            final backgroundColor =
-                                index % 2 == 0 ? true : false;
-                            return GestureDetector(
+                            if (index < listProject.length) {
+                              final project = listProject[index];
+                              // Chuyển đổi màu nền xen kẽ
+                              final backgroundColor =
+                                  index % 2 == 0 ? true : false;
+                              return GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
                                     context,
@@ -193,7 +205,13 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                                       ),
                                     ],
                                   ),
-                                ));
+                                ),
+                              );
+                            } else {
+                              return const Center(
+                                child: LoadingWidget(),
+                              );
+                            }
                           },
                         ),
                       ),
@@ -216,5 +234,23 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         return const BottomSheetSearch();
       },
     );
+  }
+
+  Future<void> _scrollListener() async {
+    if (isLoadingMore) {
+      return;
+    }
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoadingMore = true;
+      });
+      page = page + 1;
+      await fecthData();
+      setState(() {
+        isLoadingMore = false;
+      });
+      // print('Load more');
+    }
   }
 }

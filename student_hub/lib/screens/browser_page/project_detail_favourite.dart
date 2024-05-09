@@ -16,6 +16,21 @@ class ProjectDetailFavorite extends StatefulWidget {
 }
 
 class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
+  String getProjectScopeText(BuildContext context, int flag) {
+    switch (flag) {
+      case 0:
+        return LocaleData.lessThanOneMonth.getString(context);
+      case 1:
+        return LocaleData.oneToThreeMonth.getString(context);
+      case 2:
+        return LocaleData.threeToSixMonth.getString(context);
+      case 3:
+        return LocaleData.moreThanSixMonth.getString(context);
+      default:
+        return 'Unknown flag';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +117,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonth.getString(context) : LocaleData.threeToSixMonth.getString(context)}',
+                        '• ${getProjectScopeText(context, widget.projectItem.projectScopeFlag)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
