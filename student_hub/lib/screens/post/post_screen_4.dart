@@ -37,6 +37,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
   
   void postPoject() async {
     try{
+      ref.watch(postProjectProvider).projectScopeFlag ??= 0;
+      
       var requestData = json.encode({
           'companyId': ref.watch(postProjectProvider).companyId,
           'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,

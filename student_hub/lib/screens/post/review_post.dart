@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
@@ -11,6 +12,7 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/loading.dart';
 
 class ReviewPost extends ConsumerStatefulWidget {
   final int? projectID;
@@ -21,7 +23,17 @@ class ReviewPost extends ConsumerStatefulWidget {
 
 class _ReviewPostState extends ConsumerState<ReviewPost> {
   ProjectModelNew project = ProjectModelNew();
-  Future<void> getProject()async{
+  bool isLoading = true;
+  // Future<void> reload() async{
+  //   while(true){
+  //     await Future.delayed(Duration(seconds: 1));
+  //   if (widget.projectID != null  ) {
+  //       await getProject();
+  //       setState(() {}); // Cập nhật giao diện sau khi tải lại dữ liệu
+  //     }
+  //   }
+  // }
+  Future<void> getProject() async {
     try{
       final dioPrivate = DioClient();
       final response = await dioPrivate.request(
@@ -30,11 +42,17 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
           method: 'GET',
         ),
       );
-      project.projectScopeFlag = response.data['result']['projectScopeFlag'];
-      project.title = response.data['result']['title'];
-      project.numberOfStudents = response.data['result']['numberOfStudents'];
-      project.description = response.data['result']['description'];
-      project.typeFlag = response.data['result']['typeFlag'];
+      if(response.statusCode == 200){
+        project.projectScopeFlag = response.data['result']['projectScopeFlag'];
+        project.title = response.data['result']['title'];
+        project.numberOfStudents = response.data['result']['numberOfStudents'];
+        project.description = response.data['result']['description'];
+        project.typeFlag = response.data['result']['typeFlag'];
+      }
+      else {
+        print('Error: ${response.statusCode}');
+      
+      }
     }
     catch(e){
       print('Error: $e');
@@ -42,12 +60,26 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getProject().then((value) => setState(() {
+      isLoading = false;
+    }));
+  }
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getProject();
+
     final scopeProject = project.projectScopeFlag == 0
         ? '1 to 3 months'
         : '3 to 6 months';
-    return Scaffold(
+    return isLoading
+        ? const LoadingWidget()
+        : Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(
         title: 'Student Hub',

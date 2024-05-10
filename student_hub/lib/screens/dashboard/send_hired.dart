@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -28,13 +30,14 @@ class SendHired extends StatefulWidget {
 class SendHiredState extends State<SendHired>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String titleIcon = 'Hired';
+  String titleIcon = 'Send offer';
   int? _idProject;
   List<dynamic> proposals = [];
   List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
   var idUser = -1;
+  bool isHired = false;
 
   @override
   void initState() {
@@ -51,6 +54,83 @@ class SendHiredState extends State<SendHired>
   //   _tabController.dispose();
   //   super.dispose();
   // }
+
+  void setActivityStatus(int idProposal) async{
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        data: jsonEncode({
+          'statusFlag': 1,
+        }),
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+      if(response.statusCode == 200){
+        print('Chuyển vào active proposal thành công');
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+  void checkStatus(int idProposal) async{
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+      if(response.statusCode == 200){
+        if(response.data['result']['statusFlag'] != 3){
+          setState(() {
+            titleIcon = 'Send offer';
+            isHired = false;
+          });
+        }
+        if(response.data['result']['statusFlag'] == 3){
+          setState(() {
+            titleIcon = 'Hired';
+            isHired = true;
+          });
+        }
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  void setHiredStatus(int idProposal) async{
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        data: jsonEncode({
+          'statusFlag': 3,
+        }),
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+      if(response.statusCode == 200){
+        print('Tuyển thành công thành công');
+        isHired = true;
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
 
   void getDataProposalIdProject() async {
     final dioPrivate = DioClient();
@@ -241,7 +321,7 @@ class SendHiredState extends State<SendHired>
               );
   }
 
-  void _showHiredConfirmationDialog(BuildContext context) {
+  void _showHiredConfirmationDialog(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -308,8 +388,9 @@ class SendHiredState extends State<SendHired>
                       ),
                       onPressed: () {
                         // Xử lý khi nhấn nút Send
+                        setHiredStatus(index);
                         setState(() {
-                          titleIcon = "Sent hired offer";
+                          titleIcon = "Hired";
                         });
                         Navigator.of(context).pop(); // Đóng dialog
                       },
@@ -423,6 +504,7 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
+    checkStatus(proposals[index]['id']);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -518,13 +600,37 @@ class SendHiredState extends State<SendHired>
                 const SizedBox(width: 10), // Khoảng cách giữa 2 nút
                 Expanded(
                   child: ElevatedButton(
+                    onPressed: () {
+                      setActivityStatus(proposals[index]['id']);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
+                      ),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                    ),
+                    child: Text(
+                      LocaleData.active.getString(context),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.red,
                       ),
                     ),
                     onPressed: () {
-                      _showHiredConfirmationDialog(context);
+                      if(isHired == false) {
+                        final idx = proposals[index]['id'];
+                        _showHiredConfirmationDialog(context, idx);
+                      }
                     },
                     child: Text(
                       titleIcon,
@@ -636,7 +742,7 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     onPressed: () {
-                      _showHiredConfirmationDialog(context);
+                      _showHiredConfirmationDialog(context, index);
                     },
                     child: Text(
                       titleIcon,
