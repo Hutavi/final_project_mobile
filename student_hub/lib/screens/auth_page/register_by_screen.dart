@@ -123,6 +123,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
           title: LocaleData.regisSuccess.getString(context),
           description: LocaleData.verifyEmail.getString(context),
           buttonText: LocaleData.close.getString(context),
+          statusDialog: 1,
           onConfirmPressed: () {
             Navigator.pushReplacementNamed(context, AppRouterName.login);
           },
@@ -289,11 +290,6 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                       return null;
                     },
                   ),
-                  if (!isPasswordMatch)
-                    Text(
-                      LocaleData.passwordNotMatch.getString(context),
-                      style: const TextStyle(color: kRed),
-                    ),
                   const SizedBox(
                     height: 20,
                   ),
