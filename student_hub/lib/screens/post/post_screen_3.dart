@@ -39,7 +39,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(LocaleData.postingDescriptionTitle.getString(context),
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(
                   height: 8.0,
                 ),
@@ -64,7 +64,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                             child: Text(
                               LocaleData.postingDescriptionLine1.getString(context),
                               softWrap: true,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
                             ),
                           ),
@@ -86,7 +86,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                             child: Text(
                               LocaleData.postingDescriptionLine2.getString(context),
                               softWrap: true,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
                             ),
                           ),
@@ -108,7 +108,7 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                             child: Text(
                               LocaleData.postingDescriptionLine3.getString(context),
                               softWrap: true,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 14), // Đặt kích thước chữ là 14
                             ),
                           ),
@@ -123,26 +123,26 @@ class _PostScreenState extends ConsumerState<PostScreen3> {
                 TextField(
                   controller: descriptionController,
                   maxLines: 6,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: kGrey0
                   ),
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: kWhiteColor,
                       hintText: LocaleData.projectDescription.getString(context),
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         fontWeight: FontWeight.normal,
                         color: kGrey0,
                       ),
                       
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         // borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(10.0),
                           bottom: Radius.circular(10.0),
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.vertical(
                               top: Radius.circular(10.0),
