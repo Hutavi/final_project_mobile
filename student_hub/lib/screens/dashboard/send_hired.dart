@@ -330,12 +330,12 @@ class SendHiredState extends State<SendHired>
             borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 0,
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
           child: Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              // color: Colors.white,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
