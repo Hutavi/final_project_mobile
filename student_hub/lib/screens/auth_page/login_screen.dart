@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
+import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
@@ -27,10 +29,56 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   bool userNotFound = false;
   bool passwordWrong = false;
+  var idUser = -1;
+  IO.Socket? socket;
+  static String baseURL = 'https://api.studenthub.dev';
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void initSocket(dynamic token) {
+    socket = IO.io(
+      baseURL,
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build(),
+    );
+
+    socket!.io.options!['extraHeaders'] = {
+      'Authorization': 'Bearer $token',
+    };
+
+    socket!.connect();
+
+    socket!.onConnect((data) {
+      print('Connected Noti');
+    });
+  }
+
+  void getIDUser(dynamic token) async {
+    final dioPrivate = DioClient();
+
+    final responseIdUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final user = responseIdUser.data['result'];
+
+    setState(() {
+      if (user['roles'][0] == 0) {
+        idUser = user['student']['userId'];
+      } else {
+        idUser = user['company']['userId'];
+      }
+      saveIDUser(idUser);
+      initSocket(token);
+    });
   }
 
   void sendRequestLogin() async {
@@ -52,6 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.statusCode == 201) {
           final token = response.data['result']['token'];
           await saveTokenToLocal(token);
+
+          getIDUser(token);
 
           // await AccountManager.clearSharedPreferences();
           List<dynamic> roles = await ApiManager.getRoles(token);
@@ -114,6 +164,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> saveTokenToLocal(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', token);
+  }
+
+  Future<void> saveIDUser(int idUser) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('idUser', idUser);
   }
 
   @override

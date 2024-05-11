@@ -35,13 +35,14 @@ class _EditProjectState extends ConsumerState<EditProject> {
   int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   bool _descriptionPost = false;
   
-  void onSelectedDuration(ProjectDuration? duration) {
+  void onSelectedDuration(ProjectDuration? duration) { 
     if(duration?.index == 0){
       project.projectScopeFlag = 0;
     }
     else{
       project.projectScopeFlag = 1;
     }
+
     setState(() {
       _projectDuration = duration!;
     });
@@ -49,6 +50,8 @@ class _EditProjectState extends ConsumerState<EditProject> {
 
   void editPoject() async {
     try{
+      project.projectScopeFlag ??= 0;
+
       var requestData = json.encode({
           'projectScopeFlag': project.projectScopeFlag,
           'title': project.title,
@@ -66,9 +69,9 @@ class _EditProjectState extends ConsumerState<EditProject> {
           method: 'PATCH',
         ),
       );
-      print('Request data2: $response');
+      print('Request data of edit project: $response');
       if(response.statusCode == 200){
-        print('Post project success');
+        print('Edit project success');
       }
       if(response.statusCode == 400){
         // if(requestData get companyId){
@@ -96,7 +99,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBarCustom(
+      appBar: const AppBarCustom(
         title: 'Student Hub',
       ),
       body: Container(

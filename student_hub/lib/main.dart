@@ -10,7 +10,7 @@ import 'package:student_hub/services/socket.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SocketManager.initializeSocket();
-  SocketManager.recieveMessage();
+  SocketManager.recieveNotify();
 
   runApp(const ProviderScope(child: MyApp()));
 }
