@@ -50,13 +50,12 @@ class _SwitchAccountState extends State<SwitchAccount> {
       if (response.statusCode == 200) {
         final roles = response.data['result']['roles'];
         lengthOfRolesList = roles.length;
-        print('lengthOfRolesList: $lengthOfRolesList');
       }
     } catch (e) {
       print(e);
     }
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -538,9 +537,9 @@ class AccountTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if(lengthOfRoles == 1) {
       return ListTile(
-        leading: const CircleAvatar(
-          backgroundImage: AssetImage('lib/assets/images/avatar.png'),
-        ),
+        leading: const Icon(
+          Icons.add,
+          color: kBlue400,),
         title: const Text(
             'Add account'),
         onTap: () {
