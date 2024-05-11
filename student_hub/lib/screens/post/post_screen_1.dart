@@ -121,7 +121,7 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                                   context, AppRouterName.postScreen2);
                             },
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: _titlePost ? null : kWhiteColor,
+                              foregroundColor: _titlePost ? kGrey0 : kWhiteColor,
                               backgroundColor: kBlue400,
                               
                               padding: const EdgeInsets.symmetric(
