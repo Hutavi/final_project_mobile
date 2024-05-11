@@ -1,5 +1,5 @@
 import 'dart:ffi';
-
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -30,7 +30,6 @@ class _EditProfileState extends State<EditProfile>
   Timer? _timer;
 
   int? _selectedValue; // Giá trị được chọn trong RadioListTile
-  User? userCurr;
 
   // TextEditingController để điều khiển nội dung của TextField
   final TextEditingController _companyNameController = TextEditingController();
@@ -114,8 +113,24 @@ class _EditProfileState extends State<EditProfile>
     super.dispose();
   }
 
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogCustom(
+          title: '${LocaleData.edit.getString(context)} ${LocaleData.success.getString(context)}',
+          description: LocaleData.notiEdit.getString(context),
+          buttonText: LocaleData.close.getString(context),
+          statusDialog: 1,
+          onConfirmPressed: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   void _editProfile() async {
-    String token = await TokenManager.getTokenFromLocal();
     var requestData = json.encode({
       'companyName': _companyNameController.text,
       'size': _selectedValue,
@@ -132,8 +147,10 @@ class _EditProfileState extends State<EditProfile>
         options: Options(method: 'PUT'),
       );
 
-      User? userInfo = await ApiManager.getUserInfo(token);
-      print(userInfo?.companyUser?.companyName);
+      if(response.statusCode == 200){
+        print('Edit profile success');
+        _showSuccessDialog();
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -143,7 +160,7 @@ class _EditProfileState extends State<EditProfile>
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBarCustom(title: 'Edit Profile'),
+        appBar: const AppBarCustom(title: 'Edit Profile'),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -500,31 +517,3 @@ class _EditProfileState extends State<EditProfile>
         ));
   }
 }
-
-
-// class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-//   const _AppBar({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AppBar(
-//       title: const Text('Student Hub',
-//           style: TextStyle(
-//               color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
-//       backgroundColor: Colors.grey[200],
-//       actions: <Widget>[
-//         IconButton(
-//           icon: SizedBox(
-//             width: 25,
-//             height: 25,
-//             child: Image.asset('lib/assets/images/avatar.png'),
-//           ),
-//           onPressed: () {},
-//         ),
-//       ],
-//     );
-//   }
-
-//   @override
-//   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-// }

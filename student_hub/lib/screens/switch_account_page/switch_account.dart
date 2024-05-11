@@ -24,6 +24,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
   int companyData = -1 ;
   int studentData = -1;
+  int lengthOfRolesList = 0;
 
   List<AccountModel> accountList =
       []; //danh sách tất cả tài khoản đã từng đăng nhập
@@ -37,8 +38,25 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   void getRole() async {
     role = await RoleUser.getRole();
+  } 
+  
+  void getLengthRolesLists() async {
+    try {
+      final dio = DioClient();
+      final response = await dio.request('/auth/me',
+          options: Options(
+            method: 'GET',
+          ));
+      if (response.statusCode == 200) {
+        final roles = response.data['result']['roles'];
+        lengthOfRolesList = roles.length;
+        print('lengthOfRolesList: $lengthOfRolesList');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
-
+  
   @override
   void initState() {
     super.initState();
@@ -48,6 +66,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
     getUserInfoFromToken();
     getAccounts();
     getRole();
+    getLengthRolesLists();
   }
 
   @override
@@ -192,6 +211,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           accountModel: accountCurr,
                           accountManager: accountManager,
                           role: role,
+                          lengthOfRoles: lengthOfRolesList,
                         ),
                       );
                     }).toList(),
@@ -441,15 +461,17 @@ class AccountTile extends StatelessWidget {
   AccountModel accountModel;
   AccountController accountManager;
   int role;
+  int lengthOfRoles;
   AccountTile({
     Key? key,
     required this.accountModel,
     required this.accountManager,
     required this.role,
+    required this.lengthOfRoles,
   }) : super(key: key);
 
   List<dynamic> rolesList = [];
-
+  
   Future<void> getRoleList() async {
     try {
       final dio = DioClient();
@@ -514,6 +536,18 @@ class AccountTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(lengthOfRoles == 1) {
+      return ListTile(
+        leading: const CircleAvatar(
+          backgroundImage: AssetImage('lib/assets/images/avatar.png'),
+        ),
+        title: const Text(
+            'Add account'),
+        onTap: () {
+          selectAccount(context);
+        },
+      );
+    }
     return ListTile(
       leading: const CircleAvatar(
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
