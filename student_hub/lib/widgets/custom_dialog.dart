@@ -59,7 +59,7 @@ class DialogCustom extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -68,7 +68,7 @@ class DialogCustom extends StatelessWidget {
                 child: Text(
                   description,
                   style: const TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 14.0,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -112,7 +112,7 @@ class DialogCustom extends StatelessWidget {
                       child: Text(
                         buttonText,
                         style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.w500,
                           color: kBlue600,
                         ),
