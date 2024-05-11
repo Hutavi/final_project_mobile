@@ -85,7 +85,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
     final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
         ? LocaleData.oneToThreeMonths.getString(context)
         : LocaleData.threeToSixMonths.getString(context);
-    print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
+    // print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(

@@ -266,11 +266,14 @@ mixin LocaleData {
       'how_many_people_in_your_company';
   static const String descriptionCompany = 'description_company';
   static const String companyWebsite = 'company_website';
+  static const String notiEdit = 'noti_edit';
 
   //create profile company
   static const String tellUsAboutYourCompany = 'tell_us_about_your_company';
   static const String yourWayConnectWith = 'your_way_connect_with';
-
+  static const String notiCreate = 'noti_create';
+  static const String descriptionNotiCreate = 'description_noti_create';
+  
   //welcome screen
   static const String welcomeLine1 = 'welcome_line1';
   static const String getStarted = 'get_started';
@@ -570,6 +573,7 @@ mixin LocaleData {
     //edit projetc
     projectTitle: 'Project title',
 
+
     //project save page
     savedProjects: 'Save projects',
     //projectItem favorite
@@ -601,11 +605,13 @@ mixin LocaleData {
     howManyPeopleInYourCompany: 'How many people are in your company?',
     descriptionCompany: 'Description about your company',
     companyWebsite: 'Company website',
-
+    notiEdit: 'Your profile has been updated successfully!',
+    
     //create profile company
     tellUsAboutYourCompany: 'Tell us about your company and you will be on',
     yourWayConnectWith: 'your way connect with high-skilled students',
-
+    notiCreate: 'Your profile has been created',
+    descriptionNotiCreate: 'Your profile has been created successfully!',
     //welcome screen
     welcomeLine1: 'Let\'s start with your first project post!',
     getStarted: 'Get Started',
@@ -909,6 +915,7 @@ mixin LocaleData {
 
     //edit projetc
     projectTitle: 'Tiêu đề dự án',
+    
 
     //project save page
     savedProjects: 'Dự án đã lưu',
@@ -941,12 +948,14 @@ mixin LocaleData {
     howManyPeopleInYourCompany: 'Có bao nhiêu người trong công ty của bạn?',
     descriptionCompany: 'Mô tả về công ty của bạn',
     companyWebsite: 'Trang web công ty',
+    notiEdit: 'Hồ sơ của bạn đã được cập nhật thành công!',
 
     //create profile company
     tellUsAboutYourCompany:
         'Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ trên',
     yourWayConnectWith: 'đường kết nối với sinh viên có kỹ năng cao',
-
+    notiCreate: 'Hồ sơ đã được tạo',
+    descriptionNotiCreate: 'Hồ sơ của bạn đã được tạo thành công!',
     //welcome screen
     welcomeLine1: 'Hãy bắt đầu với bài đăng dự án đầu tiên của bạn!',
     getStarted: 'Bắt đầu',
