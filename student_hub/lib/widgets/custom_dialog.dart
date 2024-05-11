@@ -59,7 +59,7 @@ class DialogCustom extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w700,
                 ),
               ),

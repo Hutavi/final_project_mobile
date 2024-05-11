@@ -12,6 +12,7 @@ import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/screens/switch_account_page/account_manager.dart';
 import 'package:student_hub/models/account_models.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class SwitchAccount extends StatefulWidget {
   const SwitchAccount({super.key});
@@ -22,7 +23,7 @@ class SwitchAccount extends StatefulWidget {
 
 class _SwitchAccountState extends State<SwitchAccount> {
   User? userCurr;
-  int companyData = -1 ;
+  int companyData = -1;
   int studentData = -1;
   int lengthOfRolesList = 0;
 
@@ -88,28 +89,26 @@ class _SwitchAccountState extends State<SwitchAccount> {
       );
       late int studentDataAPI;
       late int companyDataAPI;
-      if(respondData.statusCode == 200){
-        if(respondData.data['result']['student'] != null){
+      if (respondData.statusCode == 200) {
+        if (respondData.data['result']['student'] != null) {
           studentDataAPI = respondData.data!['result']['student']['id'];
-        }
-        else {
+        } else {
           studentDataAPI = -1;
         }
-        if(respondData.data['result']['company'] != null){
+        if (respondData.data['result']['company'] != null) {
           companyDataAPI = respondData.data!['result']['company']['id'];
-        }
-        else {
+        } else {
           companyDataAPI = -1;
         }
 
         // final user = (respondData.data['result']);
-        
+
         setState(() {
           studentData = studentDataAPI;
           print('studentData: $studentData');
           companyData = companyDataAPI;
           print('companyData: $companyData');
-        }); 
+        });
       }
     } catch (e) {
       print(e);
@@ -125,6 +124,23 @@ class _SwitchAccountState extends State<SwitchAccount> {
       accountList = accounts;
       inactiveAccountList = inactiveAccounts;
     });
+  }
+
+  void confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogCustom(
+            title: "Đăng xuất khỏi ứng dụng?",
+            description: "",
+            buttonText: LocaleData.confirm.getString(context),
+            buttonTextCancel: LocaleData.cancel.getString(context),
+            statusDialog: 4,
+            onConfirmPressed: () {
+              logout();
+            });
+      },
+    );
   }
 
   void logout() async {
@@ -184,9 +200,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           width: 10,
                         ),
                         Text(
-                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 
-                                                                                                              ? LocaleData.company.getString(context) 
-                                                                                                              : LocaleData.student.getString(context)})',
+                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 ? LocaleData.company.getString(context) : LocaleData.student.getString(context)})',
                           style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
@@ -253,21 +267,19 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         print('chưa có profile company');
                         Navigator.pushNamed(
                             context, AppRouterName.profileInput);
-                      } else if (role == 1 &&
-                          companyData != -1) {
+                      } else if (role == 1 && companyData != -1) {
                         print("(đã có) edit profile company");
                         Navigator.pushNamed(
                             context, AppRouterName.editProfileCompany,
                             arguments: companyData);
-                      }
-                      else {
+                      } else {
                         print('student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
-                      } 
+                      }
                       // else if(role == 0 && studentData == -1){
                       //   print('student');
                       //   Navigator.pushNamed(context, AppRouterName.profileS1);
-                      // } 
+                      // }
                       // else if(role == 0 && studentData != -1){
                       //   print('edit student');
                       //   Navigator.pushNamed(context, AppRouterName.profileS1);
@@ -385,7 +397,7 @@ class _SwitchAccountState extends State<SwitchAccount> {
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: () {
-                      logout();
+                      confirmLogout();
                     },
                     icon: const Icon(Icons.logout, color: kBlue400, size: 25.0),
                     label: Text(LocaleData.logOut.getString(context),
@@ -442,16 +454,17 @@ class AccountController {
 
   void toCreateProfileStudent(BuildContext context) {
     print('student vào dc k?');
-    // Navigator.pushReplacement(context, 
+    // Navigator.pushReplacement(context,
     // // AppRouterName.profileS1);
     // MaterialPageRoute(builder: (context) => StudentProfileS1()));
     Navigator.pushNamed(context, AppRouterName.profileS1);
   }
 
   void toCreateProfileCompany(BuildContext context) {
-    Navigator.pushReplacement(context, 
-    // AppRouterName.profileInput);
-    MaterialPageRoute(builder: (context) => ProfileInput()));
+    Navigator.pushReplacement(
+        context,
+        // AppRouterName.profileInput);
+        MaterialPageRoute(builder: (context) => ProfileInput()));
   }
 }
 
@@ -530,7 +543,6 @@ class AccountTile extends StatelessWidget {
       accountManager.reloadScreen(context);
       return;
     }
-    
   }
 
   @override
