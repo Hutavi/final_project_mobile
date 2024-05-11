@@ -63,95 +63,106 @@ class MessageItem extends StatelessWidget {
       }
     }
 
-    return InkWell(
-      onTap: () {
-        initSocket(data['project']['id']);
-        Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
-          'idProject': data['project']['id'] as int,
-          'idThisUser': idUser == data['receiver']['id']
-              ? data['receiver']['id'] as int
-              : data['sender']['id'] as int,
-          'idAnyUser': idUser != data['receiver']['id']
-              ? data['receiver']['id'] as int
-              : data['sender']['id'] as int,
-          'name': idUser != data['receiver']['id']
-              ? data['receiver']['fullname'] as String
-              : data['sender']['fullname'] as String,
-        });
-      },
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(ImageManagent.imgAvatar),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(1000),
-                          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.background,
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: InkWell(
+        onTap: () {
+          initSocket(data['project']['id']);
+          Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
+            'idProject': data['project']['id'] as int,
+            'idThisUser': idUser == data['receiver']['id']
+                ? data['receiver']['id'] as int
+                : data['sender']['id'] as int,
+            'idAnyUser': idUser != data['receiver']['id']
+                ? data['receiver']['id'] as int
+                : data['sender']['id'] as int,
+            'name': idUser != data['receiver']['id']
+                ? data['receiver']['fullname'] as String
+                : data['sender']['fullname'] as String,
+          });
+        },
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 55,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(ImageManagent.imgAvatar),
+                          fit: BoxFit.cover,
                         ),
-                      ],
-                    ),
-                  ),
-                  const Gap(5),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DisplayText(
-                        text: idUser != data['receiver']['id']
-                            ? data['receiver']['fullname']
-                            : data['sender']['fullname'],
-                        style: textTheme.labelMedium!.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
-                      DisplayText(
-                          text: 'Senior frontend developer (Fintech)',
-                          style: textTheme.labelSmall!.copyWith(
-                            fontSize: 10,
-                            color: Colors.green,
-                          )),
-                      const Gap(5),
-                      Row(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SizedBox(
-                            width: deviceSize.width * 0.5,
-                            child: DisplayText(
-                              text: '${data['content']}',
-                              style: textTheme.labelSmall!.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.w400),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(1000),
                             ),
                           ),
                         ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-              DisplayText(
-                text: formatTimeAgo(data['createdAt']),
-                style: textTheme.labelSmall!
-                    .copyWith(color: colorScheme.onSurface),
-              ),
-            ],
-          )),
+                      ),
+                    ),
+                    const Gap(5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DisplayText(
+                          text: idUser != data['receiver']['id']
+                              ? data['receiver']['fullname']
+                              : data['sender']['fullname'],
+                          style: textTheme.labelMedium!.copyWith(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        DisplayText(
+                            text: 'Senior frontend developer (Fintech)',
+                            style: textTheme.labelSmall!.copyWith(
+                              fontSize: 10,
+                              color: Colors.green,
+                            )),
+                        const Gap(5),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: deviceSize.width * 0.5,
+                              child: DisplayText(
+                                text: '${data['content']}',
+                                style: textTheme.labelSmall!.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                DisplayText(
+                  text: formatTimeAgo(data['createdAt']),
+                  style: textTheme.labelSmall!
+                      .copyWith(color: colorScheme.onSurface),
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

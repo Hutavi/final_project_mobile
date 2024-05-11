@@ -1,24 +1,32 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:gap/gap.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/dashboard/widget/proposal_detail_student_s1.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/utils/extensions.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/widgets/display_text.dart';
 import 'package:student_hub/widgets/loading.dart';
 
 class SendHired extends StatefulWidget {
   final int idProject;
   final int indexTab;
   final Map projectDetail;
+  final String? companyName;
   const SendHired({
     Key? key,
     required this.idProject,
     required this.indexTab,
     required this.projectDetail,
+    required this.companyName,
   }) : super(key: key);
 
   @override
@@ -31,6 +39,7 @@ class SendHiredState extends State<SendHired>
   String titleIcon = 'Hired';
   int? _idProject;
   List<dynamic> proposals = [];
+  List<dynamic> proposalsHired = [];
   List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
@@ -86,7 +95,13 @@ class SendHiredState extends State<SendHired>
       } else {
         idUser = user['company']['userId'];
       }
-      proposals = proposal;
+      proposal.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+      message.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+      proposals = proposal.where((item) => item['statusFlag'] != 3).toList();
+      proposalsHired =
+          proposal.where((item) => item['statusFlag'] == 3).toList();
       listMessage = message;
       isLoading = false;
     });
@@ -148,11 +163,11 @@ class SendHiredState extends State<SendHired>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
             child: Text(
-              'Senior frontend developer (Fintech)',
-              style: TextStyle(
+              widget.companyName ?? '',
+              style: const TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.green),
@@ -172,8 +187,7 @@ class SendHiredState extends State<SendHired>
                         _buildProjectList(),
                         _buildProjectDetails(),
                         _buildProjectMessage(),
-                        Center(
-                            child: Text(LocaleData.hired.getString(context))),
+                        _buildProjectHired(),
                       ],
                     ),
                   ),
@@ -201,7 +215,7 @@ class SendHiredState extends State<SendHired>
         return null;
       }),
       tabs: [
-        Tab(text: LocaleData.proposals.getString(context)),
+        Tab(text: LocaleData.proposalsTitle.getString(context)),
         Tab(text: LocaleData.detail.getString(context)),
         Tab(text: LocaleData.message.getString(context)),
         Tab(text: LocaleData.hired.getString(context)),
@@ -241,7 +255,43 @@ class SendHiredState extends State<SendHired>
               );
   }
 
-  void _showHiredConfirmationDialog(BuildContext context) {
+  Widget _buildProjectHired() {
+    return isLoading
+        ? const LoadingWidget()
+        : proposalsHired.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposalsHired.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectHiredItem(context, index);
+                },
+              )
+            : Center(
+                child: Text('No ${LocaleData.hired.getString(context)}'),
+              );
+  }
+
+  void handleHired(int index) async {
+    setState(() {
+      isLoading = true;
+    });
+    final data = {"statusFlag": 3};
+
+    final dioPrivate = DioClient();
+    final responseHired = await dioPrivate.request(
+      '/proposal/${proposals[index]['id']}',
+      data: data,
+      options: Options(method: 'PATCH'),
+    );
+
+    if (responseHired.statusCode == 200) {
+      setState(() {
+        getDataProposalIdProject();
+      });
+    } else {}
+  }
+
+  void _showHiredConfirmationDialog(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -250,12 +300,12 @@ class SendHiredState extends State<SendHired>
             borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 0,
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
           child: Container(
             padding:
                 const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
@@ -280,42 +330,47 @@ class SendHiredState extends State<SendHired>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.red,
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red,
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
                         ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          handleHired(index);
+                        },
+                        child: Text(
+                          LocaleData.cancel.getString(context),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Đóng dialog
-                      },
-                      child: Text(
-                        LocaleData.cancel.getString(context),
-                        textAlign: TextAlign.center,
                       ),
                     ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          kBlue600,
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            kBlue600,
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
                         ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white,
+                        onPressed: () {
+                          setState(() {
+                            titleIcon = "Sent hired offer";
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          LocaleData.send.getString(context),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      onPressed: () {
-                        // Xử lý khi nhấn nút Send
-                        setState(() {
-                          titleIcon = "Sent hired offer";
-                        });
-                        Navigator.of(context).pop(); // Đóng dialog
-                      },
-                      child: Text(
-                        LocaleData.send.getString(context),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
@@ -423,231 +478,404 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: AssetImage(ImageManagent.imgAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      proposals[index]['student']['user']['fullname'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ProposalDetailStudentS1(data: proposals[index]['student']),
+            )),
+      },
+      child: Card(
+        color: Theme.of(context).cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage(ImageManagent.imgAvatar),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      findMaxYearAndCalculate(
-                          proposals[index]['student']['educations']),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  proposals[index]['student']['techStack']['name'],
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
                   ),
-                ),
-                Text(
-                  LocaleData.excellent.getString(context),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              proposals[index]['coverLetter'],
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRouterName.chatScreen, arguments: {
-                        'idProject': widget.idProject,
-                        'idThisUser': idUser,
-                        'idAnyUser': proposals[index]['student']['userId'],
-                        'name': proposals[index]['student']['user']['fullname'],
-                      });
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        kBlue600,
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        proposals[index]['student']['user']['fullname'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white,
+                      const SizedBox(height: 2),
+                      Text(
+                        findMaxYearAndCalculate(
+                            proposals[index]['student']['educations']),
+                        style: const TextStyle(fontSize: 12),
                       ),
-                    ),
-                    child: Text(
-                      LocaleData.message.getString(context),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    proposals[index]['student']['techStack']['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
-                ),
-                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.red,
-                      ),
-                    ),
-                    onPressed: () {
-                      _showHiredConfirmationDialog(context);
-                    },
-                    child: Text(
-                      titleIcon,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
+                  Text(
+                    LocaleData.excellent.getString(context),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                proposals[index]['coverLetter'],
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AppRouterName.chatScreen, arguments: {
+                          'idProject': widget.idProject,
+                          'idThisUser': idUser,
+                          'idAnyUser': proposals[index]['student']['userId'],
+                          'name': proposals[index]['student']['user']
+                              ['fullname'],
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          kBlue600,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                      child: Text(
+                        LocaleData.message.getString(context),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).colorScheme.background),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.red,
+                        ),
+                      ),
+                      onPressed: () {
+                        _showHiredConfirmationDialog(context, index);
+                      },
+                      child: Text(
+                        titleIcon,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildProjectMessageItem(BuildContext context, int index) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final deviceSize = context.deviceSize;
+
+    String formatTimeAgo(String dateTimeString) {
+      DateTime dateTime = DateTime.parse(dateTimeString);
+      DateTime now = DateTime.now();
+      Duration difference = now.difference(dateTime);
+
+      if (difference.inDays > 0) {
+        if (difference.inDays == 1) {
+          return '1 ${LocaleData.dayAgo.getString(context)}';
+        } else {
+          return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
+        }
+      } else if (difference.inHours > 0) {
+        if (difference.inHours == 1) {
+          return '1 ${LocaleData.hoursAgo.getString(context)}';
+        } else {
+          return '${difference.inHours} ${LocaleData.hoursAgo.getString(context)}';
+        }
+      } else if (difference.inMinutes > 0) {
+        if (difference.inMinutes == 1) {
+          return '1 ${LocaleData.minutesAgo.getString(context)}';
+        } else {
+          return '${difference.inMinutes} ${LocaleData.minutesAgo.getString(context)}';
+        }
+      } else {
+        if (difference.inSeconds == 1) {
+          return '1 ${LocaleData.secondsAgo.getString(context)}';
+        } else {
+          return '${difference.inSeconds} ${LocaleData.secondsAgo.getString(context)}';
+        }
+      }
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.background, // Màu của đường kẻ
+            width: 1.0, // Độ dày của đường kẻ
+          ),
+        ),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
+            'idProject': widget.idProject,
+            'idThisUser': idUser,
+            'idAnyUser': idUser != listMessage[index]['receiver']['id']
+                ? listMessage[index]['receiver']['id'] as int
+                : listMessage[index]['sender']['id'] as int,
+            'name': idUser != listMessage[index]['receiver']['id']
+                ? listMessage[index]['receiver']['fullname'] as String
+                : listMessage[index]['sender']['fullname'] as String,
+          });
+        },
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: AssetImage(ImageManagent.imgAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      '1',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                    Container(
+                      width: 55,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(ImageManagent.imgAvatar),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      'cc',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    const Gap(5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DisplayText(
+                          text: idUser != listMessage[index]['receiver']['id']
+                              ? listMessage[index]['receiver']['fullname']
+                              : listMessage[index]['sender']['fullname'],
+                          style: textTheme.labelMedium!.copyWith(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        DisplayText(
+                            text: 'Senior frontend developer (Fintech)',
+                            style: textTheme.labelSmall!.copyWith(
+                              fontSize: 10,
+                              color: Colors.green,
+                            )),
+                        const Gap(5),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: deviceSize.width * 0.5,
+                              child: DisplayText(
+                                text: '${listMessage[index]['content']}',
+                                style: textTheme.labelSmall!.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'hii',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  'Excellent',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
+                DisplayText(
+                  text: formatTimeAgo(listMessage[index]['createdAt']),
+                  style: textTheme.labelSmall!
+                      .copyWith(color: colorScheme.onSurface),
                 ),
               ],
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'haha',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Xử lý khi nhấn nút Message
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        kBlue600,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildProjectHiredItem(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProposalDetailStudentS1(
+                  data: proposalsHired[index]['student']),
+            )),
+      },
+      child: Card(
+        color: Theme.of(context).cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage(ImageManagent.imgAvatar),
+                        fit: BoxFit.cover,
                       ),
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white,
-                      ),
-                    ),
-                    child: const Text(
-                      'Message',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.red,
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        proposalsHired[index]['student']['user']['fullname'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      _showHiredConfirmationDialog(context);
-                    },
-                    child: Text(
-                      titleIcon,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
+                      const SizedBox(height: 2),
+                      Text(
+                        findMaxYearAndCalculate(
+                            proposalsHired[index]['student']['educations']),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    proposalsHired[index]['student']['techStack']['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    LocaleData.excellent.getString(context),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                proposalsHired[index]['coverLetter'],
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AppRouterName.chatScreen, arguments: {
+                          'idProject': widget.idProject,
+                          'idThisUser': idUser,
+                          'idAnyUser': proposalsHired[index]['student']
+                              ['userId'],
+                          'name': proposalsHired[index]['student']['user']
+                              ['fullname'],
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          kBlue600,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                      child: Text(
+                        LocaleData.message.getString(context),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).colorScheme.background),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.red,
+                        ),
+                      ),
+                      onPressed: () {
+                        _showHiredConfirmationDialog(context, index);
+                      },
+                      child: Text(
+                        titleIcon,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

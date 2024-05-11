@@ -158,7 +158,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent + 10000,

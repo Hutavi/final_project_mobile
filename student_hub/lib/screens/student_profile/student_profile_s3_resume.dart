@@ -88,7 +88,7 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
             color: Colors.blue,
           ),
           Text(
-            LocaleData.chooseFile.getString(context as BuildContext),
+            LocaleData.chooseFile.getString(this.context),
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,
@@ -107,8 +107,7 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
-                child: Text(
-                    LocaleData.chooseFile.getString(context as BuildContext)),
+                child: Text(LocaleData.chooseFile.getString(this.context)),
               ),
             ),
         ],
@@ -168,15 +167,14 @@ class _StundentProfileS3ResumeState extends State<StundentProfileS3Resume> {
 
       if (responseProfileResume.statusCode == 200) {
         setState(() {
-          notify = LocaleData.updatedResumeSuccess
-              .getString(context as BuildContext);
+          notify = LocaleData.updatedResumeSuccess.getString(this.context);
 
           getDataIdStudent();
           _showSuccess();
         });
       } else {
-        notify =
-            LocaleData.updatedResumeFailed.getString(context as BuildContext);
+        // ignore: use_build_context_synchronously
+        notify = LocaleData.updatedResumeFailed.getString(this.context);
 
         _showError();
       }
