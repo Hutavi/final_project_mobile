@@ -252,7 +252,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Your Company Name!',
+                        hintText: '${LocaleData.companyName.getString(context)}!',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -303,7 +303,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Your Company Website!',
+                        hintText: '${LocaleData.companyWebsite.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -339,7 +339,6 @@ class _NewLoginPageState extends State<ProfileInput>
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                            color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -354,7 +353,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Desciption about your company!',
+                        hintText: '${LocaleData.descriptionCompany.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,

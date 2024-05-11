@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:gap/gap.dart';
 import 'package:student_hub/assets/localization/locales.dart';
@@ -26,7 +27,7 @@ class SendHired extends StatefulWidget {
     required this.idProject,
     required this.indexTab,
     required this.projectDetail,
-    required this.companyName,
+    this.companyName,
   }) : super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class SendHired extends StatefulWidget {
 class SendHiredState extends State<SendHired>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String titleIcon = 'Hired';
+  String titleIcon = 'Send offer';
   int? _idProject;
   List<dynamic> proposals = [];
   List<dynamic> proposalsHired = [];
@@ -44,6 +45,7 @@ class SendHiredState extends State<SendHired>
   Map? _projectDetaild;
   var isLoading = true;
   var idUser = -1;
+  bool isHired = false;
 
   @override
   void initState() {
@@ -60,6 +62,84 @@ class SendHiredState extends State<SendHired>
   //   _tabController.dispose();
   //   super.dispose();
   // }
+
+  void setActivityStatus(int idProposal) async {
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        data: jsonEncode({
+          'statusFlag': 1,
+        }),
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+      if (response.statusCode == 200) {
+        print('Chuyển vào active proposal thành công');
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  void checkStatus(int idProposal) async {
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        options: Options(
+          method: 'GET',
+        ),
+      );
+      if (response.statusCode == 200) {
+        if (response.data['result']['statusFlag'] != 3) {
+          setState(() {
+            titleIcon = 'Send offer';
+            isHired = false;
+          });
+        }
+        if (response.data['result']['statusFlag'] == 3) {
+          setState(() {
+            titleIcon = 'Hired';
+            isHired = true;
+          });
+        }
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
+
+  void setHiredStatus(int idProposal) async {
+    try {
+      final response = await DioClient().request(
+        '/proposal/$idProposal',
+        data: jsonEncode({
+          'statusFlag': 3,
+        }),
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+      if (response.statusCode == 200) {
+        print('Tuyển thành công thành công');
+        isHired = true;
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
 
   void getDataProposalIdProject() async {
     final dioPrivate = DioClient();
@@ -163,11 +243,11 @@ class SendHiredState extends State<SendHired>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
             child: Text(
-              widget.companyName ?? '',
-              style: const TextStyle(
+              'Senior frontend developer (Fintech)',
+              style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.green),
@@ -215,7 +295,7 @@ class SendHiredState extends State<SendHired>
         return null;
       }),
       tabs: [
-        Tab(text: LocaleData.proposalsTitle.getString(context)),
+        Tab(text: LocaleData.proposals.getString(context)),
         Tab(text: LocaleData.detail.getString(context)),
         Tab(text: LocaleData.message.getString(context)),
         Tab(text: LocaleData.hired.getString(context)),
@@ -271,26 +351,6 @@ class SendHiredState extends State<SendHired>
               );
   }
 
-  void handleHired(int index) async {
-    setState(() {
-      isLoading = true;
-    });
-    final data = {"statusFlag": 3};
-
-    final dioPrivate = DioClient();
-    final responseHired = await dioPrivate.request(
-      '/proposal/${proposals[index]['id']}',
-      data: data,
-      options: Options(method: 'PATCH'),
-    );
-
-    if (responseHired.statusCode == 200) {
-      setState(() {
-        getDataProposalIdProject();
-      });
-    } else {}
-  }
-
   void _showHiredConfirmationDialog(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -305,7 +365,7 @@ class SendHiredState extends State<SendHired>
             padding:
                 const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              // color: Colors.white,
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
@@ -341,8 +401,7 @@ class SendHiredState extends State<SendHired>
                           ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
-                          handleHired(index);
+                          Navigator.of(context).pop(); // Đóng dialog
                         },
                         child: Text(
                           LocaleData.cancel.getString(context),
@@ -350,7 +409,7 @@ class SendHiredState extends State<SendHired>
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         style: ButtonStyle(
@@ -362,10 +421,12 @@ class SendHiredState extends State<SendHired>
                           ),
                         ),
                         onPressed: () {
+                          // Xử lý khi nhấn nút Send
+                          setHiredStatus(index);
                           setState(() {
-                            titleIcon = "Sent hired offer";
+                            titleIcon = "Hired";
                           });
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(); // Đóng dialog
                         },
                         child: Text(
                           LocaleData.send.getString(context),
@@ -478,133 +539,144 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
-    return GestureDetector(
-      onTap: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProposalDetailStudentS1(data: proposals[index]['student']),
-            )),
-      },
-      child: Card(
-        color: Theme.of(context).cardColor,
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(ImageManagent.imgAvatar),
-                        fit: BoxFit.cover,
-                      ),
+    checkStatus(proposals[index]['id']);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(ImageManagent.imgAvatar),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        proposals[index]['student']['user']['fullname'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        findMaxYearAndCalculate(
-                            proposals[index]['student']['educations']),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    proposals[index]['student']['techStack']['name'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  Text(
-                    LocaleData.excellent.getString(context),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                proposals[index]['coverLetter'],
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(AppRouterName.chatScreen, arguments: {
-                          'idProject': widget.idProject,
-                          'idThisUser': idUser,
-                          'idAnyUser': proposals[index]['student']['userId'],
-                          'name': proposals[index]['student']['user']
-                              ['fullname'],
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          kBlue600,
-                        ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white,
-                        ),
-                      ),
-                      child: Text(
-                        LocaleData.message.getString(context),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      proposals[index]['student']['user']['fullname'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
+                    const SizedBox(height: 2),
+                    Text(
+                      findMaxYearAndCalculate(
+                          proposals[index]['student']['educations']),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  proposals[index]['student']['techStack']['name'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
                   ),
-                  const SizedBox(width: 10), // Khoảng cách giữa 2 nút
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).colorScheme.background),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.red,
-                        ),
+                ),
+                Text(
+                  LocaleData.excellent.getString(context),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              proposals[index]['coverLetter'],
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(AppRouterName.chatScreen, arguments: {
+                        'idProject': widget.idProject,
+                        'idThisUser': idUser,
+                        'idAnyUser': proposals[index]['student']['userId'],
+                        'name': proposals[index]['student']['user']['fullname'],
+                      });
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
                       ),
-                      onPressed: () {
-                        _showHiredConfirmationDialog(context, index);
-                      },
-                      child: Text(
-                        titleIcon,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
                       ),
                     ),
+                    child: Text(
+                      LocaleData.message.getString(context),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setActivityStatus(proposals[index]['id']);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        kBlue600,
+                      ),
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.white,
+                      ),
+                    ),
+                    child: Text(
+                      LocaleData.active.getString(context),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Colors.red,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (isHired == false) {
+                        final idx = proposals[index]['id'];
+                        _showHiredConfirmationDialog(context, idx);
+                      }
+                    },
+                    child: Text(
+                      titleIcon,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

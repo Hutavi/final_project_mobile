@@ -6,6 +6,8 @@ import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/widgets/project_item_favourite.dart';
 
 class ProjectDetailFavorite extends StatefulWidget {
   final ProjectFavourite projectItem;
@@ -29,6 +31,15 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
       default:
         return 'Unknown flag';
     }
+  }
+
+  ProjectForListModel projectID = ProjectForListModel();
+
+  ProjectForListModel getProjectID(ProjectFavourite project) {
+    ProjectForListModel rst = ProjectForListModel();
+    rst.id = project.id;
+    print('id của favorite: ${rst.id}');
+    return rst;
   }
 
   @override
@@ -167,7 +178,8 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.submitProposal);
+                  projectID = getProjectID(widget.projectItem);
+                  Navigator.pushNamed(context, AppRouterName.submitProposal, arguments: projectID);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

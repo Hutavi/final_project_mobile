@@ -103,6 +103,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     socket!.on('RECEIVE_MESSAGE', (data) {
       if (mounted) {
         setState(() {
+          print('socket $data');
           messages.add(Message(
             projectID: data['notification']['message']['projectId'],
             senderUserId: data['notification']['senderId'],
@@ -145,12 +146,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         method: 'POST',
       ),
     );
-
-    if (responseListMessage.statusCode == 201) {
-      final listMessage = responseListMessage.data['result'];
-
-      print(listMessage);
-    }
 
     messageController.clear();
 

@@ -194,6 +194,7 @@ mixin LocaleData {
   static const String passwordTooShort = 'password_too_short';
   static const String confirmPassword = 'confirm_password';
   static const String homeScript = 'home_script';
+  static const String active = 'active';
 
   //posting - page1
   static const String postingTitle = 'posting_title';
@@ -252,7 +253,7 @@ mixin LocaleData {
   static const String settings = 'settings';
   static const String language = 'language';
   static const String logOut = 'log_out';
-
+  
   //editProfile Company
   static const String edtProfileCompanyTitle = 'edt_profile_company_title';
   static const String companyName = 'company_name';
@@ -263,6 +264,8 @@ mixin LocaleData {
   static const String moreThan = 'more_than';
   static const String howManyPeopleInYourCompany =
       'how_many_people_in_your_company';
+  static const String descriptionCompany = 'description_company';
+  static const String companyWebsite = 'company_website';
 
   //create profile company
   static const String tellUsAboutYourCompany = 'tell_us_about_your_company';
@@ -515,6 +518,8 @@ mixin LocaleData {
     confirmSendOffer:
         'Do you really want to send hired offer for student to do this project?',
     send: 'Send',
+    active: 'Active',
+
     // projectScope: 'Project scope',
     teamSize: 'Team size',
     excellent: 'Excellent',
@@ -594,6 +599,8 @@ mixin LocaleData {
     employees: 'Employees',
     moreThan: 'More than',
     howManyPeopleInYourCompany: 'How many people are in your company?',
+    descriptionCompany: 'Description about your company',
+    companyWebsite: 'Company website',
 
     //create profile company
     tellUsAboutYourCompany: 'Tell us about your company and you will be on',
@@ -855,6 +862,8 @@ mixin LocaleData {
     confirmSendOffer:
         'Bạn có thực sự muốn gửi đề nghị thuê cho sinh viên thực hiện dự án này không?',
     send: 'Gửi',
+    active: 'Active',
+    
     // projectScope: 'Phạm vi dự án',
     teamSize: 'Kích thước nhóm',
     excellent: 'Xuất sắc',
@@ -913,7 +922,7 @@ mixin LocaleData {
     submitProposal: 'Gửi proposal',
     coverLetter: 'Thư xin việc',
     submitProposalScript: 'Mô tả lý do bạn phù hợp với dự án này',
-
+    
     //switch account page
     home: 'Trang chủ',
     profile: 'Hồ sơ',
@@ -930,6 +939,8 @@ mixin LocaleData {
     employees: 'nhân viên',
     moreThan: 'Hơn',
     howManyPeopleInYourCompany: 'Có bao nhiêu người trong công ty của bạn?',
+    descriptionCompany: 'Mô tả về công ty của bạn',
+    companyWebsite: 'Trang web công ty',
 
     //create profile company
     tellUsAboutYourCompany:

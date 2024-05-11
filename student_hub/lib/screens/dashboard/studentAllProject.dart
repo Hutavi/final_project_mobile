@@ -50,9 +50,11 @@ class _StudentAllProjectState extends State<StudentAllProject>
       activeProposal = 
                         project.where((item) => item['statusFlag'] == 1).toList();
       projectsWorking = 
-                        project.where((item) => item['project']['typeFlag'] == 0).toList();
-      projectsArchieved = 
                         project.where((item) => item['project']['typeFlag'] == 1).toList();
+      projectsArchieved = 
+                        project.where((item) => item['project']['typeFlag'] == 2
+                        // && item['project']['statusFlag'] == 3
+                        ).toList();
     });
   }
 
@@ -297,7 +299,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
             ),
             const SizedBox(height: 8.0),
             Text(
-              LocaleData.studentsAreLookingFor.getString(context),
+              LocaleData.description.getString(context),
               style: TextStyle(
                 fontSize: 13.0,
               ),
@@ -400,7 +402,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
             ),
             const SizedBox(height: 8.0),
             Text(
-              LocaleData.studentsAreLookingFor.getString(context),
+              LocaleData.description.getString(context),
               style: const TextStyle(
                 fontSize: 13.0,
               ),
@@ -477,7 +479,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
             ),
             const SizedBox(height: 8.0),
             Text(
-              LocaleData.studentsAreLookingFor.getString(context),
+              LocaleData.description.getString(context),
               style: const TextStyle(
                 fontSize: 13.0,
               ),
@@ -553,7 +555,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
             ),
             const SizedBox(height: 8.0),
             Text(
-              LocaleData.studentsAreLookingFor.getString(context),
+              LocaleData.description.getString(context),
               style: const TextStyle(
                 fontSize: 13.0,
               ),

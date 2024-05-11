@@ -5,6 +5,8 @@ import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/models/user.dart';
+import 'package:student_hub/screens/profile_page/profile_input_company.dart';
+import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -164,12 +166,14 @@ class _SwitchAccountState extends State<SwitchAccount> {
                           width: 10,
                         ),
                         Text(
-                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 ? 'Company' : 'Student'})',
+                          '${accountList.where((element) => element.isLogin == true).first.getName} (${role == 1 
+                                                                                                              ? LocaleData.company.getString(context) 
+                                                                                                              : LocaleData.student.getString(context)})',
                           style: TextStyle(
                             color:
                                 Theme.of(context).textTheme.labelMedium!.color,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -236,13 +240,19 @@ class _SwitchAccountState extends State<SwitchAccount> {
                         Navigator.pushNamed(
                             context, AppRouterName.editProfileCompany,
                             arguments: companyData);
-                      } else if(role == 0 && studentData == -1){
+                      }
+                      else {
                         print('student');
                         Navigator.pushNamed(context, AppRouterName.profileS1);
-                      } else if(role == 0 && studentData != -1){
-                        print('edit student');
-                        Navigator.pushNamed(context, AppRouterName.profileS1);
-                      }
+                      } 
+                      // else if(role == 0 && studentData == -1){
+                      //   print('student');
+                      //   Navigator.pushNamed(context, AppRouterName.profileS1);
+                      // } 
+                      // else if(role == 0 && studentData != -1){
+                      //   print('edit student');
+                      //   Navigator.pushNamed(context, AppRouterName.profileS1);
+                      // }
                     },
                     icon: const Icon(Icons.person, color: kBlue400, size: 25.0),
                     label: Text(LocaleData.profile.getString(context),
@@ -407,16 +417,22 @@ class AccountController {
   void reloadScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const SwitchAccount()),
+      MaterialPageRoute(builder: (context) => SwitchAccount()),
     );
   }
 
   void toCreateProfileStudent(BuildContext context) {
+    print('student vào dc k?');
+    // Navigator.pushReplacement(context, 
+    // // AppRouterName.profileS1);
+    // MaterialPageRoute(builder: (context) => StudentProfileS1()));
     Navigator.pushNamed(context, AppRouterName.profileS1);
   }
 
   void toCreateProfileCompany(BuildContext context) {
-    Navigator.pushNamed(context, AppRouterName.profileInput);
+    Navigator.pushReplacement(context, 
+    // AppRouterName.profileInput);
+    MaterialPageRoute(builder: (context) => ProfileInput()));
   }
 }
 
@@ -477,19 +493,23 @@ class AccountTile extends StatelessWidget {
         count += 2;
       }
     }
+    changeRole();
     if (count == 1) {
       print('only company');
       accountManager.toCreateProfileStudent(context);
+      return;
     }
     if (count == 2) {
       print('only student');
       accountManager.toCreateProfileCompany(context);
+      return;
     }
     if (count == 3) {
       print('both student and company');
       accountManager.reloadScreen(context);
+      return;
     }
-    changeRole();
+    
   }
 
   @override
@@ -499,7 +519,7 @@ class AccountTile extends StatelessWidget {
         backgroundImage: AssetImage('lib/assets/images/avatar.png'),
       ),
       title: Text(
-          '${accountModel.getName} (${role == 1 ? 'Student' : 'Company'})'),
+          '${accountModel.getName} (${role == 1 ? LocaleData.student.getString(context) : LocaleData.company.getString(context)})'),
       onTap: () {
         selectAccount(context);
       },
