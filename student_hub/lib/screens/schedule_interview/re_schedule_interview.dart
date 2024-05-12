@@ -1,36 +1,41 @@
-import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
+import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
 
-class ScheduleInterview extends StatefulWidget {
+class ReScheduleInterview extends StatefulWidget {
   final Function(Map<String, String?>) onSendMessage;
+  final String? title;
+  final String? startDateTime;
+  final String? endDateTime;
+  final int? interviewID;
 
-  const ScheduleInterview({
+  const ReScheduleInterview({
     super.key,
     required this.onSendMessage,
+    this.title,
+    this.startDateTime,
+    this.endDateTime,
+    this.interviewID,
   });
 
   @override
-  State<ScheduleInterview> createState() => _ScheduleInterviewState();
+  State<ReScheduleInterview> createState() => _ReScheduleInterviewState();
 }
 
-class _ScheduleInterviewState extends State<ScheduleInterview> {
-  TextEditingController projectSearchController = TextEditingController();
+class _ReScheduleInterviewState extends State<ReScheduleInterview> {
   TextEditingController titleSchedule = TextEditingController();
-  TextEditingController contentSchedule = TextEditingController();
-
   String? startDateTime;
   String? endDateTime;
-  DateTime now = DateTime.now();
-  late String currentTime;
-  late String conferencesID;
 
   @override
   void initState() {
-    currentTime = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
-    conferencesID = generateRandomString(4);
+    titleSchedule.text = (widget.title) ?? '';
+    startDateTime = formatDateTimeString(widget.startDateTime!) ?? '';
+    endDateTime = formatDateTimeString(widget.endDateTime!) ?? '';
     super.initState();
   }
 
@@ -39,19 +44,63 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
     super.dispose();
   }
 
-  String generateRandomString(int length) {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    var random = Random();
-    String randomString =
-        List.generate(length, (index) => chars[random.nextInt(chars.length)])
-            .join();
-    return randomString;
-  }
+  void reScheduleMeeting() async {
+    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        .format(parseDateTime(startDateTime!));
+    String endTimeISO =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
+    var data = {
+      'title': titleSchedule.text,
+      'startTime': startTimeISO,
+      'endTime': endTimeISO,
+    };
+    // Gọi API để hủy cuộc họp
+    try {
+      final dio = DioClient();
+      final response = await dio.request(
+        '/interview/${widget.interviewID}',
+        data: data,
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
 
-  String formatDateTimeString(String inputString) {
-    DateTime dateTime = DateTime.parse(inputString);
-    String formattedDateTime = DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
-    return formattedDateTime;
+      if (response.statusCode == 200) {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Success",
+            description: "The meeting has been edit.",
+            buttonText: 'OK',
+            statusDialog: 1,
+            onConfirmPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      } else {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Error",
+            description: "Failed to edit the meeting.",
+            buttonText: 'OK',
+            statusDialog: 2,
+            onConfirmPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e.response!.data['errorDetails']);
+      } else {
+        print('Have Error: $e');
+      }
+    }
   }
 
   DateTime parseDateTime(String dateTimeString) {
@@ -172,7 +221,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                       DateTimePicker.show(context, (String? formattedDateTime) {
                         if (formattedDateTime != null) {
                           setState(() {
-                            startDateTime = formattedDateTime;
+                            startDateTime = (formattedDateTime);
                           });
                         }
                       });
@@ -325,8 +374,8 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 'titleSchedule': titleSchedule.text,
                                 'startDateTime': startDateTime,
                                 'endDateTime': endDateTime,
-                                'conferencesID': conferencesID
                               };
+                              reScheduleMeeting();
                               widget.onSendMessage(data);
                             },
                             style: ElevatedButton.styleFrom(
@@ -335,7 +384,7 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
                                 ),
                                 backgroundColor: kBlue600,
                                 foregroundColor: kWhiteColor),
-                            child: const Text('Send Invite'),
+                            child: const Text('Update Invite'),
                           ),
                         ),
                       ],
@@ -351,5 +400,11 @@ class _ScheduleInterviewState extends State<ScheduleInterview> {
         ),
       ),
     );
+  }
+
+  formatDateTimeString(String inputString) {
+    DateTime dateTime = DateFormat("EEEE, M/d/yyyy HH:mm").parse(inputString);
+    String formattedDateTime = DateFormat("d/M/yyyy hh:mm a").format(dateTime);
+    return formattedDateTime;
   }
 }

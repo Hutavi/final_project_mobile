@@ -53,6 +53,7 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                 ),
                 TextField(
                   controller: titleController,
+                  cursorColor: Theme.of(context).colorScheme.background,
                   style: const TextStyle(
                     color: kGrey0,
                   ),
@@ -121,11 +122,15 @@ class _PostScreen1State extends ConsumerState<PostScreen1> {
                             },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: _titlePost ? null : kWhiteColor,
-                              // backgroundColor: kBlue400,
+                              backgroundColor: kBlue400,
+                              
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 10),
                             ),
-                            child: Text(LocaleData.nextScope.getString(context)),
+                            child: Text(
+                              LocaleData.nextScope.getString(context),
+                              // style:
+                                ),
                           ),
                         ),
                       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:gap/gap.dart';
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/utils/utils.dart';
@@ -8,14 +10,19 @@ import 'package:student_hub/widgets/display_text.dart';
 class MessageItem extends StatelessWidget {
   final dynamic data;
   final int idUser;
-  const MessageItem({super.key, required this.data, required this.idUser});
+  final void Function(int) initSocket;
+  const MessageItem(
+      {super.key,
+      required this.data,
+      required this.idUser,
+      required this.initSocket});
 
   String formatDate(String date) {
     DateTime change = DateTime.parse(date);
-    String day = change.day.toString().padLeft(2, '0');
-    String month = change.month.toString().padLeft(2, '0');
-    String year = change.year.toString();
-    return '$day/$month/$year';
+    String hour = change.hour.toString().padLeft(2, '0');
+    String minute = change.minute.toString().padLeft(2, '0');
+
+    return '$hour:$minute';
   }
 
   @override
@@ -23,8 +30,42 @@ class MessageItem extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final deviceSize = context.deviceSize;
+
+    String formatTimeAgo(String dateTimeString) {
+      DateTime dateTime = DateTime.parse(dateTimeString);
+      DateTime now = DateTime.now();
+      Duration difference = now.difference(dateTime);
+
+      if (difference.inDays > 0) {
+        if (difference.inDays == 1) {
+          return '1 ${LocaleData.dayAgo.getString(context)}';
+        } else {
+          return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
+        }
+      } else if (difference.inHours > 0) {
+        if (difference.inHours == 1) {
+          return '1 ${LocaleData.hoursAgo.getString(context)}';
+        } else {
+          return '${difference.inHours} ${LocaleData.hoursAgo.getString(context)}';
+        }
+      } else if (difference.inMinutes > 0) {
+        if (difference.inMinutes == 1) {
+          return '1 ${LocaleData.minutesAgo.getString(context)}';
+        } else {
+          return '${difference.inMinutes} ${LocaleData.minutesAgo.getString(context)}';
+        }
+      } else {
+        if (difference.inSeconds == 1) {
+          return '1 ${LocaleData.secondsAgo.getString(context)}';
+        } else {
+          return '${difference.inSeconds} ${LocaleData.secondsAgo.getString(context)}';
+        }
+      }
+    }
+
     return InkWell(
       onTap: () {
+        initSocket(data['project']['id']);
         Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
           'idProject': data['project']['id'] as int,
           'idThisUser': idUser == data['receiver']['id']
@@ -77,7 +118,8 @@ class MessageItem extends StatelessWidget {
                         text: idUser != data['receiver']['id']
                             ? data['receiver']['fullname']
                             : data['sender']['fullname'],
-                        style: textTheme.labelMedium!,
+                        style: textTheme.labelMedium!.copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       DisplayText(
                           text: 'Senior frontend developer (Fintech)',
@@ -89,11 +131,12 @@ class MessageItem extends StatelessWidget {
                       Row(
                         children: [
                           SizedBox(
-                            width: deviceSize.width * 0.6,
+                            width: deviceSize.width * 0.5,
                             child: DisplayText(
-                              text: data['content'],
-                              style: textTheme.labelSmall!
-                                  .copyWith(color: colorScheme.onSurface),
+                              text: '${data['content']}',
+                              style: textTheme.labelSmall!.copyWith(
+                                  color: colorScheme.onSurface,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         ],
@@ -103,7 +146,7 @@ class MessageItem extends StatelessWidget {
                 ],
               ),
               DisplayText(
-                text: formatDate(data['createdAt']),
+                text: formatTimeAgo(data['createdAt']),
                 style: textTheme.labelSmall!
                     .copyWith(color: colorScheme.onSurface),
               ),
