@@ -196,6 +196,13 @@ mixin LocaleData {
   static const String homeScript = 'home_script';
   static const String active = 'active';
 
+  //dashboard -> detail proposal
+  static const String status = 'status';
+  static const String waiting = 'waiting';
+  static const String coverletterSent = 'coverletter_sent';
+  static const String offer = 'offer';
+  static const String activeStatus = 'active_status';
+
   //posting - page1
   static const String postingTitle = 'posting_title';
   static const String postingDescribeItem = 'posting_describe_item';
@@ -532,6 +539,13 @@ mixin LocaleData {
     noActiveProposal: 'You have no active proposal',
     submitted: 'Submitted',
     submittedProposal: 'Submitted proposal',
+    
+    //dashboard -> detail proposal
+    status: 'Status',
+    waiting: 'Waiting',
+    coverletterSent: 'Cover letter sent',
+    offer: 'Offer',
+    activeStatus: 'Active',
 
     //posting - page1
     postingTitle: '1/4 - Let\'s start with a strong title',
@@ -870,6 +884,12 @@ mixin LocaleData {
     send: 'Gửi',
     active: 'Active',
     
+    //dashboard -> detail proposal
+    status: 'Trạng thái',
+    waiting: 'Chờ',
+    coverletterSent: 'Thư xin việc đã được gửi',
+    offer: 'Chờ offer',
+    activeStatus: 'Đang trao đổi',
     // projectScope: 'Phạm vi dự án',
     teamSize: 'Kích thước nhóm',
     excellent: 'Xuất sắc',
