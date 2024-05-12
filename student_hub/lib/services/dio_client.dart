@@ -1,29 +1,25 @@
-// ignore_for_file: deprecated_member_use
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {
   final Dio _api;
-  String baseURL = dotenv.env['API_BASE_URL']!;
-  String accessToken = dotenv.env['ACCESS_TOKEN']!;
+  String baseURL = 'http://34.16.137.128/api';
+  String accessToken = '';
 
   DioClient() : _api = Dio() {
     _configureInterceptors();
+    _loadToken();
   }
-
-
 
   void _configureInterceptors() {
     _api.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // print(accessToken);
         options.baseUrl = baseURL;
         options.headers = {
-          'Access-Token': accessToken,
+          'Authorization': 'Bearer $accessToken',
           'Content-Type': 'application/json; charset=UTF-8',
-          'Client': "Mobile"
         };
 
         return handler.next(options);
@@ -35,6 +31,11 @@ class DioClient {
         return handler.next(error);
       },
     ));
+  }
+
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken') ?? '';
   }
 
   Future<Response<T>> request<T>(

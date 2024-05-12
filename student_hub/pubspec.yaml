@@ -2,7 +2,7 @@ name: student_hub
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: ">=3.2.6 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,12 +31,38 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dio: ^5.4.0
   flutter_dotenv: ^5.1.0
+  image_picker: ^0.8.3+1
+  dotted_border: ^2.1.0
+  font_awesome_flutter: ^10.7.0
+  gap: ^3.0.1
+  uuid: ^4.3.3
+  equatable: ^2.0.5
+  omni_datetime_picker: ^1.0.9
+  zego_uikit_prebuilt_video_conference: ^2.7.1
+  quickalert: ^1.0.2
+  #add for navigation bar
+  #reference: https://pub.dev/packages/google_nav_bar
+  google_nav_bar: ^5.0.0
+  shared_preferences: ^2.2.2
+  iconsax_flutter: ^1.0.0
+  get: ^4.6.5
+  get_storage: ^2.1.1
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  syncfusion_flutter_pdfviewer: ^24.2.8
+  file_picker: 6.2.1
+  path: ^1.8.0
+  socket_io_client: ^2.0.3+1
+  lottie: ^3.1.0
+  flutter_localization: ^0.2.0
+  intl: ^0.18.1
+  fluttertoast: ^8.0.7
+  infinite_scroll_pagination: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -49,17 +75,31 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+  #riverpod
+  build_runner:
+  custom_lint:
+  riverpod_generator: ^2.4.0
+  riverpod_lint: ^2.3.10
 
+  #flutter launcher icons
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/assets/images/logo.png"
+  min_sdk_android: 21
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - lib/assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
