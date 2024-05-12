@@ -6,6 +6,8 @@ import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/widgets/project_item_favourite.dart';
 
 class ProjectDetailFavorite extends StatefulWidget {
   final ProjectFavourite projectItem;
@@ -16,6 +18,30 @@ class ProjectDetailFavorite extends StatefulWidget {
 }
 
 class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
+  String getProjectScopeText(BuildContext context, int flag) {
+    switch (flag) {
+      case 0:
+        return LocaleData.lessThanOneMonth.getString(context);
+      case 1:
+        return LocaleData.oneToThreeMonth.getString(context);
+      case 2:
+        return LocaleData.threeToSixMonth.getString(context);
+      case 3:
+        return LocaleData.moreThanSixMonth.getString(context);
+      default:
+        return 'Unknown flag';
+    }
+  }
+
+  ProjectForListModel projectID = ProjectForListModel();
+
+  ProjectForListModel getProjectID(ProjectFavourite project) {
+    ProjectForListModel rst = ProjectForListModel();
+    rst.id = project.id;
+    print('id của favorite: ${rst.id}');
+    return rst;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +128,7 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
                         overflow: TextOverflow.clip,
                       ),
                       Text(
-                        '• ${widget.projectItem.projectScopeFlag == 0 ? LocaleData.oneToThreeMonth.getString(context) : LocaleData.threeToSixMonth.getString(context)}',
+                        '• ${getProjectScopeText(context, widget.projectItem.projectScopeFlag)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 14),
                         overflow: TextOverflow.clip,
@@ -152,7 +178,8 @@ class _ProjectDetailFavouriteState extends State<ProjectDetailFavorite> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouterName.submitProposal);
+                  projectID = getProjectID(widget.projectItem);
+                  Navigator.pushNamed(context, AppRouterName.submitProposal, arguments: projectID);
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

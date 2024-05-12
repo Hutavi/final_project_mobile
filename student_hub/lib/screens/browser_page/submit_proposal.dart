@@ -59,7 +59,7 @@ class SubmitProposalState extends State<SubmitProposal> {
           'coverLetter': (coverLetterController.text),
           'statusFlag':
               0, // {0: waiting -> submitted}, {1: offer(chat with company) -> activity}, {2: hired (accept offer from company) -> working flow}
-          'disableFlag': 1, // {0: disable}, {1: enable} |||
+          'disableFlag': 0, // {0: disable}, {1: enable} |||
         }),
         options: Options(method: 'POST'),
       );

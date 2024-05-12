@@ -44,64 +44,64 @@ class _ReScheduleInterviewState extends State<ReScheduleInterview> {
     super.dispose();
   }
 
-  void reScheduleMeeting() async {
-    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        .format(parseDateTime(startDateTime!));
-    String endTimeISO =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
-    var data = {
-      'title': titleSchedule.text,
-      'startTime': startTimeISO,
-      'endTime': endTimeISO,
-    };
-    // Gọi API để hủy cuộc họp
-    try {
-      final dio = DioClient();
-      final response = await dio.request(
-        '/interview/${widget.interviewID}',
-        data: data,
-        options: Options(
-          method: 'PATCH',
-        ),
-      );
+  // void reScheduleMeeting() async {
+  //   String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+  //       .format(parseDateTime(startDateTime!));
+  //   String endTimeISO =
+  //       DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
+  //   var data = {
+  //     'title': titleSchedule.text,
+  //     'startTime': startTimeISO,
+  //     'endTime': endTimeISO,
+  //   };
+  //   // Gọi API để hủy cuộc họp
+  //   try {
+  //     final dio = DioClient();
+  //     final response = await dio.request(
+  //       '/interview/${widget.interviewID}',
+  //       data: data,
+  //       options: Options(
+  //         method: 'PATCH',
+  //       ),
+  //     );
 
-      if (response.statusCode == 200) {
-        showDialog(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (context) => DialogCustom(
-            title: "Success",
-            description: "The meeting has been edit.",
-            buttonText: 'OK',
-            statusDialog: 1,
-            onConfirmPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        );
-      } else {
-        showDialog(
-          // ignore: use_build_context_synchronously
-          context: context,
-          builder: (context) => DialogCustom(
-            title: "Error",
-            description: "Failed to edit the meeting.",
-            buttonText: 'OK',
-            statusDialog: 2,
-            onConfirmPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        );
-      }
-    } catch (e) {
-      if (e is DioException && e.response != null) {
-        print(e.response!.data['errorDetails']);
-      } else {
-        print('Have Error: $e');
-      }
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       showDialog(
+  //         // ignore: use_build_context_synchronously
+  //         context: context,
+  //         builder: (context) => DialogCustom(
+  //           title: "Success",
+  //           description: "The meeting has been edit.",
+  //           buttonText: 'OK',
+  //           statusDialog: 1,
+  //           onConfirmPressed: () {
+  //             Navigator.pop(context);
+  //           },
+  //         ),
+  //       );
+  //     } else {
+  //       showDialog(
+  //         // ignore: use_build_context_synchronously
+  //         context: context,
+  //         builder: (context) => DialogCustom(
+  //           title: "Error",
+  //           description: "Failed to edit the meeting.",
+  //           buttonText: 'OK',
+  //           statusDialog: 2,
+  //           onConfirmPressed: () {
+  //             Navigator.pop(context);
+  //           },
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     if (e is DioException && e.response != null) {
+  //       print(e.response!.data['errorDetails']);
+  //     } else {
+  //       print('Have Error: $e');
+  //     }
+  //   }
+  // }
 
   DateTime parseDateTime(String dateTimeString) {
     String sanitizedDateTimeString = dateTimeString.trim();
@@ -375,7 +375,7 @@ class _ReScheduleInterviewState extends State<ReScheduleInterview> {
                                 'startDateTime': startDateTime,
                                 'endDateTime': endDateTime,
                               };
-                              reScheduleMeeting();
+                              // reScheduleMeeting();
                               widget.onSendMessage(data);
                             },
                             style: ElevatedButton.styleFrom(

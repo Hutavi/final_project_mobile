@@ -144,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } catch (e) {
         if (e is DioException && e.response != null) {
+          print(e.response!.data['errorDetails']);
           if (e.response!.data['errorDetails'] == 'Not found user') {
             setState(() {
               userNotFound = true;

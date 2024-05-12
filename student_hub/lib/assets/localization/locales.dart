@@ -104,6 +104,7 @@ mixin LocaleData {
       'proposal_less_than_placeholder';
   static const String clearFilter = 'clear_filter';
   static const String applyProject = 'apply_project';
+  static const String applyFilter = 'apply_filter';
   static const String notFoundProject = 'not_found_project';
 
   //Saved project
@@ -193,6 +194,14 @@ mixin LocaleData {
   static const String passwordTooShort = 'password_too_short';
   static const String confirmPassword = 'confirm_password';
   static const String homeScript = 'home_script';
+  static const String active = 'active';
+
+  //dashboard -> detail proposal
+  static const String status = 'status';
+  static const String waiting = 'waiting';
+  static const String coverletterSent = 'coverletter_sent';
+  static const String offer = 'offer';
+  static const String activeStatus = 'active_status';
 
   //posting - page1
   static const String postingTitle = 'posting_title';
@@ -251,7 +260,7 @@ mixin LocaleData {
   static const String settings = 'settings';
   static const String language = 'language';
   static const String logOut = 'log_out';
-
+  
   //editProfile Company
   static const String edtProfileCompanyTitle = 'edt_profile_company_title';
   static const String companyName = 'company_name';
@@ -262,11 +271,16 @@ mixin LocaleData {
   static const String moreThan = 'more_than';
   static const String howManyPeopleInYourCompany =
       'how_many_people_in_your_company';
+  static const String descriptionCompany = 'description_company';
+  static const String companyWebsite = 'company_website';
+  static const String notiEdit = 'noti_edit';
 
   //create profile company
   static const String tellUsAboutYourCompany = 'tell_us_about_your_company';
   static const String yourWayConnectWith = 'your_way_connect_with';
-
+  static const String notiCreate = 'noti_create';
+  static const String descriptionNotiCreate = 'description_noti_create';
+  
   //welcome screen
   static const String welcomeLine1 = 'welcome_line1';
   static const String getStarted = 'get_started';
@@ -393,6 +407,7 @@ mixin LocaleData {
     proposalLessThanPlaholder: 'Enter proposals less than',
     clearFilter: 'Clear filter',
     applyProject: 'Apply',
+    applyFilter: 'Apply filter',
     notFoundProject: 'Not found project',
 
     //Saved project
@@ -508,6 +523,8 @@ mixin LocaleData {
     confirmSendOffer:
         'Do you really want to send hired offer for student to do this project?',
     send: 'Send',
+    active: 'Active',
+
     // projectScope: 'Project scope',
     teamSize: 'Team size',
     excellent: 'Excellent',
@@ -517,6 +534,13 @@ mixin LocaleData {
     noActiveProposal: 'You have no active proposal',
     submitted: 'Submitted',
     submittedProposal: 'Submitted proposal',
+    
+    //dashboard -> detail proposal
+    status: 'Status',
+    waiting: 'Waiting',
+    coverletterSent: 'Cover letter sent',
+    offer: 'Offer',
+    activeStatus: 'Active',
 
     //posting - page1
     postingTitle: '1/4 - Let\'s start with a strong title',
@@ -558,6 +582,7 @@ mixin LocaleData {
     //edit projetc
     projectTitle: 'Project title',
 
+
     //project save page
     savedProjects: 'Save projects',
     //projectItem favorite
@@ -587,11 +612,15 @@ mixin LocaleData {
     employees: 'Employees',
     moreThan: 'More than',
     howManyPeopleInYourCompany: 'How many people are in your company?',
-
+    descriptionCompany: 'Description about your company',
+    companyWebsite: 'Company website',
+    notiEdit: 'Your profile has been updated successfully!',
+    
     //create profile company
     tellUsAboutYourCompany: 'Tell us about your company and you will be on',
     yourWayConnectWith: 'your way connect with high-skilled students',
-
+    notiCreate: 'Your profile has been created',
+    descriptionNotiCreate: 'Your profile has been created successfully!',
     //welcome screen
     welcomeLine1: 'Let\'s start with your first project post!',
     getStarted: 'Get Started',
@@ -742,6 +771,7 @@ mixin LocaleData {
     applyProject: 'Ứng tuyển',
     notFoundProject: 'Không tìm thấy dự án',
     projectScope: 'Phạm vi dự án',
+    applyFilter: 'Áp dụng bộ lọc',
 
     //Saved project
     savedProjectTitle: 'Dự án đã lưu',
@@ -842,6 +872,14 @@ mixin LocaleData {
     confirmSendOffer:
         'Bạn có thực sự muốn gửi đề nghị thuê cho sinh viên thực hiện dự án này không?',
     send: 'Gửi',
+    active: 'Active',
+    
+    //dashboard -> detail proposal
+    status: 'Trạng thái',
+    waiting: 'Chờ',
+    coverletterSent: 'Thư xin việc đã được gửi',
+    offer: 'Chờ offer',
+    activeStatus: 'Đang trao đổi',
     // projectScope: 'Phạm vi dự án',
     teamSize: 'Kích thước nhóm',
     excellent: 'Xuất sắc',
@@ -887,6 +925,7 @@ mixin LocaleData {
 
     //edit projetc
     projectTitle: 'Tiêu đề dự án',
+    
 
     //project save page
     savedProjects: 'Dự án đã lưu',
@@ -900,7 +939,7 @@ mixin LocaleData {
     submitProposal: 'Gửi proposal',
     coverLetter: 'Thư xin việc',
     submitProposalScript: 'Mô tả lý do bạn phù hợp với dự án này',
-
+    
     //switch account page
     home: 'Trang chủ',
     profile: 'Hồ sơ',
@@ -917,12 +956,16 @@ mixin LocaleData {
     employees: 'nhân viên',
     moreThan: 'Hơn',
     howManyPeopleInYourCompany: 'Có bao nhiêu người trong công ty của bạn?',
+    descriptionCompany: 'Mô tả về công ty của bạn',
+    companyWebsite: 'Trang web công ty',
+    notiEdit: 'Hồ sơ của bạn đã được cập nhật thành công!',
 
     //create profile company
     tellUsAboutYourCompany:
         'Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ trên',
     yourWayConnectWith: 'đường kết nối với sinh viên có kỹ năng cao',
-
+    notiCreate: 'Hồ sơ đã được tạo',
+    descriptionNotiCreate: 'Hồ sơ của bạn đã được tạo thành công!',
     //welcome screen
     welcomeLine1: 'Hãy bắt đầu với bài đăng dự án đầu tiên của bạn!',
     getStarted: 'Bắt đầu',

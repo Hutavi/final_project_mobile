@@ -216,7 +216,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .read(filterProvider.notifier)
                         .setNumberOfStudents(amountStudentNeedController.text);
                   },
-                  fillColor: kWhiteColor,
+                  fillColor: Theme.of(context).cardColor,
                   hint: LocaleData.studentNeededPlaholder.getString(context),
                 )
               ],
@@ -244,7 +244,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                         .read(filterProvider.notifier)
                         .setProposalsLessThan(proposalsController.text);
                   },
-                  fillColor: kWhiteColor,
+                  fillColor: Theme.of(context).cardColor,
                   hint: LocaleData.proposalLessThanPlaholder.getString(context),
                 )
               ],
@@ -322,7 +322,7 @@ class _BottomSheetFilterState extends ConsumerState<BottomSheetFilter> {
                               backgroundColor: kBlue50,
                               foregroundColor: kBlueGray600),
                           child:
-                              Text(LocaleData.applyProject.getString(context)),
+                              Text(LocaleData.applyFilter.getString(context)),
                         ),
                       ),
                     ],

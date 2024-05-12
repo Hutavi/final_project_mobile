@@ -37,6 +37,8 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
   
   void postPoject() async {
     try{
+      ref.watch(postProjectProvider).projectScopeFlag ??= 0;
+      
       var requestData = json.encode({
           'companyId': ref.watch(postProjectProvider).companyId,
           'projectScopeFlag': ref.watch(postProjectProvider).projectScopeFlag,
@@ -83,7 +85,7 @@ class _PostScreen4State extends ConsumerState<PostScreen4> {
     final scopeProject = ref.watch(postProjectProvider).projectScopeFlag == 0
         ? LocaleData.oneToThreeMonths.getString(context)
         : LocaleData.threeToSixMonths.getString(context);
-    print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
+    // print('scope ${ref.watch(postProjectProvider).projectScopeFlag}');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBarCustom(

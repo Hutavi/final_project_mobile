@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/assets/localization/locales.dart';
@@ -153,24 +152,73 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
     }
   }
 
-  // void reScheduleInterview() {
-  //   // Chuyển đến trang tạo cuộc họp mới với thông tin đã có
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (BuildContext context) {
-  //       return ReScheduleInterview(onSendMessage: (newMessage) {
-  //         // setState(() {
-  //         //   createInvite(newMessage['startDateTime'], newMessage['endDateTime'],
-  //         //       newMessage['titleSchedule']!, newMessage['conferencesID']!);
-  //         // });
-  //       });
-  //     },
-  //   );
-  // }
+  DateTime parseDateTime(String dateTimeString) {
+    String sanitizedDateTimeString = dateTimeString.trim();
+    sanitizedDateTimeString = sanitizedDateTimeString.replaceAll(" ", " ");
+    return DateFormat("M/d/yyyy h:mm a").parse(sanitizedDateTimeString);
+  }
+
+  Future<void> updateMeeting(String newTitle, newStartDate, newEndDate) async {
+    // Chuyển đổi thời gian thành chuỗi định dạng ISO 8601
+    String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        .format(parseDateTime(newStartDate!));
+    String endTimeISO =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(newEndDate!));
+    var data = {
+      'title': newTitle,
+      'startTime': startTimeISO,
+      'endTime': endTimeISO,
+    };
+
+    print(data);
+    // Gọi API để hủy cuộc họp
+    try {
+      final dio = DioClient();
+      final response = await dio.request(
+        '/interview/${widget.message.interviewID}',
+        data: data,
+        options: Options(
+          method: 'PATCH',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Success",
+            description: "The meeting has been edit.",
+            buttonText: 'OK',
+            statusDialog: 1,
+            onConfirmPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      } else {
+        showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (context) => DialogCustom(
+            title: "Error",
+            description: "Failed to edit the meeting.",
+            buttonText: 'OK',
+            statusDialog: 2,
+            onConfirmPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        print(e.response!.data['errorDetails']);
+      } else {
+        print('Have Error: $e');
+      }
+    }
+  }
 
   void reScheduleInterview() {
     // Lưu thông tin cũ vào các biến tạm thời
@@ -178,6 +226,11 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
     String oldStartDateTime = formatDateTime(widget.message.startTime!);
     String oldEndDateTime = formatDateTime(widget.message.endTime!);
     int idInterview = widget.message.interviewID!;
+
+    print(oldTitle);
+    print(oldStartDateTime);
+    print(oldEndDateTime);
+    print(idInterview);
 
     showModalBottomSheet(
       context: context,
@@ -192,7 +245,11 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           startDateTime: oldStartDateTime,
           endDateTime: oldEndDateTime,
           interviewID: idInterview,
-          onSendMessage: (newMessage) {},
+          onSendMessage: (newMessage) {
+            // Gọi hàm cập nhật cuộc họp với thông tin mới
+            updateMeeting(newMessage['titleSchedule']!,
+                newMessage['startDateTime'], newMessage['endDateTime']);
+          },
         );
       },
     );
@@ -318,7 +375,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "Start time: ",
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w400),
             ),
             Text(
               formatDateTime(widget.message.startTime!),
@@ -329,7 +386,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "End time: ",
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w400),
             ),
             Text(
               formatDateTime(widget.message.endTime!),
@@ -340,17 +397,30 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             const Text(
               "Code room: ",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
             Text(
               widget.message.meetingRoomCode!,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Text(
+              "Meeting id: ",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            ),
+            Text(
+              widget.message.meetingRoomId!,
               style: const TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.red),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
         const SizedBox(
-          height: 10,
+          height: 5,
         ),
         isMeetingCancelled
             ? const Text(

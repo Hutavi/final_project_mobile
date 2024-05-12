@@ -8,6 +8,7 @@ import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_public.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class RegisterByScreen extends StatefulWidget {
   final bool? isStudent;
@@ -118,18 +119,14 @@ class _LoginByScreenState extends State<RegisterByScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(LocaleData.regisSuccess.getString(context)),
-          content: Text(LocaleData.verifyEmail.getString(context)),
-          actions: <Widget>[
-            TextButton(
-              child: Text(LocaleData.close.getString(context)),
-              onPressed: () {
-                // Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, AppRouterName.login);
-              },
-            ),
-          ],
+        return DialogCustom(
+          title: LocaleData.regisSuccess.getString(context),
+          description: LocaleData.verifyEmail.getString(context),
+          buttonText: LocaleData.close.getString(context),
+          statusDialog: 1,
+          onConfirmPressed: () {
+            Navigator.pushReplacementNamed(context, AppRouterName.login);
+          },
         );
       },
     );
@@ -246,6 +243,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                   BuildTextField(
                     controller: passworkController,
                     inputType: TextInputType.text,
+                    obscureText: true,
                     fillColor: Theme.of(context).canvasColor,
                     onChange: (value) {
                       // validateFields();
@@ -276,6 +274,7 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                     controller: confirmPasswordController,
                     inputType: TextInputType.text,
                     fillColor: Theme.of(context).canvasColor,
+                    obscureText: true,
                     onChange: (value) {
                       isPasswordMatch = true;
                     },
@@ -291,11 +290,6 @@ class _LoginByScreenState extends State<RegisterByScreen> {
                       return null;
                     },
                   ),
-                  if (!isPasswordMatch)
-                    Text(
-                      LocaleData.passwordNotMatch.getString(context),
-                      style: const TextStyle(color: kRed),
-                    ),
                   const SizedBox(
                     height: 20,
                   ),

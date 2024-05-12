@@ -12,6 +12,7 @@ import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 
 class ProfileInput extends StatefulWidget {
   const ProfileInput({super.key});
@@ -69,8 +70,24 @@ class _NewLoginPageState extends State<ProfileInput>
     super.dispose();
   }
 
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogCustom(
+          title: LocaleData.notiCreate.getString(context),
+          description: LocaleData.descriptionNotiCreate.getString(context),
+          buttonText: LocaleData.close.getString(context),
+          statusDialog: 1,
+          onConfirmPressed: () {
+            Navigator.pushNamed(context, AppRouterName.welcomeScreen);
+          },
+        );
+      },
+    );
+  }
+
   void _createProfile() async {
-    String token = await TokenManager.getTokenFromLocal();
     var requestData = json.encode({
       'companyName': _companyNameController.text,
       'size': _selectedValue,
@@ -87,9 +104,11 @@ class _NewLoginPageState extends State<ProfileInput>
         data: requestData,
         options: Options(method: 'POST'),
       );
-
-      User? userInfo = await ApiManager.getUserInfo(token);
-      print(userInfo?.companyUser?.companyName);
+      if(response.statusCode == 201){
+        print('Create profile success');
+        _showSuccessDialog();
+      }
+      
     } catch (e) {
       print(e.toString());
     }
@@ -252,7 +271,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Your Company Name!',
+                        hintText: '${LocaleData.companyName.getString(context)}!',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -303,7 +322,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Your Company Website!',
+                        hintText: '${LocaleData.companyWebsite.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -339,7 +358,6 @@ class _NewLoginPageState extends State<ProfileInput>
                           LocaleData.description.getString(context),
                           textAlign: TextAlign.left,
                           style: const TextStyle(
-                            color: Colors.black,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -354,7 +372,7 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: 'Desciption about your company!',
+                        hintText: '${LocaleData.descriptionCompany.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -407,8 +425,8 @@ class _NewLoginPageState extends State<ProfileInput>
                         child: MaterialButton(
                           onPressed: () {
                             _createProfile();
-                            Navigator.pushNamed(
-                                context, AppRouterName.welcomeScreen);
+                            // Navigator.pushNamed(
+                            //     context, AppRouterName.welcomeScreen);
                           },
                           height: 45,
                           color: kBlue400,

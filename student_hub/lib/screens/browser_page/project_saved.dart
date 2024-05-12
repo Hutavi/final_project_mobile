@@ -6,6 +6,7 @@ import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/project_item_favourite.dart';
 
 class SavedProject extends StatefulWidget {
@@ -18,6 +19,9 @@ class SavedProject extends StatefulWidget {
 class _SavedProjectState extends State<SavedProject> {
   late List<ProjectFavourite> favoriteProjects = [];
   int? idStudent;
+  var isLoading = true;
+
+ 
 
   @override
   void initState() {
@@ -46,7 +50,7 @@ class _SavedProjectState extends State<SavedProject> {
     }
   }
 
-  void fecthData() async {
+  Future<void> fecthData() async {
     // Call API to get data
     try {
       final dioPulic = DioClient();
@@ -64,7 +68,8 @@ class _SavedProjectState extends State<SavedProject> {
         }).toList();
 
         setState(() {
-          favoriteProjects = projects;
+          favoriteProjects = favoriteProjects + projects;
+          isLoading = false;
         });
       }
     } catch (e) {
@@ -86,40 +91,48 @@ class _SavedProjectState extends State<SavedProject> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                itemCount: favoriteProjects.length,
-                itemBuilder: (context, index) {
-                  final project = favoriteProjects[index];
-                  final backgroundColor = index % 2 == 0 ? true : false;
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, AppRouterName.projectDetailFavorite,
-                          arguments: project);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        children: [
-                          ProjectItemFavourite(
-                            isEven: backgroundColor,
-                            projectForListModel: project,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
+            isLoading
+                ? const Expanded(
+                    child: Center(
+                      child: LoadingWidget(),
                     ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      itemCount: favoriteProjects.length,
+                      itemBuilder: (context, index) {
+                        final project = favoriteProjects[index];
+                        final backgroundColor = index % 2 == 0 ? true : false;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, AppRouterName.projectDetailFavorite,
+                                arguments: project);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Column(
+                              children: [
+                                ProjectItemFavourite(
+                                  isEven: backgroundColor,
+                                  projectForListModel: project,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
     );
   }
+
+  
 }

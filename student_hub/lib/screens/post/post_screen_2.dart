@@ -70,7 +70,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
             children: [
               Text(
                 LocaleData.postingScopeTitle.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -87,7 +87,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
               ),
               Text(
                 LocaleData.postingScopeHowLong.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
                 title: Text(LocaleData.oneToThreeMonths.getString(context)),
@@ -112,7 +112,7 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
               ),
               Text(
                 LocaleData.postingScopeHowManyStudents.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -125,18 +125,18 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     fillColor: kWhiteColor,
                     filled: true,
                     hintText: LocaleData.numberOfStudents.getString(context),
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
                         bottom: Radius.circular(10.0),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(10.0),
@@ -172,7 +172,6 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                   onPressed: () {
                     Navigator.pushNamed(context, AppRouterName.postScreen3);
                   },
-                  child: Text(LocaleData.nextDescription.getString(context)),
                   style: ElevatedButton.styleFrom(
                     // Adjust minimum size based on screen size
                     minimumSize: MediaQuery.of(context).size.width < 300
@@ -188,9 +187,10 @@ class _PostScreen2State extends ConsumerState<PostScreen2> {
                     ),
                     backgroundColor: kBlue400,
                     foregroundColor: _numberOfStudents > 0
-                        ? null
+                        ? kGrey0
                         : kWhiteColor, // Disable button if no value
                   ),
+                  child: Text(LocaleData.nextDescription.getString(context)),
                 ),
               ),
             ],
