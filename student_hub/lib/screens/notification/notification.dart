@@ -13,7 +13,6 @@ import 'package:student_hub/utils/utils.dart';
 import 'package:student_hub/widgets/build_text_field.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -293,339 +292,396 @@ class _NotificationPageState extends State<NotificationPage> {
                       padding: const EdgeInsets.all(10.0),
                       itemCount: notifications.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () => {
-                            if (notifications[index]['notifyFlag'] == "0")
-                              {
-                                if (notifications[index]['content']
+                        return (notifications[index]['content'] ==
+                                    "New message created" ||
+                                notifications[index]['content'] ==
+                                    "Interview created" ||
+                                notifications[index]['content']
                                     .contains("proposal"))
-                                  {
-                                    updateNotifi(
-                                        notifications[index]['id'], index),
-                                  }
-                                else
-                                  {
-                                    updateNotifi(
-                                        notifications[index]['id'], index),
-                                    Navigator.of(context).pushNamed(
-                                        AppRouterName.chatScreen,
-                                        arguments: {
-                                          'idProject': notifications[index]
-                                              ['message']['projectId'] as int,
-                                          'idThisUser': notifications[index]
-                                              ['message']['receiverId'] as int,
-                                          'idAnyUser': notifications[index]
-                                              ['message']['senderId'] as int,
-                                          'name': notifications[index]['sender']
-                                              ['fullname'] as String,
-                                        })
-                                  }
-                              }
-                          },
-                          child: Card(
-                            color: notifications[index]['notifyFlag'] == "0"
-                                ? Theme.of(context).cardColor
-                                : color,
-                            elevation: 2.0,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(notifications[index]['content'] ==
-                                              "New message created"
-                                          ? Icons.message
-                                          : notifications[index]['content']
-                                                  .contains('Interview')
-                                              ? Icons.event_available
-                                              : Icons.settings),
-                                      const SizedBox(width: 16.0),
-                                      if (notifications[index]['content'] ==
-                                          "New message created")
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  '${LocaleData.notificationMessage.getString(context)} • ',
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  formatTimeAgo(
-                                                      notifications[index]
-                                                          ['createdAt']),
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "${notifications[index]['sender']['fullname']}: ",
-                                                  style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                SizedBox(
-                                                  width: deviceSize.width * 0.4,
-                                                  child: Text(
-                                                    "${notifications[index]['message']['content']}",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                        fontSize: 13.0,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        )
-                                      else if (notifications[index]['content']
-                                          .contains('Interview'))
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${LocaleData.notificationEventStart.getString(context)} • ',
-                                                  style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  formatTimeAgo(
-                                                      notifications[index]
-                                                          ['updatedAt']),
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "${notifications[index]['sender']['fullname']}: ",
-                                                  style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                SizedBox(
-                                                  width: deviceSize.width * 0.4,
-                                                  child: Text(
-                                                    "${notifications[index]['message']['interview']['title']}",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                        fontSize: 13.0,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  "Start Time: ",
-                                                  style: TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Text(
-                                                  formatDateTime(
-                                                      notifications[index]
-                                                                  ['message']
-                                                              ['interview']
-                                                          ['endTime']),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  "End Time: ",
-                                                  style: TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Text(
-                                                  formatDateTime(
-                                                      notifications[index]
-                                                                  ['message']
-                                                              ['interview']
-                                                          ['startTime']),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  "Code Room: ",
-                                                  style: TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Text(
-                                                  "${notifications[index]['message']['interview']['meetingRoom']['meeting_room_code']}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        )
+                            ? GestureDetector(
+                                onTap: () => {
+                                  if (notifications[index]['notifyFlag'] == "0")
+                                    {
+                                      if (notifications[index]['content']
+                                          .contains("proposal"))
+                                        {
+                                          updateNotifi(
+                                              notifications[index]['id'],
+                                              index),
+                                        }
                                       else
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'Proposal mới • ',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  formatTimeAgo(
-                                                      notifications[index]
-                                                          ['updatedAt']),
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: deviceSize.width * 0.7,
-                                                  child: Text(
-                                                    "${notifications[index]['content']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                    ],
-                                  ),
-                                  if (notifications[index]['content']
-                                      .contains("Interview")) ...[
-                                    const SizedBox(height: 10.0),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                        {
+                                          updateNotifi(
+                                              notifications[index]['id'],
+                                              index),
+                                          Navigator.of(context).pushNamed(
+                                              AppRouterName.chatScreen,
+                                              arguments: {
+                                                'idProject':
+                                                    notifications[index]
+                                                            ['message']
+                                                        ['projectId'] as int,
+                                                'idThisUser':
+                                                    notifications[index]
+                                                            ['message']
+                                                        ['receiverId'] as int,
+                                                'idAnyUser':
+                                                    notifications[index]
+                                                            ['message']
+                                                        ['senderId'] as int,
+                                                'name': notifications[index]
+                                                        ['sender']['fullname']
+                                                    as String,
+                                              })
+                                        }
+                                    }
+                                },
+                                child: Card(
+                                  color:
+                                      notifications[index]['notifyFlag'] == "0"
+                                          ? Theme.of(context).cardColor
+                                          : color,
+                                  elevation: 2.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  notifications[index]
-                                                              ['notifyFlag'] ==
-                                                          "0"
-                                                      ? Colors.blue
-                                                      : Colors.grey),
-                                          onPressed: () {
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(notifications[index]
+                                                        ['content'] ==
+                                                    "New message created"
+                                                ? Icons.message
+                                                : notifications[index]
+                                                            ['content'] ==
+                                                        "Interview created"
+                                                    ? Icons.event_available
+                                                    : Icons.settings),
+                                            const SizedBox(width: 16.0),
                                             if (notifications[index]
-                                                    ['notifyFlag'] ==
-                                                "0") {
-                                              _showEnterCodeRoomModal(
-                                                  context,
-                                                  notifications[index]
-                                                                  ['message']
-                                                              ['interview']
-                                                          ['meetingRoom']
-                                                      ['meeting_room_id'],
-                                                  notifications[index]
-                                                                  ['message']
-                                                              ['interview']
-                                                          ['meetingRoom']
-                                                      ['meeting_room_code']);
-                                            }
-                                          },
-                                          child: Text(
-                                            LocaleData.joinBtn
-                                                .getString(context),
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
+                                                    ['content'] ==
+                                                "New message created")
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        '${LocaleData.notificationMessage.getString(context)} • ',
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Text(
+                                                        formatTimeAgo(
+                                                            notifications[index]
+                                                                ['createdAt']),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "${notifications[index]['sender']['fullname']}: ",
+                                                        style: const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.4,
+                                                        child: Text(
+                                                          "${notifications[index]['message']['content']}",
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              fontSize: 13.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            else if (notifications[index]
+                                                    ['content'] ==
+                                                "Interview created")
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        '${LocaleData.notificationEventStart.getString(context)} • ',
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Text(
+                                                        formatTimeAgo(
+                                                            notifications[index]
+                                                                ['updatedAt']),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "${notifications[index]['sender']['fullname']}: ",
+                                                        style: const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.4,
+                                                        child: Text(
+                                                          "${notifications[index]['message']['interview']['title']}",
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              fontSize: 13.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        "Start Time: ",
+                                                        style: TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      Text(
+                                                        formatDateTime(
+                                                            notifications[index]
+                                                                        [
+                                                                        'message']
+                                                                    [
+                                                                    'interview']
+                                                                ['endTime']),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        "End Time: ",
+                                                        style: TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      Text(
+                                                        formatDateTime(
+                                                            notifications[index]
+                                                                        [
+                                                                        'message']
+                                                                    [
+                                                                    'interview']
+                                                                ['startTime']),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        "Code Room: ",
+                                                        style: TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      Text(
+                                                        "${notifications[index]['message']['interview']['meetingRoom']['meeting_room_code']}",
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            else
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        'Proposal mới • ',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Text(
+                                                        formatTimeAgo(
+                                                            notifications[index]
+                                                                ['updatedAt']),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.7,
+                                                        child: Text(
+                                                          "${notifications[index]['content']}",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                          ],
                                         ),
+                                        if (notifications[index]['content'] ==
+                                            "Interview created") ...[
+                                          const SizedBox(height: 10.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor: notifications[
+                                                                    index][
+                                                                'notifyFlag'] ==
+                                                            "0"
+                                                        ? Colors.blue
+                                                        : Colors.grey),
+                                                onPressed: () {
+                                                  if (notifications[index]
+                                                          ['notifyFlag'] ==
+                                                      "0") {
+                                                    _showEnterCodeRoomModal(
+                                                        context,
+                                                        notifications[index][
+                                                                        'message']
+                                                                    [
+                                                                    'interview']
+                                                                ['meetingRoom']
+                                                            ['meeting_room_id'],
+                                                        notifications[index]
+                                                                        [
+                                                                        'message']
+                                                                    [
+                                                                    'interview']
+                                                                ['meetingRoom'][
+                                                            'meeting_room_code']);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  LocaleData.joinBtn
+                                                      .getString(context),
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ],
-                                    )
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox();
                       },
                     )
                   : Center(

@@ -15,9 +15,16 @@ import 'package:student_hub/widgets/custom_dialog.dart';
 
 class ScheduleMessageItem extends StatefulWidget {
   final Message message;
+  final int userId1;
+  final int userId2;
+  final Function(Map<String, String?>) onSendMessage;
+
   const ScheduleMessageItem({
     super.key,
     required this.message,
+    required this.userId1,
+    required this.userId2,
+    required this.onSendMessage,
   });
 
   @override
@@ -26,11 +33,12 @@ class ScheduleMessageItem extends StatefulWidget {
 
 class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
   bool isMeetingValid = false;
-  bool isMeetingCancelled = false;
+  late bool isMeetingCancelled;
   final TextEditingController codeRoom = TextEditingController();
 
   @override
   void initState() {
+    isMeetingCancelled = widget.message.canceled;
     super.initState();
   }
 
@@ -52,9 +60,6 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           method: 'GET',
         ),
       );
-
-      print(codeRoom.text);
-      print(widget.message.meetingRoomId);
 
       if (response.statusCode == 200) {
         if (response.data['result'] == true) {
@@ -192,7 +197,9 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
             buttonText: 'OK',
             statusDialog: 1,
             onConfirmPressed: () {
-              Navigator.pop(context);
+              widget.onSendMessage(data);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
           ),
         );
@@ -226,11 +233,6 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
     String oldStartDateTime = formatDateTime(widget.message.startTime!);
     String oldEndDateTime = formatDateTime(widget.message.endTime!);
     int idInterview = widget.message.interviewID!;
-
-    print(oldTitle);
-    print(oldStartDateTime);
-    print(oldEndDateTime);
-    print(idInterview);
 
     showModalBottomSheet(
       context: context,
@@ -450,14 +452,15 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                   const SizedBox(
                     width: 10,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _showOptionsModal(context);
-                    },
-                    child: const Icon(
-                      Icons.pending_outlined,
+                  if (widget.message.senderUserId == widget.userId1)
+                    GestureDetector(
+                      onTap: () {
+                        _showOptionsModal(context);
+                      },
+                      child: const Icon(
+                        Icons.pending_outlined,
+                      ),
                     ),
-                  ),
                 ],
               )
       ],
