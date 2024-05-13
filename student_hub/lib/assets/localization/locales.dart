@@ -322,6 +322,7 @@ mixin LocaleData {
   static const String notificationMessage = 'notification_message';
   static const String notificationEventStart = 'notification_event_start';
   static const String joinBtn = 'join_btn';
+  static const String emptyNoti = 'empty_noti';
 
   //Modal
   // Modal Add, Update Languages
@@ -337,6 +338,10 @@ mixin LocaleData {
   static const String hintEducation = "hint_education";
   static const String startYear = "start_year";
   static const String endYear = "end_year";
+
+  //chat
+  static const String emptyChat = 'empty_chat';
+  static const String proposalsTitle = 'proposals_title';
 
   static const Map<String, dynamic> EN = {
     //Home page
@@ -500,7 +505,7 @@ mixin LocaleData {
     removePosting: 'Remove posting',
     startWorkingThisProject: 'Start working this project',
     studentsAreLookingFor: 'Students are looking for',
-    // proposals: 'Proposals',
+    proposalsTitle: 'Proposals',
     hired: 'Hired',
     dayAgo: 'day ago',
     minutesAgo: 'minutes ago',
@@ -669,6 +674,7 @@ mixin LocaleData {
     notificationMessage: 'New message',
     notificationEventStart: 'New interview',
     joinBtn: 'Join',
+    emptyNoti: 'No Notification',
 
     //Modal
     // Modal Add, Update Languages
@@ -684,6 +690,9 @@ mixin LocaleData {
     hintEducation: "Please enter education, start year and end year.",
     startYear: "Start year",
     endYear: "End year",
+
+    //chat
+    emptyChat: "Not Message"
   };
 
   /// Vietnamese
@@ -850,6 +859,7 @@ mixin LocaleData {
     startWorkingThisProject: 'Bắt đầu làm việc trên dự án này',
     studentsAreLookingFor: 'Sinh viên đang tìm kiếm',
     // proposals: 'Proposals',
+    proposalsTitle: 'Đề xuất sinh viên',
     hired: 'Đã thuê',
     dayAgo: 'ngày trước',
     minutesAgo: 'phút trước',
@@ -1011,6 +1021,7 @@ mixin LocaleData {
     notificationMessage: 'Tin nhắn mới',
     notificationEventStart: 'Interview mới',
     joinBtn: 'Tham gia',
+    emptyNoti: 'Không có thông báo',
 
     //Modal
     // Modal Add, Update Languages
@@ -1027,6 +1038,9 @@ mixin LocaleData {
 
     //Modal Add, Update Education
     startYear: "Năm bắt đầu",
-    endYear: "Năm tốt nghiệp"
+    endYear: "Năm tốt nghiệp",
+
+    //chat
+    emptyChat: "Không có đoạn chat"
   };
 }

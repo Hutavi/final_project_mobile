@@ -103,6 +103,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     socket!.on('RECEIVE_MESSAGE', (data) {
       if (mounted) {
         setState(() {
+          print('socket $data');
           messages.add(Message(
             projectID: data['notification']['message']['projectId'],
             senderUserId: data['notification']['senderId'],
@@ -146,19 +147,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       ),
     );
 
-    if (responseListMessage.statusCode == 201) {
-      final listMessage = responseListMessage.data['result'];
-
-      print(listMessage);
-    }
-
     messageController.clear();
 
     _scrollToBottom();
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent + 10000,

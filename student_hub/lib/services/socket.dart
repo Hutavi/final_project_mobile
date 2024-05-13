@@ -68,10 +68,18 @@ class SocketManager {
   static void recieveNotify() async {
     final prefs = await SharedPreferences.getInstance();
     final idUser = prefs.getInt('idUser');
+    var noti = '';
 
     socket!.on('NOTI_$idUser', (data) {
+      if (data['notification']['content'] == "New message created") {
+        noti = "Bạn có 1 tin nhắn mới";
+      } else if (data['notification']['content'].contains('Interview')) {
+        noti = "Bạn có 1 interview mới";
+      } else {
+        noti = "Bạn có 1 proposal mới";
+      }
       Fluttertoast.showToast(
-        msg: 'Bạn có 1 thông báo mới',
+        msg: noti,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,

@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/screens/chat/widgets/chat.widgets.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/services/socket.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/search_field.dart';
 
@@ -139,35 +140,39 @@ class _MessageListScreenState extends State<MessageListScreen> {
     return isLoading
         ? const LoadingWidget()
         : SafeArea(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Scaffold(
-                appBar: null,
-                body: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: SearchBox(
-                        controller: _searchController,
-                        handleSearch: updateSearchResults,
+            child: displayedList.isNotEmpty
+                ? GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: Scaffold(
+                      appBar: null,
+                      body: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: SearchBox(
+                              controller: _searchController,
+                              handleSearch: updateSearchResults,
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: displayedList.length,
+                              itemBuilder: (ctx, index) {
+                                return MessageItem(
+                                    data: displayedList[index],
+                                    idUser: idUser,
+                                    initSocket: connectSocket);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: displayedList.length,
-                        itemBuilder: (ctx, index) {
-                          return MessageItem(
-                              data: displayedList[index],
-                              idUser: idUser,
-                              initSocket: connectSocket);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : Center(
+                    child: Text(LocaleData.emptyChat.getString(context)),
+                  ),
           );
   }
 }

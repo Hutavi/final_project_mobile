@@ -67,23 +67,17 @@ class DashboardState extends State<Dashboard>
     final project = responseProject.data['result'];
 
     setState(() {
+      project.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+
       projects = project
           .where((item) => item['typeFlag'] != 1 && item['typeFlag'] != 2)
-          .toList()
-          .reversed
           .toList();
 
-      projectsWorking = project
-          .where((item) => item['typeFlag'] == 1)
-          .toList()
-          .reversed
-          .toList();
+      projectsWorking = project.where((item) => item['typeFlag'] == 1).toList();
 
-      projectsArchieved = project
-          .where((item) => item['typeFlag'] == 2)
-          .toList()
-          .reversed
-          .toList();
+      projectsArchieved =
+          project.where((item) => item['typeFlag'] == 2).toList();
 
       isLoading = false;
     });
@@ -161,13 +155,13 @@ class DashboardState extends State<Dashboard>
     };
 
     final dioPrivate = DioClient();
-    final responseLanguage = await dioPrivate.request(
+    final responseWorking = await dioPrivate.request(
       '/project/$idProject',
       data: data,
       options: Options(method: 'PATCH'),
     );
 
-    if (responseLanguage.statusCode == 200) {
+    if (responseWorking.statusCode == 200) {
       setState(() {
         getDataIdCompany();
       });
@@ -232,14 +226,28 @@ class DashboardState extends State<Dashboard>
     Duration difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
-    } else {
-      if (difference.inHours < 1) {
-        int minutesDifference = difference.inMinutes;
-        return '$minutesDifference ${LocaleData.minutesAgo.getString(context)}';
+      if (difference.inDays == 1) {
+        return '1 ${LocaleData.dayAgo.getString(context)}';
       } else {
-        int hoursDifference = difference.inHours;
-        return '$hoursDifference ${LocaleData.hoursAgo.getString(context)}';
+        return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 ${LocaleData.hoursAgo.getString(context)}';
+      } else {
+        return '${difference.inHours} ${LocaleData.hoursAgo.getString(context)}';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 ${LocaleData.minutesAgo.getString(context)}';
+      } else {
+        return '${difference.inMinutes} ${LocaleData.minutesAgo.getString(context)}';
+      }
+    } else {
+      if (difference.inSeconds == 1) {
+        return '1 ${LocaleData.secondsAgo.getString(context)}';
+      } else {
+        return '${difference.inSeconds} ${LocaleData.secondsAgo.getString(context)}';
       }
     }
   }
@@ -462,6 +470,7 @@ class DashboardState extends State<Dashboard>
                                 "numberOfStudents": data[index]
                                     ['numberOfStudents']
                               },
+                              companyName: data[index]['companyName'],
                             ),
                           ),
                         );
@@ -478,16 +487,16 @@ class DashboardState extends State<Dashboard>
                           context,
                           MaterialPageRoute(
                             builder: (context) => SendHired(
-                              idProject: projects[index]['id'],
-                              indexTab: 2,
-                              projectDetail: {
-                                "description": data[index]['description'],
-                                "projectScopeFlag": data[index]
-                                    ['projectScopeFlag'],
-                                "numberOfStudents": data[index]
-                                    ['numberOfStudents']
-                              },
-                            ),
+                                idProject: data[index]['id'],
+                                indexTab: 2,
+                                projectDetail: {
+                                  "description": data[index]['description'],
+                                  "projectScopeFlag": data[index]
+                                      ['projectScopeFlag'],
+                                  "numberOfStudents": data[index]
+                                      ['numberOfStudents'],
+                                },
+                                companyName: data[index]['companyName']),
                           ),
                         );
                       },
@@ -503,16 +512,16 @@ class DashboardState extends State<Dashboard>
                           context,
                           MaterialPageRoute(
                             builder: (context) => SendHired(
-                              idProject: data[index]['id'],
-                              indexTab: 3,
-                              projectDetail: {
-                                "description": data[index]['description'],
-                                "projectScopeFlag": data[index]
-                                    ['projectScopeFlag'],
-                                "numberOfStudents": data[index]
-                                    ['numberOfStudents']
-                              },
-                            ),
+                                idProject: data[index]['id'],
+                                indexTab: 3,
+                                projectDetail: {
+                                  "description": data[index]['description'],
+                                  "projectScopeFlag": data[index]
+                                      ['projectScopeFlag'],
+                                  "numberOfStudents": data[index]
+                                      ['numberOfStudents']
+                                },
+                                companyName: data[index]['companyName']),
                           ),
                         );
                       },
@@ -582,18 +591,19 @@ class DashboardState extends State<Dashboard>
           context,
           MaterialPageRoute(
             builder: (context) => SendHired(
-              idProject: projects[index]['id'],
-              indexTab: 0,
-              projectDetail: {
-                "description": projects[index]['description'],
-                "projectScopeFlag": projects[index]['projectScopeFlag'],
-                "numberOfStudents": projects[index]['numberOfStudents']
-              },
-            ),
+                idProject: projects[index]['id'],
+                indexTab: 0,
+                projectDetail: {
+                  "description": projects[index]['description'],
+                  "projectScopeFlag": projects[index]['projectScopeFlag'],
+                  "numberOfStudents": projects[index]['numberOfStudents']
+                },
+                companyName: projects[index]['companyName']),
           ),
         );
       },
       child: Card(
+        color: Theme.of(context).cardColor,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -691,18 +701,20 @@ class DashboardState extends State<Dashboard>
           context,
           MaterialPageRoute(
             builder: (context) => SendHired(
-              idProject: projectsWorking[index]['id'],
-              indexTab: 0,
-              projectDetail: {
-                "description": projectsWorking[index]['description'],
-                "projectScopeFlag": projectsWorking[index]['projectScopeFlag'],
-                "numberOfStudents": projectsWorking[index]['numberOfStudents']
-              },
-            ),
+                idProject: projectsWorking[index]['id'],
+                indexTab: 0,
+                projectDetail: {
+                  "description": projectsWorking[index]['description'],
+                  "projectScopeFlag": projectsWorking[index]
+                      ['projectScopeFlag'],
+                  "numberOfStudents": projectsWorking[index]['numberOfStudents']
+                },
+                companyName: projectsWorking[index]['companyName']),
           ),
         );
       },
       child: Card(
+        color: Theme.of(context).cardColor,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -800,19 +812,21 @@ class DashboardState extends State<Dashboard>
           context,
           MaterialPageRoute(
             builder: (context) => SendHired(
-              idProject: projectsArchieved[index]['id'],
-              indexTab: 0,
-              projectDetail: {
-                "description": projectsArchieved[index]['description'],
-                "projectScopeFlag": projectsArchieved[index]
-                    ['projectScopeFlag'],
-                "numberOfStudents": projectsArchieved[index]['numberOfStudents']
-              },
-            ),
+                idProject: projectsArchieved[index]['id'],
+                indexTab: 0,
+                projectDetail: {
+                  "description": projectsArchieved[index]['description'],
+                  "projectScopeFlag": projectsArchieved[index]
+                      ['projectScopeFlag'],
+                  "numberOfStudents": projectsArchieved[index]
+                      ['numberOfStudents']
+                },
+                companyName: projectsArchieved[index]['companyName']),
           ),
         );
       },
       child: Card(
+        color: Theme.of(context).cardColor,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -844,9 +858,10 @@ class DashboardState extends State<Dashboard>
                     onPressed: () {
                       _showPopupMenu(context, index);
                     },
-                    icon: Icon(Icons.pending_outlined,
-                        size: MediaQuery.of(context).size.width * 0.06,
-                        color: Colors.black),
+                    icon: Icon(
+                      Icons.pending_outlined,
+                      size: MediaQuery.of(context).size.width * 0.06,
+                    ),
                   ),
                 ],
               ),
