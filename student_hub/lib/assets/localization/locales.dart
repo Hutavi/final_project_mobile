@@ -203,6 +203,8 @@ mixin LocaleData {
   static const String offer = 'offer';
   static const String activeStatus = 'active_status';
   static const String activeNo = 'active_no';
+  static const String questionAboutOffer = 'question_about_offer';
+  static const String notiOffer = 'noti_offer';
   
   //posting - page1
   static const String postingTitle = 'posting_title';
@@ -548,6 +550,9 @@ mixin LocaleData {
     offer: 'Offer',
     activeStatus: 'Active',
     activeNo: 'Active',
+    questionAboutOffer: 'Do you agree with this offer?',
+    notiOffer: 'Welcome to company',
+
     //posting - page1
     postingTitle: '1/4 - Let\'s start with a strong title',
     postingDescribeItem:
@@ -899,6 +904,8 @@ mixin LocaleData {
     noActiveProposal: 'Bạn không có proposal nào',
     submitted: 'Đã gửi',
     submittedProposal: 'Proposal đã gửi',
+    questionAboutOffer: 'Bạn có đồng ý với offer này không?',
+    notiOffer: 'Chào mừng bạn đến với công ty!',
 
     //posting - page1
     postingTitle: '1/4 - Hãy bắt đầu với một tiêu đề mạnh mẽ',
