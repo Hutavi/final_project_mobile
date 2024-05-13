@@ -88,13 +88,13 @@ class SendHiredState extends State<SendHired>
       if(response.statusCode == 200){
         if(response.data['result']['statusFlag'] != 3){
           setState(() {
-            titleIcon = 'Send offer';
+            titleIcon = '${LocaleData.send.getString(context)} offer';
             isHired = false;
           });
         }
         if(response.data['result']['statusFlag'] == 3){
           setState(() {
-            titleIcon = 'Hired';
+            titleIcon = LocaleData.hired.getString(context);
             isHired = true;
           });
         }
@@ -612,7 +612,7 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     child: Text(
-                      LocaleData.active.getString(context),
+                      LocaleData.activeNo.getString(context),
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 12),
                     ),
