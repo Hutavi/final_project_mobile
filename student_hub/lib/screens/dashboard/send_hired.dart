@@ -97,13 +97,13 @@ class SendHiredState extends State<SendHired>
       if (response.statusCode == 200) {
         if (response.data['result']['statusFlag'] != 3) {
           setState(() {
-            titleIcon = 'Send offer';
+            titleIcon = '${LocaleData.send.getString(context)} offer';
             isHired = false;
           });
         }
         if (response.data['result']['statusFlag'] == 3) {
           setState(() {
-            titleIcon = 'Hired';
+            titleIcon = LocaleData.hired.getString(context);
             isHired = true;
           });
         }
@@ -122,14 +122,15 @@ class SendHiredState extends State<SendHired>
       final response = await DioClient().request(
         '/proposal/$idProposal',
         data: jsonEncode({
-          'statusFlag': 3,
+          // 'statusFlag': 2,
+          'disableFlag': 1, //gởi giá trị 1 cho student, nếu student đồng ý thì gởi statusFlag = 3
         }),
         options: Options(
           method: 'PATCH',
         ),
       );
       if (response.statusCode == 200) {
-        print('Tuyển thành công thành công');
+        print('Gửi offer thành công thành công');
         isHired = true;
       }
     } catch (e) {
@@ -539,7 +540,7 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
-    checkStatus(proposals[index]['id']);
+    // checkStatus(proposals[index]['id']);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -647,7 +648,7 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     child: Text(
-                      LocaleData.active.getString(context),
+                      LocaleData.activeNo.getString(context),
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 12),
                     ),

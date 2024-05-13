@@ -275,6 +275,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
         Navigator.push(context,
         MaterialPageRoute(
           builder: (context) => DetailProposal(
+            idProposal: activeProposal[index]['id'],
             coverletter: activeProposal[index]['coverLetter'],
             statusFlag: activeProposal[index]['statusFlag'],
             project: {
@@ -395,6 +396,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
         Navigator.push(context,
         MaterialPageRoute(
           builder: (context) => DetailProposal(
+            idProposal: submittedProposal[index]['id'],
             coverletter: submittedProposal[index]['coverLetter'],
             statusFlag: submittedProposal[index]['statusFlag'],
             project: {
@@ -490,6 +492,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
         Navigator.push(context,
         MaterialPageRoute(
           builder: (context) => DetailProposal(
+            idProposal: projectsWorking[index]['id'],
             coverletter: projectsWorking[index]['coverLetter'],
             statusFlag: projectsWorking[index]['statusFlag'],
             project: {
@@ -583,6 +586,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
         Navigator.push(context,
         MaterialPageRoute(
           builder: (context) => DetailProposal(
+            idProposal: projectsArchieved[index]['id'],
             coverletter: projectsArchieved[index]['coverLetter'],
             statusFlag: projectsArchieved[index]['statusFlag'],
             project: {

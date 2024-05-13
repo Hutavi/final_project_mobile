@@ -202,7 +202,10 @@ mixin LocaleData {
   static const String coverletterSent = 'coverletter_sent';
   static const String offer = 'offer';
   static const String activeStatus = 'active_status';
-
+  static const String activeNo = 'active_no';
+  static const String questionAboutOffer = 'question_about_offer';
+  static const String notiOffer = 'noti_offer';
+  
   //posting - page1
   static const String postingTitle = 'posting_title';
   static const String postingDescribeItem = 'posting_describe_item';
@@ -546,6 +549,9 @@ mixin LocaleData {
     coverletterSent: 'Cover letter sent',
     offer: 'Offer',
     activeStatus: 'Active',
+    activeNo: 'Active',
+    questionAboutOffer: 'Do you agree with this offer?',
+    notiOffer: 'Welcome to company',
 
     //posting - page1
     postingTitle: '1/4 - Let\'s start with a strong title',
@@ -883,7 +889,8 @@ mixin LocaleData {
         'Bạn có thực sự muốn gửi đề nghị thuê cho sinh viên thực hiện dự án này không?',
     send: 'Gửi',
     active: 'Active',
-    
+    activeNo: 'Kích hoạt',
+
     //dashboard -> detail proposal
     status: 'Trạng thái',
     waiting: 'Chờ',
@@ -897,6 +904,8 @@ mixin LocaleData {
     noActiveProposal: 'Bạn không có proposal nào',
     submitted: 'Đã gửi',
     submittedProposal: 'Proposal đã gửi',
+    questionAboutOffer: 'Bạn có đồng ý với offer này không?',
+    notiOffer: 'Chào mừng bạn đến với công ty!',
 
     //posting - page1
     postingTitle: '1/4 - Hãy bắt đầu với một tiêu đề mạnh mẽ',
