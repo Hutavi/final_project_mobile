@@ -85,7 +85,7 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                 });
               },
               style: const TextStyle(fontSize: 13),
-              items: <String>['beginner', 'normal', 'hard']
+              items: <String>['Beginner', 'Normal', 'Hard']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

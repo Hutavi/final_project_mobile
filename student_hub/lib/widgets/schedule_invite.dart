@@ -9,6 +9,7 @@ class ScheduleInviteTicket extends StatelessWidget {
     required this.userId1,
     required this.userId2,
     this.onCancelMeeting,
+    required this.onUpdateInterview,
   });
   final int userId1;
   final int userId2;
@@ -16,6 +17,7 @@ class ScheduleInviteTicket extends StatelessWidget {
   final Message message;
 
   final VoidCallback? onCancelMeeting;
+  final Function(Map<String, String?>) onUpdateInterview;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,12 @@ class ScheduleInviteTicket extends StatelessWidget {
             8.0,
           ),
         ),
-        child: ScheduleMessageItem(message: message),
+        child: ScheduleMessageItem(
+          message: message,
+          userId1: userId1,
+          userId2: userId2,
+          onSendMessage: (data) => {onUpdateInterview(data)},
+        ),
       ),
     );
   }

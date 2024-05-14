@@ -1,9 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/show_date_picker_time.dart';
 
 class ReScheduleInterview extends StatefulWidget {
@@ -44,69 +41,10 @@ class _ReScheduleInterviewState extends State<ReScheduleInterview> {
     super.dispose();
   }
 
-  // void reScheduleMeeting() async {
-  //   String startTimeISO = DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-  //       .format(parseDateTime(startDateTime!));
-  //   String endTimeISO =
-  //       DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(parseDateTime(endDateTime!));
-  //   var data = {
-  //     'title': titleSchedule.text,
-  //     'startTime': startTimeISO,
-  //     'endTime': endTimeISO,
-  //   };
-  //   // Gọi API để hủy cuộc họp
-  //   try {
-  //     final dio = DioClient();
-  //     final response = await dio.request(
-  //       '/interview/${widget.interviewID}',
-  //       data: data,
-  //       options: Options(
-  //         method: 'PATCH',
-  //       ),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       showDialog(
-  //         // ignore: use_build_context_synchronously
-  //         context: context,
-  //         builder: (context) => DialogCustom(
-  //           title: "Success",
-  //           description: "The meeting has been edit.",
-  //           buttonText: 'OK',
-  //           statusDialog: 1,
-  //           onConfirmPressed: () {
-  //             Navigator.pop(context);
-  //           },
-  //         ),
-  //       );
-  //     } else {
-  //       showDialog(
-  //         // ignore: use_build_context_synchronously
-  //         context: context,
-  //         builder: (context) => DialogCustom(
-  //           title: "Error",
-  //           description: "Failed to edit the meeting.",
-  //           buttonText: 'OK',
-  //           statusDialog: 2,
-  //           onConfirmPressed: () {
-  //             Navigator.pop(context);
-  //           },
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (e is DioException && e.response != null) {
-  //       print(e.response!.data['errorDetails']);
-  //     } else {
-  //       print('Have Error: $e');
-  //     }
-  //   }
-  // }
-
   DateTime parseDateTime(String dateTimeString) {
     String sanitizedDateTimeString = dateTimeString.trim();
     sanitizedDateTimeString = sanitizedDateTimeString.replaceAll(" ", " ");
-    return DateFormat("M/d/yyyy h:mm a").parse(sanitizedDateTimeString);
+    return DateFormat("M/d/yyyy hh:mm a").parse(sanitizedDateTimeString);
   }
 
   // Tính toán duration giữa hai thời điểm và trả về số phút
@@ -403,8 +341,8 @@ class _ReScheduleInterviewState extends State<ReScheduleInterview> {
   }
 
   formatDateTimeString(String inputString) {
-    DateTime dateTime = DateFormat("EEEE, M/d/yyyy HH:mm").parse(inputString);
-    String formattedDateTime = DateFormat("d/M/yyyy hh:mm a").format(dateTime);
+    DateTime dateTime = DateFormat("EEEE, d/M/yyyy HH:mm").parse(inputString);
+    String formattedDateTime = DateFormat("M/d/yyyy hh:mm a").format(dateTime);
     return formattedDateTime;
   }
 }

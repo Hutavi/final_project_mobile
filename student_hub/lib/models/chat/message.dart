@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:uuid/uuid.dart';
 
+// ignore: must_be_immutable
 class Message extends Equatable {
   final int? id;
   final int projectID;
@@ -8,11 +8,11 @@ class Message extends Equatable {
   final int receiverUserId;
   final String? content;
   final DateTime createdAt;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final String? title;
+  DateTime? startTime;
+  DateTime? endTime;
+  String? title;
   final int meeting;
-  final int? duration;
+  int? duration;
   final String? meetingRoomId;
   final String? meetingRoomCode;
   final int? interviewID;
