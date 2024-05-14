@@ -88,11 +88,11 @@ class _StundentProfileS3TranscriptState
             color: Colors.blue,
           ),
           Text(
-            LocaleData.chooseFile.getString(context as BuildContext),
+            LocaleData.chooseFile.getString(this.context),
             style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.black),
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+            ),
           ),
           if (trancriptImage == null)
             Container(
@@ -101,13 +101,14 @@ class _StundentProfileS3TranscriptState
                   onPressed: _pickImageTranscript,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.blue,
+                    backgroundColor: Colors.white,
                     padding: const EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                   child: Text(
-                    LocaleData.chooseImage.getString(context as BuildContext),
+                    LocaleData.chooseImage.getString(this.context),
                   )),
             ),
         ],
@@ -258,15 +259,14 @@ class _StundentProfileS3TranscriptState
 
       if (responseProfileTranscript.statusCode == 200) {
         setState(() {
-          notify = LocaleData.updatedTranscriptSuccess
-              .getString(context as BuildContext);
+          notify = LocaleData.updatedTranscriptSuccess.getString(this.context);
 
           getDataIdStudent();
           _showSuccess();
         });
       } else {
-        notify = LocaleData.updatedTranscriptFailed
-            .getString(context as BuildContext);
+        // ignore: use_build_context_synchronously
+        notify = LocaleData.updatedTranscriptFailed.getString(this.context);
 
         _showError();
       }

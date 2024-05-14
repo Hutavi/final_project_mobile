@@ -1,26 +1,33 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:gap/gap.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/constants/image_assets.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/dashboard/widget/proposal_detail_student_s1.dart';
 import 'package:student_hub/services/dio_client.dart';
+import 'package:student_hub/utils/extensions.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
+import 'package:student_hub/widgets/display_text.dart';
 import 'package:student_hub/widgets/loading.dart';
 
 class SendHired extends StatefulWidget {
   final int idProject;
   final int indexTab;
   final Map projectDetail;
+  final String? companyName;
   const SendHired({
     Key? key,
     required this.idProject,
     required this.indexTab,
     required this.projectDetail,
+    this.companyName,
   }) : super(key: key);
 
   @override
@@ -33,6 +40,7 @@ class SendHiredState extends State<SendHired>
   String titleIcon = 'Send offer';
   int? _idProject;
   List<dynamic> proposals = [];
+  List<dynamic> proposalsHired = [];
   List<dynamic> listMessage = [];
   Map? _projectDetaild;
   var isLoading = true;
@@ -55,7 +63,7 @@ class SendHiredState extends State<SendHired>
   //   super.dispose();
   // }
 
-  void setActivityStatus(int idProposal) async{
+  void setActivityStatus(int idProposal) async {
     try {
       final response = await DioClient().request(
         '/proposal/$idProposal',
@@ -66,7 +74,7 @@ class SendHiredState extends State<SendHired>
           method: 'PATCH',
         ),
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         print('Chuyển vào active proposal thành công');
       }
     } catch (e) {
@@ -77,7 +85,8 @@ class SendHiredState extends State<SendHired>
       }
     }
   }
-  void checkStatus(int idProposal) async{
+
+  void checkStatus(int idProposal) async {
     try {
       final response = await DioClient().request(
         '/proposal/$idProposal',
@@ -85,16 +94,16 @@ class SendHiredState extends State<SendHired>
           method: 'GET',
         ),
       );
-      if(response.statusCode == 200){
-        if(response.data['result']['statusFlag'] != 3){
+      if (response.statusCode == 200) {
+        if (response.data['result']['statusFlag'] != 3) {
           setState(() {
-            titleIcon = 'Send offer';
+            titleIcon = '${LocaleData.send.getString(context)} offer';
             isHired = false;
           });
         }
-        if(response.data['result']['statusFlag'] == 3){
+        if (response.data['result']['statusFlag'] == 3) {
           setState(() {
-            titleIcon = 'Hired';
+            titleIcon = LocaleData.hired.getString(context);
             isHired = true;
           });
         }
@@ -108,19 +117,20 @@ class SendHiredState extends State<SendHired>
     }
   }
 
-  void setHiredStatus(int idProposal) async{
+  void setHiredStatus(int idProposal) async {
     try {
       final response = await DioClient().request(
         '/proposal/$idProposal',
         data: jsonEncode({
-          'statusFlag': 3,
+          // 'statusFlag': 2,
+          'disableFlag': 1, //gởi giá trị 1 cho student, nếu student đồng ý thì gởi statusFlag = 3
         }),
         options: Options(
           method: 'PATCH',
         ),
       );
-      if(response.statusCode == 200){
-        print('Tuyển thành công thành công');
+      if (response.statusCode == 200) {
+        print('Gửi offer thành công thành công');
         isHired = true;
       }
     } catch (e) {
@@ -166,7 +176,13 @@ class SendHiredState extends State<SendHired>
       } else {
         idUser = user['company']['userId'];
       }
-      proposals = proposal;
+      proposal.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+      message.sort((a, b) => DateTime.parse(b['createdAt'])
+          .compareTo(DateTime.parse(a['createdAt'])));
+      proposals = proposal.where((item) => item['statusFlag'] != 3).toList();
+      proposalsHired =
+          proposal.where((item) => item['statusFlag'] == 3).toList();
       listMessage = message;
       isLoading = false;
     });
@@ -252,8 +268,7 @@ class SendHiredState extends State<SendHired>
                         _buildProjectList(),
                         _buildProjectDetails(),
                         _buildProjectMessage(),
-                        Center(
-                            child: Text(LocaleData.hired.getString(context))),
+                        _buildProjectHired(),
                       ],
                     ),
                   ),
@@ -321,6 +336,22 @@ class SendHiredState extends State<SendHired>
               );
   }
 
+  Widget _buildProjectHired() {
+    return isLoading
+        ? const LoadingWidget()
+        : proposalsHired.isNotEmpty
+            ? ListView.builder(
+                itemCount: proposalsHired.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectHiredItem(context, index);
+                },
+              )
+            : Center(
+                child: Text('No ${LocaleData.hired.getString(context)}'),
+              );
+  }
+
   void _showHiredConfirmationDialog(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -360,43 +391,48 @@ class SendHiredState extends State<SendHired>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.red,
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red,
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
                         ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white,
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Đóng dialog
+                        },
+                        child: Text(
+                          LocaleData.cancel.getString(context),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Đóng dialog
-                      },
-                      child: Text(
-                        LocaleData.cancel.getString(context),
-                        textAlign: TextAlign.center,
                       ),
                     ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          kBlue600,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            kBlue600,
+                          ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
                         ),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Colors.white,
+                        onPressed: () {
+                          // Xử lý khi nhấn nút Send
+                          setHiredStatus(index);
+                          setState(() {
+                            titleIcon = "Hired";
+                          });
+                          Navigator.of(context).pop(); // Đóng dialog
+                        },
+                        child: Text(
+                          LocaleData.send.getString(context),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      onPressed: () {
-                        // Xử lý khi nhấn nút Send
-                        setHiredStatus(index);
-                        setState(() {
-                          titleIcon = "Hired";
-                        });
-                        Navigator.of(context).pop(); // Đóng dialog
-                      },
-                      child: Text(
-                        LocaleData.send.getString(context),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
@@ -504,7 +540,7 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectItem(BuildContext context, int index) {
-    checkStatus(proposals[index]['id']);
+    // checkStatus(proposals[index]['id']);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -612,7 +648,7 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     child: Text(
-                      LocaleData.active.getString(context),
+                      LocaleData.activeNo.getString(context),
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 12),
                     ),
@@ -627,7 +663,7 @@ class SendHiredState extends State<SendHired>
                       ),
                     ),
                     onPressed: () {
-                      if(isHired == false) {
+                      if (isHired == false) {
                         final idx = proposals[index]['id'];
                         _showHiredConfirmationDialog(context, idx);
                       }
@@ -648,112 +684,271 @@ class SendHiredState extends State<SendHired>
   }
 
   Widget _buildProjectMessageItem(BuildContext context, int index) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final deviceSize = context.deviceSize;
+
+    String formatTimeAgo(String dateTimeString) {
+      DateTime dateTime = DateTime.parse(dateTimeString);
+      DateTime now = DateTime.now();
+      Duration difference = now.difference(dateTime);
+
+      if (difference.inDays > 0) {
+        if (difference.inDays == 1) {
+          return '1 ${LocaleData.dayAgo.getString(context)}';
+        } else {
+          return '${difference.inDays} ${LocaleData.dayAgo.getString(context)}';
+        }
+      } else if (difference.inHours > 0) {
+        if (difference.inHours == 1) {
+          return '1 ${LocaleData.hoursAgo.getString(context)}';
+        } else {
+          return '${difference.inHours} ${LocaleData.hoursAgo.getString(context)}';
+        }
+      } else if (difference.inMinutes > 0) {
+        if (difference.inMinutes == 1) {
+          return '1 ${LocaleData.minutesAgo.getString(context)}';
+        } else {
+          return '${difference.inMinutes} ${LocaleData.minutesAgo.getString(context)}';
+        }
+      } else {
+        if (difference.inSeconds == 1) {
+          return '1 ${LocaleData.secondsAgo.getString(context)}';
+        } else {
+          return '${difference.inSeconds} ${LocaleData.secondsAgo.getString(context)}';
+        }
+      }
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.background, // Màu của đường kẻ
+            width: 1.0, // Độ dày của đường kẻ
+          ),
+        ),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(AppRouterName.chatScreen, arguments: {
+            'idProject': widget.idProject,
+            'idThisUser': idUser,
+            'idAnyUser': idUser != listMessage[index]['receiver']['id']
+                ? listMessage[index]['receiver']['id'] as int
+                : listMessage[index]['sender']['id'] as int,
+            'name': idUser != listMessage[index]['receiver']['id']
+                ? listMessage[index]['receiver']['fullname'] as String
+                : listMessage[index]['sender']['fullname'] as String,
+          });
+        },
+        child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: AssetImage(ImageManagent.imgAvatar),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      '1',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                    Container(
+                      width: 55,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(ImageManagent.imgAvatar),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      'cc',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    const Gap(5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DisplayText(
+                          text: idUser != listMessage[index]['receiver']['id']
+                              ? listMessage[index]['receiver']['fullname']
+                              : listMessage[index]['sender']['fullname'],
+                          style: textTheme.labelMedium!.copyWith(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        DisplayText(
+                            text: 'Senior frontend developer (Fintech)',
+                            style: textTheme.labelSmall!.copyWith(
+                              fontSize: 10,
+                              color: Colors.green,
+                            )),
+                        const Gap(5),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: deviceSize.width * 0.5,
+                              child: DisplayText(
+                                text: '${listMessage[index]['content']}',
+                                style: textTheme.labelSmall!.copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'hii',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  'Excellent',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                  ),
+                DisplayText(
+                  text: formatTimeAgo(listMessage[index]['createdAt']),
+                  style: textTheme.labelSmall!
+                      .copyWith(color: colorScheme.onSurface),
                 ),
               ],
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'haha',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Xử lý khi nhấn nút Message
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        kBlue600,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildProjectHiredItem(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProposalDetailStudentS1(
+                  data: proposalsHired[index]['student']),
+            )),
+      },
+      child: Card(
+        color: Theme.of(context).cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage(ImageManagent.imgAvatar),
+                        fit: BoxFit.cover,
                       ),
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white,
-                      ),
-                    ),
-                    child: const Text(
-                      'Message',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10), // Khoảng cách giữa 2 nút
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.red,
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        proposalsHired[index]['student']['user']['fullname'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      _showHiredConfirmationDialog(context, index);
-                    },
-                    child: Text(
-                      titleIcon,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12),
+                      const SizedBox(height: 2),
+                      Text(
+                        findMaxYearAndCalculate(
+                            proposalsHired[index]['student']['educations']),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    proposalsHired[index]['student']['techStack']['name'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    LocaleData.excellent.getString(context),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                proposalsHired[index]['coverLetter'],
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed(AppRouterName.chatScreen, arguments: {
+                          'idProject': widget.idProject,
+                          'idThisUser': idUser,
+                          'idAnyUser': proposalsHired[index]['student']
+                              ['userId'],
+                          'name': proposalsHired[index]['student']['user']
+                              ['fullname'],
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          kBlue600,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                      child: Text(
+                        LocaleData.message.getString(context),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).colorScheme.background),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.red,
+                        ),
+                      ),
+                      onPressed: () {
+                        _showHiredConfirmationDialog(context, index);
+                      },
+                      child: Text(
+                        titleIcon,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

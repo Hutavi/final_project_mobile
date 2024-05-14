@@ -70,15 +70,16 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void connectSocket() async {
     socket!.on('RECEIVE_INTERVIEW', (data) {
       if (data['notification']['content'] == 'Interview created' && mounted) {
-        print(data['notification']['message']['interview']['startTime']);
-        print(data['notification']['message']['interview']['endTime']);
         setState(() {
+          print(data);
           messages.add(Message(
+              id: data['notification']['messageId'],
               projectID: data['notification']['message']['projectId'],
               senderUserId: data['notification']['senderId'],
               receiverUserId: data['notification']['receiverId'],
-              interviewID: data['notification']['interviewId'],
+              interviewID: data['notification']['message']['interviewId'],
               title: data['notification']['message']['interview']['title'],
+              content: data['notification']['message']['interview']['title'],
               createdAt: DateTime.parse(
                   data['notification']['message']['interview']['createdAt']),
               startTime: DateTime.parse(
@@ -95,6 +96,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               duration: calculateDurationInMinutes(
                   data['notification']['message']['interview']['startTime'],
                   data['notification']['message']['interview']['endTime'])));
+          print('cc: ${messages[messages.length - 1]}');
           _scrollToBottom();
         });
       }
@@ -103,6 +105,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     socket!.on('RECEIVE_MESSAGE', (data) {
       if (mounted) {
         setState(() {
+          print('socket $data');
           messages.add(Message(
             projectID: data['notification']['message']['projectId'],
             senderUserId: data['notification']['senderId'],
@@ -138,7 +141,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
     final dioPrivate = DioClient();
 
-    final responseListMessage = await dioPrivate.request(
+    await dioPrivate.request(
       '/message/sendMessage',
       data: data,
       options: Options(
@@ -146,19 +149,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       ),
     );
 
-    if (responseListMessage.statusCode == 201) {
-      final listMessage = responseListMessage.data['result'];
-
-      print(listMessage);
-    }
-
     messageController.clear();
 
     _scrollToBottom();
   }
 
   void _scrollToBottom() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent + 10000,
@@ -407,7 +404,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemCount: messages.length,
                             itemBuilder: (context, index) {
-                              final message = messages[index];
+                              Message message = messages[index];
 
                               final showImage = index + 1 == messages.length ||
                                   (index + 1 < messages.length &&
@@ -449,15 +446,30 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                         ),
                                       if (message.meeting == 1)
                                         ScheduleInviteTicket(
-                                          userId1: widget.idThisUser,
-                                          userId2: widget.idAnyUser,
-                                          message: message,
-                                          onCancelMeeting: () {
-                                            setState(() {
-                                              message.canceled = true;
-                                            });
-                                          },
-                                        )
+                                            userId1: widget.idThisUser,
+                                            userId2: widget.idAnyUser,
+                                            message: message,
+                                            onCancelMeeting: () {
+                                              setState(() {
+                                                message.canceled = true;
+                                              });
+                                            },
+                                            onUpdateInterview: (data) {
+                                              setState(() {
+                                                print(data);
+                                                message.title = data['title'];
+                                                message.startTime =
+                                                    DateTime.parse(
+                                                        data['startTime']!);
+                                                message.endTime =
+                                                    DateTime.parse(
+                                                        data['endTime']!);
+                                                message.duration =
+                                                    calculateDurationInMinutes(
+                                                        data['startTime']!,
+                                                        data['endTime']!);
+                                              });
+                                            })
                                       else
                                         MessageChatBubble(
                                           userId1: widget.idThisUser,

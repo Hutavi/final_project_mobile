@@ -28,6 +28,7 @@ class _ProjectSearchState extends State<ProjectSearch> {
   int? amountStudentNeed;
   int? proposalsLessThan;
   bool isLoading = true;
+  bool notFoundProject = false;
 
   //Pagination
   int page = 1;
@@ -80,6 +81,7 @@ class _ProjectSearchState extends State<ProjectSearch> {
         options: Options(method: 'GET'),
         queryParameters: queryParams,
       );
+
       print("Re fetch data");
       if (response.statusCode == 200) {
         final List<dynamic> parsed = response.data!['result'];
@@ -91,10 +93,14 @@ class _ProjectSearchState extends State<ProjectSearch> {
         setState(() {
           listProject = listProject + projects;
           isLoading = false;
+          notFoundProject = false;
         });
       }
     } catch (e) {
       print(e);
+      setState(() {
+        notFoundProject = true;
+      });
     }
   }
 
@@ -176,45 +182,53 @@ class _ProjectSearchState extends State<ProjectSearch> {
                 )
               ],
             ),
-            isLoading
-                ? const Expanded(
-                    child: Center(
-                      child: LoadingWidget(),
+            notFoundProject
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text('Not found project'),
                     ),
                   )
-                : Expanded(
-                    child: listProject.isEmpty
-                        ? Center(
-                            child: Text(
-                                LocaleData.notFoundProject.getString(context)))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            itemCount: listProject.length,
-                            itemBuilder: (context, index) {
-                              final project = listProject[index];
-                              final backgroundColor =
-                                  index % 2 == 0 ? true : false;
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, AppRouterName.projectDetail,
-                                      arguments: project);
+                : isLoading
+                    ? const Expanded(
+                        child: Center(
+                          child: LoadingWidget(),
+                        ),
+                      )
+                    : Expanded(
+                        child: listProject.isEmpty
+                            ? Center(
+                                child: Text(LocaleData.notFoundProject
+                                    .getString(context)))
+                            : ListView.builder(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                itemCount: listProject.length,
+                                itemBuilder: (context, index) {
+                                  final project = listProject[index];
+                                  final backgroundColor =
+                                      index % 2 == 0 ? true : false;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, AppRouterName.projectDetail,
+                                          arguments: project);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        ProjectItem(
+                                          isEven: backgroundColor,
+                                          projectForListModel: project,
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
-                                child: Column(
-                                  children: [
-                                    ProjectItem(
-                                      isEven: backgroundColor,
-                                      projectForListModel: project,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                  ),
+                              ),
+                      ),
           ]),
         ),
       ),

@@ -182,6 +182,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       setState(() {
         if (user['student'] == null) {
           created = false;
+          isLoading = false;
         } else {
           created = true;
           final student = user['student'];
@@ -440,7 +441,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       builder: (BuildContext context) {
         return AddLanguageModal(
           initialLanguageName: '',
-          initialSelectedLanguageLevel: 'beginner',
+          initialSelectedLanguageLevel: 'Beginner',
           onAccept: _handleAcceptAddLanguage,
         );
       },
@@ -455,7 +456,7 @@ class _StudentProfileS1State extends State<StudentProfileS1> {
       builder: (BuildContext context) {
         return AddLanguageModal(
           initialLanguageName: languages['languageName'] ?? '',
-          initialSelectedLanguageLevel: languages['level'] ?? 'beginner',
+          initialSelectedLanguageLevel: languages['level'] ?? 'Beginner',
           onAccept: (name, level) {
             _handleAcceptUpdateLanguage(name, level, index);
           },
