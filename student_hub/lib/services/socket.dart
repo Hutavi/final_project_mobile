@@ -24,23 +24,6 @@ class SocketManager {
     socket!.io.options!['extraHeaders'] = {
       'Authorization': 'Bearer $token',
     };
-
-    // socket!.io.options!['query'] = {
-    //   'project_id': 560,
-    // };
-
-    // socket!.connect();
-
-    // socket!.onConnect((data) {
-    //   print('Connected');
-    // });
-
-    // socket!.onDisconnect((data) {
-    //   print('Disconnected');
-    // });
-
-    // socket!.onConnectError((data) => print('$data'));
-    // socket!.onError((data) => print(data));
   }
 
   static void connect() {
@@ -68,10 +51,18 @@ class SocketManager {
   static void recieveNotify() async {
     final prefs = await SharedPreferences.getInstance();
     final idUser = prefs.getInt('idUser');
+    var noti = '';
 
     socket!.on('NOTI_$idUser', (data) {
+      if (data['notification']['content'] == "New message created") {
+        noti = "Bạn có 1 tin nhắn mới";
+      } else if (data['notification']['content'] == "Interview created") {
+        noti = "Bạn có 1 interview mới";
+      } else if (data['notification']['content'].contains("proposal")) {
+        noti = "Bạn có 1 proposal mới";
+      }
       Fluttertoast.showToast(
-        msg: 'Bạn có 1 thông báo mới',
+        msg: noti,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
@@ -79,26 +70,6 @@ class SocketManager {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-    });
-  }
-
-  static void recieveMessage() async {
-    socket!.on('RECEIVE_MESSAGE', (data) {
-      MessageQueueService.addMessage(data);
-    });
-  }
-
-  static void sendMessage(String message, int projectId, int senderId,
-      int receiverId, int messageFlag) {
-    addQueryParameter(projectId);
-
-    // Send message
-    socket!.emit("SEND_MESSAGE", {
-      "content": message,
-      "projectId": projectId,
-      "senderId": senderId,
-      "receiverId": receiverId,
-      "messageFlag": messageFlag,
     });
   }
 }
