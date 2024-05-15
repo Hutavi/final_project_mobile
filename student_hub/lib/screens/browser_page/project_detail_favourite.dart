@@ -7,7 +7,6 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
-import 'package:student_hub/widgets/project_item_favourite.dart';
 
 class ProjectDetailFavorite extends StatefulWidget {
   final ProjectFavourite projectItem;

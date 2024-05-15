@@ -1,11 +1,11 @@
+// ignore_for_file: file_names
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/screens/dashboard/detail_proposal.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/constants/colors.dart';
 
 class StudentAllProject extends StatefulWidget {
   const StudentAllProject({super.key});
@@ -21,10 +21,10 @@ class _StudentAllProjectState extends State<StudentAllProject>
   var idStudent = -1;
   List<dynamic> projects = [];
   List<dynamic> submittedProposal = [];
-  List<dynamic> activeProposal = [];    //statusFlag = 1
-  List<dynamic> projectsWorking = [];   //typeFlag = 0
+  List<dynamic> activeProposal = []; //statusFlag = 1
+  List<dynamic> projectsWorking = []; //typeFlag = 0
   List<dynamic> projectsArchieved = []; //typeFlag = 1
-  
+
   @override
   void initState() {
     super.initState();
@@ -46,23 +46,22 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
     setState(() {
       projects = project;
-      submittedProposal = 
-                        project.where((item) => item['statusFlag'] == 0).toList();
-      activeProposal = 
-                        project.where((item) => item['statusFlag'] == 1).toList();
-      projectsWorking = 
-                        project.where((item) => item['project']['typeFlag'] == 1).toList();
-      projectsArchieved = 
-                        project.where((item) => item['project']['typeFlag'] == 2
-                        // && item['project']['statusFlag'] == 3
-                        ).toList();
+      submittedProposal =
+          project.where((item) => item['statusFlag'] == 0).toList();
+      activeProposal =
+          project.where((item) => item['statusFlag'] == 1).toList();
+      projectsWorking =
+          project.where((item) => item['project']['typeFlag'] == 1).toList();
+      projectsArchieved = project
+          .where((item) => item['project']['typeFlag'] == 2
+              // && item['project']['statusFlag'] == 3
+              )
+          .toList();
     });
   }
 
-  void readProposal(){
+  void readProposal() {}
 
-  }
-  
   void getDataDefault() async {
     try {
       final dioPrivate = DioClient();
@@ -196,96 +195,93 @@ class _StudentAllProjectState extends State<StudentAllProject>
   }
 
   Widget _activeProposal() {
-    if(activeProposal.isEmpty){
+    if (activeProposal.isEmpty) {
       return Card(
         // color: const Color.fromRGBO(247, 242, 249, 1),
         color: Theme.of(context).colorScheme.background,
         child: Padding(
           padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                children: [
+                  Text(
+                    "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
                   ),
+                ],
               ),
-              const SizedBox(height: 8.0),
-              Text(
-                LocaleData.noActiveProposal.getString(context),
-                style: const TextStyle(
-                  fontSize: 13.0,
-                ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              LocaleData.noActiveProposal.getString(context),
+              style: const TextStyle(
+                fontSize: 13.0,
               ),
-            ]
-          ),
+            ),
+          ]),
         ),
       );
-    }
-    else {
+    } else {
       return Card(
         color: Theme.of(context).colorScheme.background,
         child: Padding(
           padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(
+                    "${LocaleData.activeProposal.getString(context)} (${activeProposal.length})",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
                   ),
+                ],
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: activeProposal.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return _buildActivityProposalItem(index);
-                  },
-                ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: activeProposal.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildActivityProposalItem(index);
+                },
               ),
-            ]
-          ),
+            ),
+          ]),
         ),
       );
     }
   }
 
-  Widget _buildActivityProposalItem(int index){
+  Widget _buildActivityProposalItem(int index) {
     return GestureDetector(
-      onTap:(){
-        Navigator.push(context,
-        MaterialPageRoute(
-          builder: (context) => DetailProposal(
-            idProposal: activeProposal[index]['id'],
-            coverletter: activeProposal[index]['coverLetter'],
-            statusFlag: activeProposal[index]['statusFlag'],
-            project: {
-              'title': activeProposal[index]['project']['title'],
-              'description': activeProposal[index]['project']['description'],
-              'projectScopeFlag': activeProposal[index]['project']['projectScopeFlag'],
-              'numberOfStudents': activeProposal[index]['project']['numberOfStudents'],
-            }
-          )
-        ));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailProposal(
+                        idProposal: activeProposal[index]['id'],
+                        coverletter: activeProposal[index]['coverLetter'],
+                        statusFlag: activeProposal[index]['statusFlag'],
+                        project: {
+                          'title': activeProposal[index]['project']['title'],
+                          'description': activeProposal[index]['project']
+                              ['description'],
+                          'projectScopeFlag': activeProposal[index]['project']
+                              ['projectScopeFlag'],
+                          'numberOfStudents': activeProposal[index]['project']
+                              ['numberOfStudents'],
+                        })));
       },
       child: Card(
         color: Theme.of(context).colorScheme.secondary,
@@ -322,7 +318,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
               const SizedBox(height: 8.0),
               Text(
                 LocaleData.description.getString(context),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13.0,
                 ),
               ),
@@ -353,60 +349,63 @@ class _StudentAllProjectState extends State<StudentAllProject>
       ),
     );
   }
+
   Widget _submittedProposal() {
     return Card(
-        color: Theme.of(context).colorScheme.background,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "${LocaleData.submittedProposal.getString(context)} (${submittedProposal.length})",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+      color: Theme.of(context).colorScheme.background,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Row(
+                children: [
+                  Text(
+                    "${LocaleData.submittedProposal.getString(context)} (${submittedProposal.length})",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: submittedProposal.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return _buildProjectItem(index);
-                  },
-                ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: submittedProposal.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _buildProjectItem(index);
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
   Widget _buildProjectItem(int index) {
     return GestureDetector(
-      onTap:(){
-        Navigator.push(context,
-        MaterialPageRoute(
-          builder: (context) => DetailProposal(
-            idProposal: submittedProposal[index]['id'],
-            coverletter: submittedProposal[index]['coverLetter'],
-            statusFlag: submittedProposal[index]['statusFlag'],
-            project: {
-              'title': submittedProposal[index]['project']['title'],
-              'description': submittedProposal[index]['project']['description'],
-              'projectScopeFlag': submittedProposal[index]['project']['projectScopeFlag'],
-              'numberOfStudents': submittedProposal[index]['project']['numberOfStudents'],
-            }
-          )
-        ));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailProposal(
+                        idProposal: submittedProposal[index]['id'],
+                        coverletter: submittedProposal[index]['coverLetter'],
+                        statusFlag: submittedProposal[index]['statusFlag'],
+                        project: {
+                          'title': submittedProposal[index]['project']['title'],
+                          'description': submittedProposal[index]['project']
+                              ['description'],
+                          'projectScopeFlag': submittedProposal[index]
+                              ['project']['projectScopeFlag'],
+                          'numberOfStudents': submittedProposal[index]
+                              ['project']['numberOfStudents'],
+                        })));
       },
       child: Card(
         color: Theme.of(context).colorScheme.secondary,
@@ -488,21 +487,23 @@ class _StudentAllProjectState extends State<StudentAllProject>
 
   Widget _buildWorkingProjectItem(int index) {
     return GestureDetector(
-      onTap:(){
-        Navigator.push(context,
-        MaterialPageRoute(
-          builder: (context) => DetailProposal(
-            idProposal: projectsWorking[index]['id'],
-            coverletter: projectsWorking[index]['coverLetter'],
-            statusFlag: projectsWorking[index]['statusFlag'],
-            project: {
-              'title': projectsWorking[index]['project']['title'],
-              'description': projectsWorking[index]['project']['description'],
-              'projectScopeFlag': projectsWorking[index]['project']['projectScopeFlag'],
-              'numberOfStudents': projectsWorking[index]['project']['numberOfStudents'],
-            }
-          )
-        ));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailProposal(
+                        idProposal: projectsWorking[index]['id'],
+                        coverletter: projectsWorking[index]['coverLetter'],
+                        statusFlag: projectsWorking[index]['statusFlag'],
+                        project: {
+                          'title': projectsWorking[index]['project']['title'],
+                          'description': projectsWorking[index]['project']
+                              ['description'],
+                          'projectScopeFlag': projectsWorking[index]['project']
+                              ['projectScopeFlag'],
+                          'numberOfStudents': projectsWorking[index]['project']
+                              ['numberOfStudents'],
+                        })));
       },
       child: Card(
         child: Padding(
@@ -569,7 +570,7 @@ class _StudentAllProjectState extends State<StudentAllProject>
       ),
     );
   }
-  
+
   Widget _archieved() {
     return ListView.builder(
       itemCount: projectsArchieved.length,
@@ -580,23 +581,25 @@ class _StudentAllProjectState extends State<StudentAllProject>
     );
   }
 
-  Widget _buildArchievedProjectItem(int index){
+  Widget _buildArchievedProjectItem(int index) {
     return GestureDetector(
-      onTap:(){
-        Navigator.push(context,
-        MaterialPageRoute(
-          builder: (context) => DetailProposal(
-            idProposal: projectsArchieved[index]['id'],
-            coverletter: projectsArchieved[index]['coverLetter'],
-            statusFlag: projectsArchieved[index]['statusFlag'],
-            project: {
-              'title': projectsArchieved[index]['project']['title'],
-              'description': projectsArchieved[index]['project']['description'],
-              'projectScopeFlag': projectsArchieved[index]['project']['projectScopeFlag'],
-              'numberOfStudents': projectsArchieved[index]['project']['numberOfStudents'],
-            }
-          )
-        ));
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailProposal(
+                        idProposal: projectsArchieved[index]['id'],
+                        coverletter: projectsArchieved[index]['coverLetter'],
+                        statusFlag: projectsArchieved[index]['statusFlag'],
+                        project: {
+                          'title': projectsArchieved[index]['project']['title'],
+                          'description': projectsArchieved[index]['project']
+                              ['description'],
+                          'projectScopeFlag': projectsArchieved[index]
+                              ['project']['projectScopeFlag'],
+                          'numberOfStudents': projectsArchieved[index]
+                              ['project']['numberOfStudents'],
+                        })));
       },
       child: Card(
         child: Padding(

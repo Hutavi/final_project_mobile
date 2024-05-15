@@ -49,9 +49,7 @@ class _Content extends StatelessWidget {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const SizedBox(
-            height: 150
-          ),
+          const SizedBox(height: 150),
           Align(
             alignment: Alignment.topCenter,
             child: Text(
@@ -92,7 +90,8 @@ class _Content extends StatelessWidget {
               LocaleData.getStarted.getString(context),
               style: const TextStyle(
                 color: kWhiteColor,
-                fontSize: 16,),
+                fontSize: 16,
+              ),
             ),
           ),
         ]);

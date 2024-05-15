@@ -6,7 +6,6 @@ import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/models/user.dart';
 import 'package:student_hub/screens/profile_page/profile_input_company.dart';
-import 'package:student_hub/screens/student_profile/student_profile_s1.dart';
 import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
@@ -39,8 +38,8 @@ class _SwitchAccountState extends State<SwitchAccount> {
 
   void getRole() async {
     role = await RoleUser.getRole();
-  } 
-  
+  }
+
   void getLengthRolesLists() async {
     try {
       final dio = DioClient();
@@ -448,7 +447,7 @@ class AccountController {
   void reloadScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SwitchAccount()),
+      MaterialPageRoute(builder: (context) => const SwitchAccount()),
     );
   }
 
@@ -464,7 +463,7 @@ class AccountController {
     Navigator.pushReplacement(
         context,
         // AppRouterName.profileInput);
-        MaterialPageRoute(builder: (context) => ProfileInput()));
+        MaterialPageRoute(builder: (context) => const ProfileInput()));
   }
 }
 
@@ -483,7 +482,7 @@ class AccountTile extends StatelessWidget {
   }) : super(key: key);
 
   List<dynamic> rolesList = [];
-  
+
   Future<void> getRoleList() async {
     try {
       final dio = DioClient();
@@ -547,13 +546,13 @@ class AccountTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(lengthOfRoles == 1) {
+    if (lengthOfRoles == 1) {
       return ListTile(
         leading: const Icon(
           Icons.add,
-          color: kBlue400,),
-        title: const Text(
-            'Add account'),
+          color: kBlue400,
+        ),
+        title: const Text('Add account'),
         onTap: () {
           selectAccount(context);
         },
