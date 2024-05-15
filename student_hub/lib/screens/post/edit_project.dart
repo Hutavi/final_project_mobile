@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/models/project_models/project_model_new.dart';
-import 'package:student_hub/models/user.dart';
-import 'package:student_hub/providers/post_project_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student_hub/constants/colors.dart';
@@ -12,6 +10,7 @@ import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+
 enum ProjectDuration {
   oneToThreeMonths,
   threeToSixMonths,
@@ -29,17 +28,16 @@ class _EditProjectState extends ConsumerState<EditProject> {
   ProjectModelNew project = ProjectModelNew();
   final titleController = TextEditingController();
   bool _titlePost = false;
-  
+
   ProjectDuration _projectDuration = ProjectDuration.oneToThreeMonths;
   final descriptionController = TextEditingController();
   int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   bool _descriptionPost = false;
-  
-  void onSelectedDuration(ProjectDuration? duration) { 
-    if(duration?.index == 0){
+
+  void onSelectedDuration(ProjectDuration? duration) {
+    if (duration?.index == 0) {
       project.projectScopeFlag = 0;
-    }
-    else{
+    } else {
       project.projectScopeFlag = 1;
     }
 
@@ -49,16 +47,16 @@ class _EditProjectState extends ConsumerState<EditProject> {
   }
 
   void editPoject() async {
-    try{
+    try {
       project.projectScopeFlag ??= 0;
 
       var requestData = json.encode({
-          'projectScopeFlag': project.projectScopeFlag,
-          'title': project.title,
-          'numberOfStudents': project.numberOfStudents,
-          'description': project.description,
-          'typeFlag': project.typeFlag,
-        });
+        'projectScopeFlag': project.projectScopeFlag,
+        'title': project.title,
+        'numberOfStudents': project.numberOfStudents,
+        'description': project.description,
+        'typeFlag': project.typeFlag,
+      });
       print('Request data1: $requestData');
 
       final dioPrivate = DioClient();
@@ -70,31 +68,36 @@ class _EditProjectState extends ConsumerState<EditProject> {
         ),
       );
       print('Request data of edit project: $response');
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         print('Edit project success');
       }
-      if(response.statusCode == 400){
+      if (response.statusCode == 400) {
         // if(requestData get companyId){
-          if(response.data['projectScopeFlag'] == null){
-            print('projectScopeFlag should not be empty, projectScopeFlag must be one of the following values: 0, 1, 2, 3');
-          }
-          if(response.data['numberOfStudents'] == null){
-            print('numberOfStudents must be a number conforming to the specified constraints, numberOfStudents should not be empty');
-          }
-          if(response.data['numberOfStudents'] == 0){
-            print('numberOfStudents should not be one of the following values: 0');
-          }
-          if(response.data['description'] == null){
-            print('description should not be empty, description must be a string');
-          }
-          if(response.data['typeFlag'] == ""){
-            print('description should not be empty');
-          }
+        if (response.data['projectScopeFlag'] == null) {
+          print(
+              'projectScopeFlag should not be empty, projectScopeFlag must be one of the following values: 0, 1, 2, 3');
+        }
+        if (response.data['numberOfStudents'] == null) {
+          print(
+              'numberOfStudents must be a number conforming to the specified constraints, numberOfStudents should not be empty');
+        }
+        if (response.data['numberOfStudents'] == 0) {
+          print(
+              'numberOfStudents should not be one of the following values: 0');
+        }
+        if (response.data['description'] == null) {
+          print(
+              'description should not be empty, description must be a string');
+        }
+        if (response.data['typeFlag'] == "") {
+          print('description should not be empty');
+        }
       }
-    }catch(e){
+    } catch (e) {
       print('Error: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,8 +115,10 @@ class _EditProjectState extends ConsumerState<EditProject> {
               Center(
                 child: Text(
                   LocaleData.projectDetail.getString(context),
-                  style: TextStyle(fontWeight: FontWeight.bold,
-                  fontSize: 20,),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
               ),
               SizedBox(
@@ -123,7 +128,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               Text(
                 LocaleData.projectTitle.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -132,24 +137,24 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               TextField(
                 controller: titleController,
-                style: TextStyle(
+                style: const TextStyle(
                   color: kGrey0,
                 ),
                 decoration: InputDecoration(
                     fillColor: kWhiteColor,
                     filled: true,
                     hintText: LocaleData.postingPlaceholder.getString(context),
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
                         bottom: Radius.circular(10.0),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(10.0),
@@ -162,53 +167,49 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 },
               ),
               const Divider(),
-              Text(
-                LocaleData.projectDescription.getString(context),
-                style: TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 14,
-                )
-              ),
+              Text(LocaleData.projectDescription.getString(context),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  )),
               const SizedBox(height: 5),
               TextField(
-                  controller: descriptionController,
-                  maxLines: 6,
-                  style: TextStyle(
-                    color: kGrey0,
-                  ),
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: kWhiteColor,
-                      hintText: LocaleData.projectDescription.getString(context),
-                      hintStyle: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: kGrey0,
+                controller: descriptionController,
+                maxLines: 6,
+                style: const TextStyle(
+                  color: kGrey0,
+                ),
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: kWhiteColor,
+                    hintText: LocaleData.projectDescription.getString(context),
+                    hintStyle: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: kGrey0,
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      // borderSide: BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10.0),
+                        bottom: Radius.circular(10.0),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        // borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10.0),
-                          bottom: Radius.circular(10.0),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(10.0),
-                              bottom:Radius.circular(10.0)
-                          )
-                      )
-                  ),
-                  onChanged: (value) {
+                            top: Radius.circular(10.0),
+                            bottom: Radius.circular(10.0)))),
+                onChanged: (value) {
                   project.description = value;
                   setState(() {
                     _descriptionPost = value.isNotEmpty;
                   });
                 },
-                ),
+              ),
               const Divider(),
               Text(
                 LocaleData.postingScopeHowManyStudents.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -221,18 +222,18 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     fillColor: kWhiteColor,
                     filled: true,
                     hintText: LocaleData.numberOfStudents.getString(context),
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       fontWeight: FontWeight.normal,
                       color: kGrey0,
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       // borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10.0),
                         bottom: Radius.circular(10.0),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(10.0),
@@ -242,7 +243,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                   FilteringTextInputFormatter.allow(
                       RegExp(r'^[0-9]*$')), // Chỉ cho phép nhập số
                 ],
-                onChanged: (value){
+                onChanged: (value) {
                   setState(() {
                     project.numberOfStudents = int.tryParse(value) ?? 1;
                     _numberOfStudents = int.tryParse(value) ?? 0;
@@ -256,7 +257,6 @@ class _EditProjectState extends ConsumerState<EditProject> {
                       : 16,
                 ),
               ),
-              
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
@@ -264,7 +264,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
               ),
               Text(
                 LocaleData.postingScopeHowLong.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               ListTile(
                 title: Text(LocaleData.oneToThreeMonths.getString(context)),
@@ -295,7 +295,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   setState(() async {
                     editPoject();
                     Navigator.pushNamed(context, AppRouterName.navigation);
@@ -303,7 +303,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,
-                  foregroundColor: _titlePost ? null : kWhiteColor, 
+                  foregroundColor: _titlePost ? null : kWhiteColor,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15.0,
                     vertical: 10.0,

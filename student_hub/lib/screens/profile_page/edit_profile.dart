@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -7,9 +6,7 @@ import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/models/user.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 
 class EditProfile extends StatefulWidget {
@@ -52,7 +49,8 @@ class _EditProfileState extends State<EditProfile>
         print(size);
         _companyNameController.text =
             respondData.data['result']['company']['companyName'] ?? '';
-        _websiteController.text = respondData.data['result']['company']['website'] ?? '';
+        _websiteController.text =
+            respondData.data['result']['company']['website'] ?? '';
         _descriptionController.text =
             respondData.data['result']['company']['description'] ?? '';
         switch (size) {
@@ -118,7 +116,8 @@ class _EditProfileState extends State<EditProfile>
       context: context,
       builder: (BuildContext context) {
         return DialogCustom(
-          title: '${LocaleData.edit.getString(context)} ${LocaleData.success.getString(context)}',
+          title:
+              '${LocaleData.edit.getString(context)} ${LocaleData.success.getString(context)}',
           description: LocaleData.notiEdit.getString(context),
           buttonText: LocaleData.close.getString(context),
           statusDialog: 1,
@@ -147,7 +146,7 @@ class _EditProfileState extends State<EditProfile>
         options: Options(method: 'PUT'),
       );
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         print('Edit profile success');
         _showSuccessDialog();
       }

@@ -6,11 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/routers/route.dart';
 import 'package:student_hub/routers/route_name.dart';
-import 'package:student_hub/screens/switch_account_page/api_manager.dart';
 import 'package:student_hub/services/dio_client.dart';
-import 'package:student_hub/models/user.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
 
@@ -104,11 +101,10 @@ class _NewLoginPageState extends State<ProfileInput>
         data: requestData,
         options: Options(method: 'POST'),
       );
-      if(response.statusCode == 201){
+      if (response.statusCode == 201) {
         print('Create profile success');
         _showSuccessDialog();
       }
-      
     } catch (e) {
       print(e.toString());
     }
@@ -194,7 +190,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('2-9 ${LocaleData.employees.getString(context)}',
+                          title: Text(
+                              '2-9 ${LocaleData.employees.getString(context)}',
                               style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 1,
@@ -207,7 +204,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('10-99 ${LocaleData.employees.getString(context)}',
+                          title: Text(
+                              '10-99 ${LocaleData.employees.getString(context)}',
                               style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 2,
@@ -220,7 +218,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('100-1000 ${LocaleData.employees.getString(context)}',
+                          title: Text(
+                              '100-1000 ${LocaleData.employees.getString(context)}',
                               style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 3,
@@ -233,7 +232,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           activeColor: kBlue400,
                         ),
                         RadioListTile<int>(
-                          title: Text('${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
+                          title: Text(
+                              '${LocaleData.moreThan.getString(context)} 1000 ${LocaleData.employees.getString(context)}',
                               style: const TextStyle(fontSize: 14)),
                           dense: true,
                           value: 4,
@@ -271,7 +271,8 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: '${LocaleData.companyName.getString(context)}!',
+                        hintText:
+                            '${LocaleData.companyName.getString(context)}!',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -282,7 +283,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -322,7 +324,8 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: '${LocaleData.companyWebsite.getString(context)} !',
+                        hintText:
+                            '${LocaleData.companyWebsite.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -333,7 +336,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -372,7 +376,8 @@ class _NewLoginPageState extends State<ProfileInput>
                         fillColor: Theme.of(context).cardColor,
                         filled: true,
                         labelText: '',
-                        hintText: '${LocaleData.descriptionCompany.getString(context)} !',
+                        hintText:
+                            '${LocaleData.descriptionCompany.getString(context)} !',
                         hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14.0,
@@ -383,7 +388,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.black, width: 0.5),
+                          borderSide:
+                              const BorderSide(color: Colors.black, width: 0.5),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         floatingLabelStyle: const TextStyle(
@@ -437,8 +443,8 @@ class _NewLoginPageState extends State<ProfileInput>
                           ),
                           child: Text(
                             LocaleData.continu.getString(context),
-                            style:
-                                const TextStyle(color: Colors.white, fontSize: 16.0),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16.0),
                           ),
                         ),
                       ),

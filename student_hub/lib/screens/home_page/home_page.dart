@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -15,14 +16,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> setRoleCurr(int value) async{
+  Future<void> setRoleCurr(int value) async {
     await RoleUser.clearRole();
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     await RoleUser.saveRole(value);
-    int a = await RoleUser.getRole();
+    // int a = await RoleUser.getRole();
     // print('roleUser: $value');
     // print('curr: ' + a.toString());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                   // List
                   Text(
                     LocaleData.homeTitle.getString(context),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.normal,
                     ),

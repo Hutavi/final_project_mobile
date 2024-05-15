@@ -834,24 +834,13 @@ class DashboardState extends State<Dashboard>
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          projectsArchieved[index]['title'],
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          formatTimeAgo(projectsArchieved[index]['createdAt']),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
+                  Text(
+                    projectsArchieved[index]['title'],
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   IconButton(
@@ -863,6 +852,31 @@ class DashboardState extends State<Dashboard>
                       size: MediaQuery.of(context).size.width * 0.06,
                     ),
                   ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formatTimeAgo(projectsArchieved[index]['createdAt']),
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    projectsArchieved[index]['projectStatusFlag'] == 1
+                        ? "Thành công"
+                        : projectsArchieved[index]['projectStatusFlag'] == 1
+                            ? "Thất bại"
+                            : "Thành công",
+                    style: TextStyle(
+                        color: projectsArchieved[index]['projectStatusFlag'] ==
+                                1
+                            ? Colors.green
+                            : projectsArchieved[index]['projectStatusFlag'] == 1
+                                ? Colors.red
+                                : Colors.green,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700),
+                  )
                 ],
               ),
               const SizedBox(height: 8.0),
