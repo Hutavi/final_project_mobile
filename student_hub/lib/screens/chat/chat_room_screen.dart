@@ -71,7 +71,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     socket!.on('RECEIVE_INTERVIEW', (data) {
       if (data['notification']['content'] == 'Interview created' && mounted) {
         setState(() {
-          print(data);
           messages.add(Message(
               id: data['notification']['messageId'],
               projectID: data['notification']['message']['projectId'],
@@ -105,7 +104,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     socket!.on('RECEIVE_MESSAGE', (data) {
       if (mounted) {
         setState(() {
-          print('socket $data');
           messages.add(Message(
             projectID: data['notification']['message']['projectId'],
             senderUserId: data['notification']['senderId'],
