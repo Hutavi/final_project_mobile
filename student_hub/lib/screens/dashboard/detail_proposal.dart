@@ -5,22 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
-import 'package:student_hub/constants/image_assets.dart';
-import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
-import 'package:student_hub/widgets/describe_item.dart';
-import 'package:student_hub/widgets/loading.dart';
-import 'package:student_hub/models/proposal_models/proposal.dart';
 import 'package:student_hub/widgets/custom_dialog.dart';
 
-class DetailProposal extends StatefulWidget { 
+class DetailProposal extends StatefulWidget {
   // Proposal proposal;
   final String coverletter;
   final int statusFlag;
   final Map project;
   final int idProposal;
-  DetailProposal({ required this.coverletter, required this.statusFlag, required this.project , required this.idProposal});
+  DetailProposal(
+      {required this.coverletter,
+      required this.statusFlag,
+      required this.project,
+      required this.idProposal});
   @override
   State<DetailProposal> createState() => _DetailProposalState();
 }
@@ -45,7 +44,7 @@ class _DetailProposalState extends State<DetailProposal> {
     );
   }
 
-  void receiverOffer()async {
+  void receiverOffer() async {
     try {
       final response = await DioClient().request(
         '/proposal/${widget.idProposal}',
@@ -56,15 +55,12 @@ class _DetailProposalState extends State<DetailProposal> {
       if (response.statusCode == 200) {
         final data = response.data;
         if (data['result']['disableFlag'] == 1) {
-          print(
-            'Data: ${data['result']['disableFlag']}'
-          );
+          print('Data: ${data['result']['disableFlag']}');
           setState(() {
             isOffer = true;
           });
         }
       }
-
     } catch (e) {
       if (e is DioException && e.response != null) {
         print(e);
@@ -97,6 +93,7 @@ class _DetailProposalState extends State<DetailProposal> {
       }
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -122,7 +119,7 @@ class _DetailProposalState extends State<DetailProposal> {
             children: [
               Text(
                 LocaleData.projectDetail.getString(context),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -135,19 +132,17 @@ class _DetailProposalState extends State<DetailProposal> {
                       fontWeight: FontWeight.bold,
                       color: kBlue600)),
               const Divider(),
-              Text(
-                LocaleData.projectDescription.getString(context),
-                style: TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 14,
-                )
-              ),
+              Text(LocaleData.projectDescription.getString(context),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  )),
               const SizedBox(height: 5),
               Text("${widget.project['description']}",
                   style: const TextStyle(
                       fontSize: 14,
                       // fontWeight: FontWeight.w300,
                       color: kBlue600)),
-              
               const Divider(),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
@@ -165,7 +160,7 @@ class _DetailProposalState extends State<DetailProposal> {
                     children: [
                       Text(
                         LocaleData.projectScope.getString(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 14),
                         overflow: TextOverflow.clip,
                       ),
@@ -215,51 +210,52 @@ class _DetailProposalState extends State<DetailProposal> {
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              Text(
-                "${LocaleData.coverLetter.getString(context)}: ",
-                style: const TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 14,
-                )
-              ),
+              Text("${LocaleData.coverLetter.getString(context)}: ",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  )),
               const SizedBox(height: 5),
               Text(widget.coverletter,
                   style: const TextStyle(
-                      fontSize: 14,
-                      )
-              ),
+                    fontSize: 14,
+                  )),
               const Divider(),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              Text(
-                LocaleData.status.getString(context),
-                style: const TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 14,
-                )
-              ),
-              const SizedBox(height: 5),
-              Text(widget.statusFlag == 0 ? LocaleData.waiting.getString(context)
-                                          : widget.statusFlag == 1 ? LocaleData.activeStatus.getString(context)
-                                          : widget.statusFlag == 2 ? LocaleData.offer.getString(context)
-                                                                  : LocaleData.hired.getString(context),
+              Text(LocaleData.status.getString(context),
                   style: const TextStyle(
-                      fontSize: 14,
-                      )
-              ),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  )),
+              const SizedBox(height: 5),
+              Text(
+                  widget.statusFlag == 0
+                      ? LocaleData.waiting.getString(context)
+                      : widget.statusFlag == 1
+                          ? LocaleData.activeStatus.getString(context)
+                          : widget.statusFlag == 2
+                              ? LocaleData.offer.getString(context)
+                              : LocaleData.hired.getString(context),
+                  style: const TextStyle(
+                    fontSize: 14,
+                  )),
               isOffer ? const Divider() : Container(),
               SizedBox(
                 height: MediaQuery.of(context).size.height < 600
                     ? 8 // Giảm khoảng trống cho màn hình nhỏ hơn
                     : 16,
               ),
-              isOffer ? Text(
-                LocaleData.questionAboutOffer.getString(context),
-                style: const TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 14,
-                )
-              ) : Container(),
+              isOffer
+                  ? Text(LocaleData.questionAboutOffer.getString(context),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ))
+                  : Container(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -267,15 +263,16 @@ class _DetailProposalState extends State<DetailProposal> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        isOffer ? ElevatedButton(
-                          onPressed: (){
-                            agreeOffer(widget.idProposal);
-                          }, 
-                          child: 
-                          Text(
-                            '${LocaleData.accept.getString(context)} offer',
-                              ),
-                        ): Container(),
+                        isOffer
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  agreeOffer(widget.idProposal);
+                                },
+                                child: Text(
+                                  '${LocaleData.accept.getString(context)} offer',
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),

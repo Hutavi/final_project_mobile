@@ -104,9 +104,10 @@ class AddEducationModalState extends State<AddEducationModal> {
               items: yearsList.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(
-                    value,
-                  ),
+                  child: Text(value,
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).textTheme.labelLarge!.color)),
                 );
               }).toList(),
               underline: const SizedBox(),
@@ -141,9 +142,10 @@ class AddEducationModalState extends State<AddEducationModal> {
               items: yearsList.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(
-                    value,
-                  ),
+                  child: Text(value,
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).textTheme.labelLarge!.color)),
                 );
               }).toList(),
               underline: const SizedBox(),

@@ -6,6 +6,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/describe_item.dart';
 
@@ -26,13 +27,13 @@ class _ProjectItemState extends State<ProjectItem> {
   @override
   void initState() {
     isFavoriteUpdate = widget.projectForListModel.isFavorite ?? false;
-    super.initState();
     fecthMe();
+    super.initState();
   }
 
   @override
   void dispose() {
-    isFavoriteUpdate = false;
+    // isFavoriteUpdate = false;
     super.dispose();
   }
 
@@ -54,6 +55,7 @@ class _ProjectItemState extends State<ProjectItem> {
           idStudent = null;
           idCompany = company != null ? company['id'] : null;
         }
+        setState(() {});
       }
     } catch (e) {
       print(e);
@@ -143,76 +145,78 @@ class _ProjectItemState extends State<ProjectItem> {
       backgroundColor =
           widget.isEven! ? colorScheme.surface : colorScheme.background;
     }
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
-              blurRadius: 5.0,
-            ),
-          ]),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  timeAgo,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w400, fontSize: 13),
-                ),
-                Text(widget.projectForListModel.title ?? '',
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => Navigator.pushNamed(context, AppRouterName.projectDetail,
+          arguments: widget.projectForListModel),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                blurRadius: 5.0,
+              ),
+            ]),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    timeAgo,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: kBlue600,
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text(
-                  // widget.projectForListModel.projectScopeFlag == 0
-                  //     ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonth.getString(context)}'
-                  //     : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonth.getString(context)}',
-                  getProjectScopeText(context,
-                      widget.projectForListModel.projectScopeFlag ?? 0),
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 10),
-                Text(LocaleData.studentsAreLookingFor.getString(context),
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold)),
-                ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    DescribeItem(
-                      itemDescribe:
-                          widget.projectForListModel.description ?? '',
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} ${LocaleData.student.getString(context)}',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ],
+                        fontWeight: FontWeight.w400, fontSize: 13),
+                  ),
+                  Text(widget.projectForListModel.title ?? '',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: kBlue600,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  Text(
+                    getProjectScopeText(context,
+                        widget.projectForListModel.projectScopeFlag ?? 0),
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(LocaleData.studentsAreLookingFor.getString(context),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold)),
+                  ListView(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      DescribeItem(
+                        itemDescribe:
+                            widget.projectForListModel.description ?? '',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} ${LocaleData.student.getString(context)}',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
             ),
-          ),
-          GestureDetector(
-            onTap: idStudent != null ? toggleTypeFlag : null,
-            child: isFavoriteUpdate == true
-                ? const Icon(
-                    Icons.favorite_rounded,
-                    color: kRed,
-                  )
-                : const Icon(Icons.favorite_border_rounded),
-          )
-        ],
+            GestureDetector(
+              onTap: idStudent != null ? toggleTypeFlag : null,
+              child: isFavoriteUpdate == true
+                  ? const Icon(
+                      Icons.favorite_rounded,
+                      color: kRed,
+                    )
+                  : const Icon(Icons.favorite_border_rounded),
+            )
+          ],
+        ),
       ),
     );
   }

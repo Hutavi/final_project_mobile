@@ -89,7 +89,10 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value,
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).textTheme.labelLarge!.color)),
                 );
               }).toList(),
               underline: const SizedBox(),
@@ -115,7 +118,7 @@ class AddLanguageModalState extends State<AddLanguageModal> {
                   ),
                 ),
                 child: Text(LocaleData.cancel.getString(context),
-                    style: TextStyle(fontSize: 13, color: Colors.white)),
+                    style: const TextStyle(fontSize: 13, color: Colors.white)),
               ),
             ),
             const SizedBox(width: 10),

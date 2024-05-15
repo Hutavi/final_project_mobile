@@ -146,14 +146,14 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                 ),
                 Text(
                   widget.projectForListModel.projectScopeFlag == 0
-                    ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonths.getString(context)}'
+                      ? '${LocaleData.time.getString(context)}: ${LocaleData.oneToThreeMonths.getString(context)}'
                       : '${LocaleData.time.getString(context)}: ${LocaleData.threeToSixMonths.getString(context)}',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
                 Text(LocaleData.studentsAreLookingFor.getString(context),
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold)),
                 ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -167,7 +167,8 @@ class _ProjectItemFavouriteState extends State<ProjectItemFavourite> {
                   height: 10,
                 ),
                 Text(
-                  '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} ' '${LocaleData.student.getString(context)}',
+                  '${LocaleData.proposals.getString(context)}: ${widget.projectForListModel.numberOfStudents} '
+                  '${LocaleData.student.getString(context)}',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],
