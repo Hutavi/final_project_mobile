@@ -19,11 +19,15 @@ class MessageChatBubble extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     Color? color = (brightness == Brightness.light)
         ? (message.senderUserId == userId1
-            ? Colors.blue[300]
+            ? Colors.blue[500]
             : Colors.grey[300])
         : (message.senderUserId == userId1
             ? Colors.blue[700]
             : Colors.grey[700]);
+
+    Color? colorText = (brightness == Brightness.light)
+        ? (message.senderUserId == userId1 ? Colors.white : Colors.black)
+        : (message.senderUserId == userId1 ? Colors.white : Colors.white);
 
     final alignment = (message.senderUserId == userId1)
         ? Alignment.centerRight
@@ -44,8 +48,8 @@ class MessageChatBubble extends StatelessWidget {
         child: Text(
           message.content ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: MediaQuery.of(context).size.width * 0.04,
-              ),
+              fontSize: MediaQuery.of(context).size.width * 0.04,
+              color: colorText),
         ),
       ),
     );

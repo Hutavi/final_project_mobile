@@ -54,12 +54,18 @@ class SocketManager {
     var noti = '';
 
     socket!.on('NOTI_$idUser', (data) {
-      if (data['notification']['content'] == "New message created") {
-        noti = "Bạn có 1 tin nhắn mới";
+      print(data);
+      if (data['notification']['typeNotifyFlag'] == "3") {
+        noti = data['notification']['title'];
       } else if (data['notification']['content'] == "Interview created") {
-        noti = "Bạn có 1 interview mới";
-      } else if (data['notification']['content'].contains("proposal")) {
-        noti = "Bạn có 1 proposal mới";
+        noti =
+            'New interview is sent by ${data['notification']['sender']['fullname']}';
+      } else if (data['notification']['typeNotifyFlag'] == "2") {
+        noti = data['notification']['title'];
+      } else if (data['notification']['typeNotifyFlag'] == "4") {
+        noti = data['notification']['title'];
+      } else if (data['notification']['typeNotifyFlag'] == "0") {
+        noti = data['notification']['title'];
       }
       Fluttertoast.showToast(
         msg: noti,
@@ -68,7 +74,7 @@ class SocketManager {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.grey[700],
         textColor: Colors.white,
-        fontSize: 16.0,
+        fontSize: 13.0,
       );
     });
   }

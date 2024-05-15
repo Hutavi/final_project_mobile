@@ -30,7 +30,7 @@ class ScheduleInviteTicket extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     Color? color = (brightness == Brightness.light)
         ? (message.senderUserId == userId1
-            ? Colors.blue[300]
+            ? Colors.blue[500]
             : Colors.grey[300])
         : (message.senderUserId == userId1
             ? Colors.blue[700]
