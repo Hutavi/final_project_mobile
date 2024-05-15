@@ -183,28 +183,20 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               // Chuyển đổi màu nền xen kẽ
                               final backgroundColor =
                                   index % 2 == 0 ? true : false;
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppRouterName.projectDetail,
-                                    arguments: project,
-                                  );
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Column(
-                                    children: [
-                                      ProjectItem(
-                                        isEven: backgroundColor,
-                                        projectForListModel: listProject[index],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  ),
+                              return Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    ProjectItem(
+                                      isEven: backgroundColor,
+                                      projectForListModel: listProject[index],
+                                      // project: project,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
                                 ),
                               );
                             } else {

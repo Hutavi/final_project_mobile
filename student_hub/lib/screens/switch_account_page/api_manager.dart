@@ -1,4 +1,5 @@
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:student_hub/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,7 @@ class ApiManager {
         },
       );
       if (response.statusCode == 200) {
-        final userData = json.decode(response.body); 
+        final userData = json.decode(response.body);
         final String fullname = userData['result']['fullname'];
         // Kiểm tra dữ liệu người dùng hợp lệ
         if (userData['result']['id'] != null) {
@@ -74,6 +75,7 @@ class ApiManager {
       return 'Error';
     }
   }
+
   static Future<List<dynamic>> getRoles(String token) async {
     try {
       final response = await http.get(
@@ -83,7 +85,7 @@ class ApiManager {
         },
       );
       if (response.statusCode == 200) {
-        final userData = json.decode(response.body); 
+        final userData = json.decode(response.body);
         final List<dynamic> roles = userData['result']['roles'];
         // Kiểm tra dữ liệu người dùng hợp lệ
         return roles;

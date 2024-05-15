@@ -89,11 +89,11 @@ class SubmitProposalState extends State<SubmitProposal> {
               children: [
                 Text(
                   LocaleData.coverLetter.getString(context),
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      // color: Colors.black
-                      ),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    // color: Colors.black
+                  ),
                 ),
               ],
             ),
@@ -105,11 +105,11 @@ class SubmitProposalState extends State<SubmitProposal> {
               children: [
                 Text(
                   LocaleData.submitProposalScript.getString(context),
-                  style: TextStyle(
-                      fontSize: 13,
-                      // fontWeight: FontWeight.w500,
-                      // color: Colors.black
-                      ),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    // fontWeight: FontWeight.w500,
+                    // color: Colors.black
+                  ),
                 ),
               ],
             ),

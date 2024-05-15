@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student_hub/models/company_user.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
 import 'package:student_hub/routers/route_name.dart';
@@ -38,7 +37,7 @@ import 'package:student_hub/screens/welcome_screen.dart';
 class AppRoute {
   static Route onGenerateRoute(RouteSettings settings) {
     //Biến args cho biến Object
-    final args = settings.arguments;
+    // final args = settings.arguments;
 
     switch (settings.name) {
       case AppRouterName.homePage:
