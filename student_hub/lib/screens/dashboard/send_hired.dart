@@ -122,7 +122,8 @@ class SendHiredState extends State<SendHired>
         '/proposal/$idProposal',
         data: jsonEncode({
           // 'statusFlag': 2,
-          'disableFlag': 1, //gởi giá trị 1 cho student, nếu student đồng ý thì gởi statusFlag = 3
+          'disableFlag':
+              1, //gởi giá trị 1 cho student, nếu student đồng ý thì gởi statusFlag = 3
         }),
         options: Options(
           method: 'PATCH',
@@ -324,7 +325,7 @@ class SendHiredState extends State<SendHired>
         ? const LoadingWidget()
         : listMessage.isNotEmpty
             ? ListView.builder(
-                itemCount: proposals.length,
+                itemCount: listMessage.length,
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _buildProjectMessageItem(context, index);
@@ -935,10 +936,10 @@ class SendHiredState extends State<SendHired>
                         ),
                       ),
                       onPressed: () {
-                        _showHiredConfirmationDialog(context, index);
+                        // _showHiredConfirmationDialog(context, index);
                       },
                       child: Text(
-                        titleIcon,
+                        LocaleData.hired.getString(context),
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 12),
                       ),

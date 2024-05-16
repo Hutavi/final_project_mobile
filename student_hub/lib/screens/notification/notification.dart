@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:student_hub/constants/colors.dart';
 import 'package:student_hub/routers/route_name.dart';
+import 'package:student_hub/screens/dashboard/detail_proposal.dart';
+import 'package:student_hub/screens/dashboard/send_hired.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:student_hub/assets/localization/locales.dart';
@@ -34,7 +36,37 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    getIDUser();
+
+    checkUser();
+  }
+
+  void checkUser() async {
+    final dioPrivate = DioClient();
+
+    final responseUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final user = responseUser.data['result'];
+
+    setState(() {
+      if (user['roles'][0] == 0) {
+        if (user['student'] != null) {
+          getIDUser();
+        } else {
+          isLoading = false;
+        }
+      } else {
+        if (user['company'] != null) {
+          getIDUser();
+        } else {
+          isLoading = false;
+        }
+      }
+    });
   }
 
   void initSocket() async {
@@ -292,24 +324,119 @@ class _NotificationPageState extends State<NotificationPage> {
                       padding: const EdgeInsets.all(10.0),
                       itemCount: notifications.length,
                       itemBuilder: (context, index) {
-                        return (notifications[index]['content'] ==
-                                    "New message created" ||
+                        return (notifications[index]['typeNotifyFlag'] == "0" ||
                                 notifications[index]['content'] ==
                                     "Interview created" ||
-                                notifications[index]['content']
-                                    .contains("proposal"))
+                                notifications[index]['typeNotifyFlag'] == "2" ||
+                                notifications[index]['typeNotifyFlag'] == "3" ||
+                                notifications[index]['typeNotifyFlag'] == "4")
                             ? GestureDetector(
                                 onTap: () => {
                                   if (notifications[index]['notifyFlag'] == "0")
                                     {
-                                      if (notifications[index]['content']
-                                          .contains("proposal"))
+                                      if (notifications[index]
+                                              ['typeNotifyFlag'] ==
+                                          "0")
                                         {
                                           updateNotifi(
                                               notifications[index]['id'],
                                               index),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailProposal(
+                                                          idProposal:
+                                                              notifications[
+                                                                      index][
+                                                                  'proposalId'],
+                                                          coverletter:
+                                                              notifications[
+                                                                          index]
+                                                                      ['proposal']
+                                                                  [
+                                                                  'coverLetter'],
+                                                          statusFlag:
+                                                              notifications[
+                                                                          index]
+                                                                      ['proposal']
+                                                                  ['statusFlag'],
+                                                          project: {
+                                                            'title': notifications[
+                                                                        index]
+                                                                    ['proposal']
+                                                                [
+                                                                'project']['title'],
+                                                            'description': notifications[
+                                                                            index]
+                                                                        [
+                                                                        'proposal']
+                                                                    ['project']
+                                                                ['description'],
+                                                            'projectScopeFlag':
+                                                                notifications[index]
+                                                                            [
+                                                                            'proposal']
+                                                                        [
+                                                                        'project']
+                                                                    [
+                                                                    'projectScopeFlag'],
+                                                            'numberOfStudents':
+                                                                notifications[index]
+                                                                            [
+                                                                            'proposal']
+                                                                        [
+                                                                        'project']
+                                                                    [
+                                                                    'numberOfStudents'],
+                                                          })))
                                         }
-                                      else
+                                      else if (notifications[index]
+                                              ['typeNotifyFlag'] ==
+                                          "2")
+                                        {
+                                          updateNotifi(
+                                              notifications[index]['id'],
+                                              index),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => SendHired(
+                                                idProject: notifications[index]
+                                                    ['proposal']['projectId'],
+                                                indexTab: 0,
+                                                projectDetail: {
+                                                  "description":
+                                                      notifications[index]
+                                                                  ['proposal']
+                                                              ['project']
+                                                          ['description'],
+                                                  "projectScopeFlag":
+                                                      notifications[index]
+                                                                  ['proposal']
+                                                              ['project']
+                                                          ['projectScopeFlag'],
+                                                  "numberOfStudents":
+                                                      notifications[index]
+                                                                  ['proposal']
+                                                              ['project']
+                                                          ['numberOfStudents']
+                                                },
+                                                companyName:
+                                                    notifications[index]
+                                                                ['proposal']
+                                                            ['project']
+                                                        ['companyName'],
+                                              ),
+                                            ),
+                                          )
+                                        }
+                                      else if (notifications[index]
+                                                  ['content'] ==
+                                              "Interview created" ||
+                                          notifications[index]
+                                                  ['typeNotifyFlag'] ==
+                                              "3")
                                         {
                                           updateNotifi(
                                               notifications[index]['id'],
@@ -334,6 +461,14 @@ class _NotificationPageState extends State<NotificationPage> {
                                                     as String,
                                               })
                                         }
+                                      else if (notifications[index]
+                                              ['typeNotifyFlag'] ==
+                                          "4")
+                                        {
+                                          updateNotifi(
+                                              notifications[index]['id'],
+                                              index),
+                                        }
                                     }
                                 },
                                 child: Card(
@@ -355,18 +490,27 @@ class _NotificationPageState extends State<NotificationPage> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Icon(notifications[index]
-                                                        ['content'] ==
-                                                    "New message created"
+                                                        ['typeNotifyFlag'] ==
+                                                    "3"
                                                 ? Icons.message
                                                 : notifications[index]
                                                             ['content'] ==
                                                         "Interview created"
                                                     ? Icons.event_available
-                                                    : Icons.settings),
+                                                    : notifications[index][
+                                                                'typeNotifyFlag'] ==
+                                                            "2"
+                                                        ? Icons.settings
+                                                        : notifications[index][
+                                                                    'typeNotifyFlag'] ==
+                                                                "0"
+                                                            ? Icons.local_offer
+                                                            : Icons
+                                                                .circle_notifications_rounded),
                                             const SizedBox(width: 16.0),
                                             if (notifications[index]
-                                                    ['content'] ==
-                                                "New message created")
+                                                    ['typeNotifyFlag'] ==
+                                                "3")
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -575,7 +719,9 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   )
                                                 ],
                                               )
-                                            else
+                                            else if (notifications[index]
+                                                    ['typeNotifyFlag'] ==
+                                                "2")
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -592,6 +738,123 @@ class _NotificationPageState extends State<NotificationPage> {
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w600),
+                                                      ),
+                                                      Text(
+                                                        formatTimeAgo(
+                                                            notifications[index]
+                                                                ['updatedAt']),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.7,
+                                                        child: Text(
+                                                          "${notifications[index]['content']}",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            else if (notifications[index]
+                                                    ['typeNotifyFlag'] ==
+                                                "0")
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        '${notifications[index]['title']} • ',
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Text(
+                                                        formatTimeAgo(
+                                                            notifications[index]
+                                                                ['updatedAt']),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.7,
+                                                        child: Text(
+                                                          "${notifications[index]['content']}",
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 13.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            else if (notifications[index]
+                                                    ['typeNotifyFlag'] ==
+                                                "4")
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        width:
+                                                            deviceSize.width *
+                                                                0.5,
+                                                        child: Text(
+                                                          '${notifications[index]['title']} • ',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                        ),
                                                       ),
                                                       Text(
                                                         formatTimeAgo(

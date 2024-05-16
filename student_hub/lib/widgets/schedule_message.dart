@@ -356,6 +356,15 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+
+    Color? colorText = (brightness == Brightness.light)
+        ? (widget.message.senderUserId == widget.userId1
+            ? Colors.white
+            : Colors.black)
+        : (widget.message.senderUserId == widget.userId1
+            ? Colors.white
+            : Colors.white);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -364,60 +373,63 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
           children: [
             Text(
               widget.message.title!,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w700, color: colorText),
             ),
             Text(
               '${widget.message.duration!} minutes',
-              style: const TextStyle(fontSize: 13),
+              style: TextStyle(fontSize: 13, color: colorText),
             ),
           ],
         ),
         const SizedBox(height: 6),
         Row(
           children: [
-            const Text(
+            Text(
               "Start time: ",
-              style: TextStyle(fontWeight: FontWeight.w400),
+              style: TextStyle(fontWeight: FontWeight.w400, color: colorText),
             ),
             Text(
               formatDateTime(widget.message.startTime!),
+              style: TextStyle(color: colorText),
             ),
           ],
         ),
         Row(
           children: [
-            const Text(
+            Text(
               "End time: ",
-              style: TextStyle(fontWeight: FontWeight.w400),
+              style: TextStyle(fontWeight: FontWeight.w400, color: colorText),
             ),
             Text(
               formatDateTime(widget.message.endTime!),
+              style: TextStyle(color: colorText),
             ),
           ],
         ),
         Row(
           children: [
-            const Text(
+            Text(
               "Code room: ",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w400, color: colorText),
             ),
             Text(
               widget.message.meetingRoomCode!,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: TextStyle(fontWeight: FontWeight.w500, color: colorText),
             ),
           ],
         ),
         Row(
           children: [
-            const Text(
+            Text(
               "Meeting id: ",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w400, color: colorText),
             ),
             Text(
               widget.message.meetingRoomId!,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontWeight: FontWeight.w500, color: colorText),
             ),
           ],
         ),
@@ -457,9 +469,7 @@ class _ScheduleMessageItemState extends State<ScheduleMessageItem> {
                       onTap: () {
                         _showOptionsModal(context);
                       },
-                      child: const Icon(
-                        Icons.pending_outlined,
-                      ),
+                      child: Icon(Icons.pending_outlined, color: colorText),
                     ),
                 ],
               )

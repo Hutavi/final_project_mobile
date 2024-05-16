@@ -7,6 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:student_hub/assets/localization/locales.dart';
 import 'package:student_hub/services/dio_client.dart';
 import 'package:student_hub/widgets/app_bar_custom.dart';
+import 'package:student_hub/widgets/custom_dialog.dart';
 import 'package:student_hub/widgets/loading.dart';
 import 'package:student_hub/widgets/navigation_menu.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -119,115 +120,24 @@ class _StundentProfileS3TranscriptState
   void _showSuccess() {
     showDialog(
       context: this.context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(
-            child: Text(
-              LocaleData.success.getString(context),
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: LocaleData.success.getString(context),
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 1,
+      ),
     );
   }
 
   void _showError() {
     showDialog(
       context: this.context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(
-            child: Text(
-              LocaleData.failed.getString(context),
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                notify,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(6)),
-                    ),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    child: Text(
-                      LocaleData.cancel.getString(context),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => DialogCustom(
+        title: LocaleData.error.getString(context),
+        description: notify,
+        buttonText: 'OK',
+        statusDialog: 2,
+      ),
     );
   }
 
