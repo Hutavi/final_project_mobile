@@ -20,6 +20,7 @@ class ReviewPost extends ConsumerStatefulWidget {
 class _ReviewPostState extends ConsumerState<ReviewPost> {
   ProjectModelNew project = ProjectModelNew();
   bool isLoading = true;
+  
   // Future<void> reload() async{
   //   while(true){
   //     await Future.delayed(Duration(seconds: 1));
@@ -39,11 +40,13 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
         ),
       );
       if (response.statusCode == 200) {
+        project.id = response.data['result']['id'];
         project.projectScopeFlag = response.data['result']['projectScopeFlag'];
         project.title = response.data['result']['title'];
         project.numberOfStudents = response.data['result']['numberOfStudents'];
         project.description = response.data['result']['description'];
         project.typeFlag = response.data['result']['typeFlag'];
+        print(response.data['result']);
       } else {
         print('Error: ${response.statusCode}');
       }
@@ -186,11 +189,8 @@ class _ReviewPostState extends ConsumerState<ReviewPost> {
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
                         onPressed: () {
-                          setState(() async {
-                            Navigator.pushNamed(
-                                context, AppRouterName.editPoject,
-                                arguments: widget.projectID);
-                          });
+                          Navigator.pushNamed(context, AppRouterName.editPoject,
+                              arguments: project);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kBlue400,
