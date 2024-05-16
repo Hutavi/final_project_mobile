@@ -40,7 +40,7 @@ class ChatRoomScreen extends StatefulWidget {
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   final messageController = TextEditingController();
-  final List<Message> messages = [];
+  List<Message> messages = [];
   static IO.Socket? socket;
   late ScrollController _scrollController;
   final FocusNode _messageFocusNode = FocusNode();
@@ -69,7 +69,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   void connectSocket() async {
     socket!.on('RECEIVE_INTERVIEW', (data) {
-      if (data['notification']['content'] == 'Interview created' && mounted) {
+      print(data);
+      if (data['notification'] != null &&
+          data['notification']['content'] != null &&
+          data['notification']['content'] == 'Interview created' &&
+          mounted) {
         setState(() {
           messages.add(Message(
               id: data['notification']['messageId'],
@@ -95,8 +99,44 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               duration: calculateDurationInMinutes(
                   data['notification']['message']['interview']['startTime'],
                   data['notification']['message']['interview']['endTime'])));
-          print('cc: ${messages[messages.length - 1]}');
           _scrollToBottom();
+        });
+      } else if (data['notification'] != null &&
+          data['notification']['content'] == 'Interview cancelled' &&
+          mounted) {
+        bool canceled =
+            data['notification']['message']['interview']['disableFlag'] == 0
+                ? false
+                : true;
+        int index = messages.indexWhere(
+            (message) => message.id == data['notification']['message']['id']);
+        setState(() {
+          messages[index] = messages[index].copyWith(canceled: canceled);
+        });
+      } else if (data['notification'] != null &&
+          data['notification']['content'] != null &&
+          data['notification']['content'] == 'Interview updated') {
+        DateTime startTime = DateTime.parse(
+            data['notification']['message']['interview']['startTime']);
+        DateTime endTime = DateTime.parse(
+            data['notification']['message']['interview']['endTime']);
+        String title = data['notification']['message']['interview']['title'];
+        bool canceled =
+            data['notification']['message']['interview']['disableFlag'] == 0
+                ? false
+                : true;
+        int duration = calculateDurationInMinutes(
+            data['notification']['message']['interview']['startTime'],
+            data['notification']['message']['interview']['endTime']);
+        int index = messages.indexWhere(
+            (element) => element.id == data['notification']['message']['id']);
+        setState(() {
+          messages[index] = messages[index].copyWith(
+              startTime: startTime,
+              endTime: endTime,
+              title: title,
+              canceled: canceled,
+              duration: duration);
         });
       }
     });
@@ -122,13 +162,6 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void _sendMessage() async {
     if (messageController.text == '') return;
 
-    // socket!.emit('SEND_MESSAGE', {
-    //   'content': messageController.text.trim(),
-    //   'projectId': widget.idProject,
-    //   'senderId': widget.idThisUser,
-    //   'receiverId': widget.idAnyUser,
-    //   'messageFlag': 0,
-    // });
     final data = {
       'content': messageController.text.trim(),
       'projectId': widget.idProject,
@@ -410,6 +443,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                           message.senderUserId);
 
                               return Column(
+                                key: ValueKey(message.id),
                                 children: [
                                   const Gap(12),
                                   Row(
@@ -448,9 +482,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                             userId2: widget.idAnyUser,
                                             message: message,
                                             onCancelMeeting: () {
-                                              setState(() {
-                                                message.canceled = true;
-                                              });
+                                              // setState(() {
+                                              //   message.canceled = true;
+                                              // });
                                             },
                                             onUpdateInterview: (data) {
                                               setState(() {

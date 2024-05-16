@@ -17,22 +17,34 @@ enum ProjectDuration {
 }
 
 class EditProject extends ConsumerStatefulWidget {
-  final int? projectID;
-  // const EditProject({super.key});
-  const EditProject({Key? key, this.projectID}) : super(key: key);
+  final ProjectModelNew project;
+
+  const EditProject({Key? key, required this.project}) : super(key: key);
+
   @override
   ConsumerState<EditProject> createState() => _EditProjectState();
 }
 
 class _EditProjectState extends ConsumerState<EditProject> {
   ProjectModelNew project = ProjectModelNew();
-  final titleController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
   bool _titlePost = false;
 
   ProjectDuration _projectDuration = ProjectDuration.oneToThreeMonths;
-  final descriptionController = TextEditingController();
-  int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
+  // int _numberOfStudents = 0; // Biến để lưu giá trị số không âm
   bool _descriptionPost = false;
+
+  @override
+  void initState() {
+    project = widget.project;
+
+    titleController.text = project.title ?? '';
+    descriptionController.text = project.description ?? '';
+    numberController.text = project.numberOfStudents.toString();
+    super.initState();
+  }
 
   void onSelectedDuration(ProjectDuration? duration) {
     if (duration?.index == 0) {
@@ -55,21 +67,23 @@ class _EditProjectState extends ConsumerState<EditProject> {
         'title': project.title,
         'numberOfStudents': project.numberOfStudents,
         'description': project.description,
-        'typeFlag': project.typeFlag,
+        'typeFlag': project.typeFlag?? 0,
+        'status': 0,
       });
       print('Request data1: $requestData');
-
+      print(widget.project.id);
       final dioPrivate = DioClient();
       final response = await dioPrivate.request(
-        '/project/${widget.projectID}',
+        '/project/${widget.project.id}',
         data: requestData,
         options: Options(
           method: 'PATCH',
         ),
       );
-      print('Request data of edit project: $response');
       if (response.statusCode == 200) {
         print('Edit project success');
+                    Navigator.pushNamed(context, AppRouterName.navigation);
+
       }
       if (response.statusCode == 400) {
         // if(requestData get companyId){
@@ -100,6 +114,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.project.id);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AppBarCustom(
@@ -217,7 +232,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                     : 16,
               ),
               TextFormField(
-                // controller: _numberStudentsController,
+                controller: numberController,
                 decoration: InputDecoration(
                     fillColor: kWhiteColor,
                     filled: true,
@@ -246,7 +261,7 @@ class _EditProjectState extends ConsumerState<EditProject> {
                 onChanged: (value) {
                   setState(() {
                     project.numberOfStudents = int.tryParse(value) ?? 1;
-                    _numberOfStudents = int.tryParse(value) ?? 0;
+                    // _numberOfStudents = int.tryParse(value) ?? 0;
                     // _isDisabledNextButton = value != null? true : false;
                   });
                 },
@@ -296,10 +311,9 @@ class _EditProjectState extends ConsumerState<EditProject> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  setState(() async {
+                  // setState(() async {
                     editPoject();
-                    Navigator.pushNamed(context, AppRouterName.navigation);
-                  });
+                  // });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kBlue400,

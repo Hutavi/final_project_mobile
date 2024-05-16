@@ -27,9 +27,38 @@ class _MessageListScreenState extends State<MessageListScreen> {
       isLoading = true;
     });
 
-    getListMessage();
+    checkUser();
     _searchController = TextEditingController();
     super.initState();
+  }
+
+  void checkUser() async {
+    final dioPrivate = DioClient();
+
+    final responseUser = await dioPrivate.request(
+      '/auth/me',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    final user = responseUser.data['result'];
+
+    setState(() {
+      if (user['roles'][0] == 0) {
+        if (user['student'] != null) {
+          getListMessage();
+        } else {
+          isLoading = false;
+        }
+      } else {
+        if (user['company'] != null) {
+          getListMessage();
+        } else {
+          isLoading = false;
+        }
+      }
+    });
   }
 
   void updateSearchResults(String query) {
@@ -88,7 +117,7 @@ class _MessageListScreenState extends State<MessageListScreen> {
     return isLoading
         ? const LoadingWidget()
         : SafeArea(
-            child: displayedList.isNotEmpty
+            child: originalList.isNotEmpty
                 ? GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => FocusScope.of(context).unfocus(),

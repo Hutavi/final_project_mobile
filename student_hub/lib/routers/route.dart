@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_hub/models/project_models/project_model_favourite.dart';
 import 'package:student_hub/models/project_models/project_model_for_list.dart';
+import 'package:student_hub/models/project_models/project_model_new.dart';
 import 'package:student_hub/routers/route_name.dart';
 import 'package:student_hub/screens/auth_page/change_password.dart';
 import 'package:student_hub/screens/auth_page/forgot_password_screen.dart';
@@ -296,10 +297,10 @@ class AppRoute {
         );
 
       case AppRouterName.editPoject:
-        final args = settings.arguments as int;
+        final args = settings.arguments as ProjectModelNew;
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => EditProject(
-            projectID: args,
+            project: args,
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0);
